@@ -1,0 +1,37 @@
+---
+import AsciiRule from './ui/AsciiRule.astro';
+
+interface Depoimento {
+  nome: string;
+  turma: string;
+  papel: string;
+  texto: string;
+  projeto?: string;
+}
+
+interface Props {
+  depoimentos: Depoimento[];
+}
+
+const { depoimentos } = Astro.props;
+---
+
+<section class="encodere-section" aria-labelledby="depoimentos-title">
+  <p class="encodere-section__eyebrow">vozes da turma</p>
+  <h2 id="depoimentos-title">depoimentos</h2>
+  <AsciiRule />
+  <div class="encodere-depoimentos">
+    {
+      depoimentos.map((d) => (
+        <blockquote class="encodere-depoimento encodere-scanline">
+          <p>"{d.texto}"</p>
+          <footer>
+            <cite>{d.nome}</cite>
+            <span> · {d.papel} · turma {d.turma}</span>
+            {d.projeto && <span> · {d.projeto}</span>}
+          </footer>
+        </blockquote>
+      ))
+    }
+  </div>
+</section>

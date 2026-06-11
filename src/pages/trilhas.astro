@@ -1,0 +1,32 @@
+---
+import SiteLayout from '../layouts/SiteLayout.astro';
+import GlitchTitle from '../components/ui/GlitchTitle.astro';
+import AsciiRule from '../components/ui/AsciiRule.astro';
+import { CatalogoTrilhas } from '../components/trilhas/CatalogoTrilhas';
+import { getCollection } from 'astro:content';
+import { SITE_TITLE } from '../consts';
+
+const disciplinasRaw = await getCollection('disciplinas');
+const disciplinas = disciplinasRaw.map((d) => d.data);
+
+const title = 'Trilhas';
+const description = 'Catálogo de disciplinas da encodere.se — filtre por fase lunar.';
+---
+
+<SiteLayout title={title} description={description}>
+  <section class="encodere-section">
+    <p class="encodere-section__eyebrow">currículo</p>
+    <GlitchTitle text="trilhas de aprendizado" as="h1" />
+    <p>Doze disciplinas organizadas em cinco fases. Cada uma com mestra, carga horária e tags de domínio.</p>
+    <AsciiRule />
+    <CatalogoTrilhas client:visible disciplinas={disciplinas} />
+  </section>
+
+  <script type="application/ld+json" set:html={JSON.stringify({
+    '@context': 'https://schema.org',
+    '@type': 'EducationalOrganization',
+    name: SITE_TITLE,
+    description,
+    url: 'https://encodere.se/trilhas',
+  })} />
+</SiteLayout>

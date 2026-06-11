@@ -1,0 +1,35 @@
+---
+import SiteLayout from '../layouts/SiteLayout.astro';
+import GlitchTitle from '../components/ui/GlitchTitle.astro';
+import AsciiRule from '../components/ui/AsciiRule.astro';
+import Stat from '../components/ui/Stat.astro';
+import Roadmap from '../components/Roadmap.astro';
+import Depoimentos from '../components/Depoimentos.astro';
+import CtaMatricula from '../components/CtaMatricula.astro';
+import { LandingBoot } from '../components/ui/LandingBoot';
+import { getCollection } from 'astro:content';
+import { SITE_DESCRIPTION, SITE_TITLE } from '../consts';
+import fasesData from '../content/fases.json';
+
+const fases = fasesData.fases;
+
+const depoimentosRaw = await getCollection('depoimentos');
+const depoimentos = depoimentosRaw.map((d) => d.data);
+---
+
+<SiteLayout title={SITE_TITLE} description={SITE_DESCRIPTION}>
+  <LandingBoot client:load />
+
+  <section class="encodere-hero encodere-section">
+    <p class="encodere-section__eyebrow">escola de tecnomancia</p>
+    <GlitchTitle text="criar com intenção." as="h1" />
+    <p class="encodere-hero__lede">
+      A encodere.se une tecnologia atual com metodologia deliberada — cybermagia como
+      prática, não como estética vazia. Programar é ritual; o código é grimório.
+    </p>
+  </section>
+
+  <Roadmap fases={fases} />
+  <!-- <Depoimentos depoimentos={depoimentos} /> -->
+  <CtaMatricula />
+</SiteLayout>

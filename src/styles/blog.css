@@ -1,0 +1,117 @@
+/* Blog — listagem, post e links legados (MDX) */
+
+.encodere-header-link {
+  display: inline-block;
+  text-decoration: none;
+  border: none;
+  color: var(--encodere-fg-2);
+}
+
+.encodere-header-link--active {
+  font-weight: 700;
+  color: var(--encodere-cyan);
+  text-decoration: underline;
+}
+
+.encodere-blog-index__list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: calc(var(--encodere-step) * 8);
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.encodere-blog-index__item {
+  width: calc(50% - calc(var(--encodere-step) * 4));
+}
+
+.encodere-blog-index__item--featured {
+  width: 100%;
+  margin-bottom: calc(var(--encodere-step) * 4);
+  text-align: center;
+}
+
+.encodere-blog-index__item--featured .encodere-blog-index__title {
+  font-size: 28px;
+}
+
+.encodere-blog-index__link {
+  display: block;
+  text-decoration: none;
+  border: none;
+  color: inherit;
+  transition: color 0.15s;
+}
+
+.encodere-blog-index__link:hover .encodere-blog-index__title,
+.encodere-blog-index__link:hover .encodere-blog-index__date {
+  color: var(--encodere-cyan);
+}
+
+.encodere-blog-index__title {
+  margin: 0;
+  color: var(--encodere-fg);
+  line-height: 1.12;
+  font-size: 18px;
+}
+
+.encodere-blog-index__date {
+  margin: calc(var(--encodere-step) * 2) 0 0;
+  font-size: 12px;
+  color: var(--encodere-fg-3);
+}
+
+.encodere-blog-index__tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: calc(var(--encodere-step) * 2);
+  margin-top: calc(var(--encodere-step) * 2);
+}
+
+.encodere-blog-post__hero img {
+  display: block;
+  width: 100%;
+  height: auto;
+  border: 1px solid var(--encodere-rule);
+}
+
+.encodere-blog-post__header {
+  margin-bottom: calc(var(--encodere-step) * 8);
+  padding: calc(var(--encodere-step) * 6) 0;
+  text-align: center;
+}
+
+.encodere-blog-post__header h1 {
+  margin: calc(var(--encodere-step) * 4) 0 calc(var(--encodere-step) * 2);
+}
+
+.encodere-blog-post__date {
+  font-size: 12px;
+  color: var(--encodere-fg-3);
+}
+
+.encodere-blog-post__updated {
+  font-style: italic;
+  margin-top: calc(var(--encodere-step) * 1);
+}
+
+@media (max-width: 720px) {
+  .encodere-blog-index__list {
+    gap: calc(var(--encodere-step) * 4);
+  }
+
+  .encodere-blog-index__item,
+  .encodere-blog-index__item--featured {
+    width: 100%;
+    text-align: center;
+  }
+
+  .encodere-blog-index__item--featured {
+    margin-bottom: 0;
+  }
+
+  .encodere-blog-index__item--featured .encodere-blog-index__title {
+    font-size: 22px;
+  }
+}

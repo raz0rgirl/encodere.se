@@ -1,0 +1,29 @@
+{
+  "fases": [
+    {
+      "id": "I",
+      "nome": "Despertar",
+      "descricao": "Fundamentos da tecnomancia: terminal, git, primeira magia de automação."
+    },
+    {
+      "id": "II",
+      "nome": "Invocação",
+      "descricao": "APIs, HTTP e contratos — aprender a chamar forças externas com intenção."
+    },
+    {
+      "id": "III",
+      "nome": "Transmutação",
+      "descricao": "Dados, persistência e modelagem — transformar informação em conhecimento."
+    },
+    {
+      "id": "IV",
+      "nome": "Vínculo",
+      "descricao": "Frontend, UX e interfaces — criar pontes entre mundos (humano e máquina)."
+    },
+    {
+      "id": "V",
+      "nome": "Manifestação",
+      "descricao": "Projeto final: ritual de entrega, deploy e apresentação ao círculo."
+    }
+  ]
+}

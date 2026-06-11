@@ -1,0 +1,777 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>encodere.se · especificação técnica · Astro + React</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0f0c1a;
+    --paper: #ffffff;
+    --ink: #16121f;
+    --ink-2: #4a4458;
+    --ink-3: #6f6880;
+    --rule: #e4e0ec;
+    --rule-2: #f0edf5;
+    --violet: #6b2fc7;
+    --violet-bg: #f3edfd;
+    --cyan: #0c7b8a;
+    --cyan-bg: #e6f6f8;
+    --code-bg: #16121f;
+    --code-fg: #d8d2e6;
+    --amber: #9a6b00;
+    --amber-bg: #fbf3df;
+    --page-w: 820px;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+  body {
+    background: var(--bg);
+    font-family: 'JetBrains Mono', ui-monospace, monospace;
+    color: var(--ink);
+    line-height: 1.62;
+    font-size: 13.5px;
+    -webkit-font-smoothing: antialiased;
+    padding: 40px 20px 80px;
+  }
+
+  .page {
+    background: var(--paper);
+    width: var(--page-w);
+    max-width: 100%;
+    margin: 0 auto 28px;
+    padding: 64px 72px;
+    border: 1px solid #000;
+    position: relative;
+  }
+
+  /* ── Type ─────────────────────────────────────────── */
+  h1, h2, h3, h4 { font-weight: 800; letter-spacing: -0.5px; line-height: 1.12; margin: 0; }
+  h1 { font-size: 38px; letter-spacing: -1.5px; }
+  h2 { font-size: 23px; margin: 0 0 4px; letter-spacing: -0.8px; }
+  h3 { font-size: 16px; font-weight: 700; margin: 0 0 8px; }
+  h4 { font-size: 13px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.8px; color: var(--ink-2); }
+  p  { margin: 0 0 14px; color: var(--ink-2); }
+  strong { color: var(--ink); font-weight: 700; }
+  em { font-style: normal; border-bottom: 1px dashed var(--cyan); color: var(--ink); }
+  a { color: var(--violet); }
+  ul, ol { margin: 0 0 16px; padding-left: 20px; color: var(--ink-2); }
+  li { margin: 0 0 7px; }
+  li::marker { color: var(--violet); }
+
+  .eyebrow {
+    font-size: 10.5px; letter-spacing: 2px; text-transform: uppercase;
+    color: var(--cyan); margin-bottom: 14px; display: flex; align-items: center; gap: 10px;
+  }
+  .eyebrow::before { content: ""; width: 24px; border-top: 1.5px solid var(--cyan); }
+
+  .lede { font-size: 15px; color: var(--ink-2); line-height: 1.65; }
+
+  /* ── Section header block ─────────────────────────── */
+  .sec { margin: 0 0 30px; }
+  .sencodere-head {
+    display: flex; align-items: baseline; gap: 14px;
+    border-bottom: 2px solid var(--ink); padding-bottom: 10px; margin-bottom: 22px;
+  }
+  .sencodere-num {
+    font-size: 12px; font-weight: 800; color: var(--violet);
+    font-variant-numeric: tabular-nums; flex-shrink: 0;
+  }
+  .sencodere-head h2 { flex: 1; }
+  .sencodere-tag { font-size: 10.5px; color: var(--ink-3); letter-spacing: 1px; text-transform: uppercase; }
+
+  /* ── Code ─────────────────────────────────────────── */
+  pre, code { font-family: 'JetBrains Mono', monospace; }
+  code.inline {
+    background: var(--rule-2); border: 1px solid var(--rule);
+    padding: 1px 5px; font-size: 12px; color: var(--violet); border-radius: 2px;
+    white-space: nowrap;
+  }
+  pre {
+    background: var(--code-bg); color: var(--code-fg);
+    padding: 18px 20px; margin: 0 0 18px; font-size: 12px; line-height: 1.7;
+    overflow-x: auto; border-left: 3px solid var(--violet);
+  }
+  pre .c { color: #7d7596; }      /* comment */
+  pre .k { color: #c79bff; }      /* keyword */
+  pre .s { color: #7be0e0; }      /* string */
+  pre .f { color: #9fe6b0; }      /* function/dir */
+  pre .d { color: #8f88a3; }      /* dim/tree */
+
+  .filetree { line-height: 1.65; }
+  .filetree .d { color: var(--ink-3); }
+  .filetree .k { color: #c79bff; }
+  .filetree .s { color: #7be0e0; }
+  .filetree .cm { color: #7d7596; }
+
+  /* ── Callouts ─────────────────────────────────────── */
+  .note {
+    border: 1px solid var(--rule); border-left: 3px solid var(--cyan);
+    background: var(--cyan-bg); padding: 14px 18px; margin: 0 0 18px; font-size: 12.5px;
+  }
+  .note.violet { border-left-color: var(--violet); background: var(--violet-bg); }
+  .note.amber  { border-left-color: var(--amber);  background: var(--amber-bg); }
+  .note .nh { font-weight: 700; color: var(--ink); text-transform: uppercase; font-size: 10.5px; letter-spacing: 1px; margin-bottom: 5px; display: block; }
+  .note p:last-child { margin: 0; }
+
+  /* ── Tables ───────────────────────────────────────── */
+  table { width: 100%; border-collapse: collapse; margin: 0 0 18px; font-size: 12px; }
+  th, td { text-align: left; padding: 9px 12px; border-bottom: 1px solid var(--rule); vertical-align: top; }
+  thead th {
+    border-bottom: 1.5px solid var(--ink); font-size: 10px; letter-spacing: 1px;
+    text-transform: uppercase; color: var(--ink-3); font-weight: 700;
+  }
+  td { color: var(--ink-2); }
+  td strong { color: var(--ink); }
+  tr:last-child td { border-bottom: none; }
+  .mono-accent { color: var(--violet); }
+
+  /* ── Token swatches ───────────────────────────────── */
+  .swatch-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin: 0 0 18px; }
+  .swatch { display: flex; align-items: center; gap: 12px; border: 1px solid var(--rule); padding: 10px 12px; }
+  .swatch .chip { width: 38px; height: 38px; flex-shrink: 0; border: 1px solid rgba(0,0,0,.15); }
+  .swatch .meta { font-size: 11px; line-height: 1.5; }
+  .swatch .meta b { display: block; color: var(--ink); font-size: 12px; }
+  .swatch .meta span { color: var(--ink-3); }
+
+  /* ── Step list ────────────────────────────────────── */
+  .steps { counter-reset: step; padding: 0; list-style: none; margin: 0 0 14px; }
+  .steps > li {
+    position: relative; padding-left: 40px; margin-bottom: 18px; min-height: 28px;
+  }
+  .steps > li::before {
+    counter-increment: step; content: counter(step, decimal-leading-zero);
+    position: absolute; left: 0; top: 0; width: 28px; height: 28px;
+    background: var(--ink); color: #fff; display: flex; align-items: center; justify-content: center;
+    font-size: 11px; font-weight: 700;
+  }
+  .steps > li b { color: var(--ink); }
+
+  /* ── Misc ─────────────────────────────────────────── */
+  .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
+  .pill {
+    display: inline-block; font-size: 10.5px; padding: 2px 9px; border: 1px solid var(--rule);
+    color: var(--ink-2); margin: 0 4px 5px 0; letter-spacing: 0.3px;
+  }
+  .pill.v { border-color: var(--violet); color: var(--violet); }
+  .pill.c { border-color: var(--cyan); color: var(--cyan); }
+  .kv { display: grid; grid-template-columns: 130px 1fr; gap: 4px 16px; font-size: 12px; margin-bottom: 16px; }
+  .kv dt { color: var(--ink-3); }
+  .kv dd { margin: 0; color: var(--ink); }
+  hr.soft { border: none; border-top: 1px solid var(--rule); margin: 26px 0; }
+
+  /* ── Cover ────────────────────────────────────────── */
+  .cover { background: var(--code-bg); color: #e9e4f2; border-color: #000; }
+  .cover .eyebrow { color: #7be0e0; }
+  .cover .eyebrow::before { border-color: #7be0e0; }
+  .cover h1 { color: #fff; font-size: 52px; letter-spacing: -2.5px; line-height: 0.98; }
+  .cover .lede { color: #b3acc4; }
+  .cover .kv dt { color: #837b97; }
+  .cover .kv dd { color: #e9e4f2; }
+  .cover .dot { color: var(--violet); }
+  .cover-boot { font-size: 11.5px; color: #9089a3; line-height: 1.9; margin-top: 30px; border-top: 1px solid #2a2438; padding-top: 22px; }
+  .cover-boot .ok { color: #7be0e0; }
+  .blink { display: inline-block; width: 7px; height: 13px; background: #7be0e0; vertical-align: -2px; animation: bk 1s steps(1) infinite; }
+  @keyframes bk { 0%,49%{opacity:1} 50%,100%{opacity:0} }
+
+  .toc-list { list-style: none; padding: 0; margin: 0; }
+  .toc-list li {
+    display: flex; align-items: baseline; gap: 12px; padding: 10px 0;
+    border-bottom: 1px solid var(--rule); font-size: 13px;
+  }
+  .toc-list .n { color: var(--violet); font-weight: 700; font-size: 11px; width: 24px; flex-shrink: 0; }
+  .toc-list .t { color: var(--ink); font-weight: 600; flex: 1; }
+  .toc-list .pg { color: var(--ink-3); font-size: 11px; }
+
+  @media print {
+    body { background: #fff; padding: 0; }
+    .page { border: none; margin: 0; width: 100%; padding: 22mm 20mm; page-break-after: always; }
+    .page:last-child { page-break-after: auto; }
+    .cover { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    pre, .note, .cover, .chip, thead th, .steps > li::before { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    .blink { display: none; }
+  }
+  @media (max-width: 880px) {
+    .page { padding: 40px 26px; }
+    .grid-2, .swatch-grid { grid-template-columns: 1fr; }
+    .kv { grid-template-columns: 100px 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ════════════════ COVER ════════════════ -->
+<section class="page cover">
+  <div class="eyebrow">documento de engenharia · confidencial</div>
+  <h1>especificação<br>técnica<span class="dot">.</span></h1>
+  <p class="lede" style="margin-top:22px; max-width:560px;">
+    Implementação do site da <strong style="color:#fff">encodere.se</strong> — escola de
+    tecnomancia — em <strong style="color:#fff">Astro + React (islands)</strong>. Cobre
+    arquitetura, design tokens, componentes, rotas, modo claro/escuro, microinterações,
+    modelagem de conteúdo, dashboard, performance, acessibilidade e deploy.
+  </p>
+
+  <dl class="kv" style="margin-top:34px; max-width:520px;">
+    <dt>produto</dt><dd>encodere.se / site institucional + área da aluna</dd>
+    <dt>versão da spec</dt><dd>v1.0 · derivada do protótipo no canvas</dd>
+    <dt>stack-alvo</dt><dd>Astro 4 · React 18 · TypeScript · Tailwind</dd>
+    <dt>data</dt><dd>junho 2026</dd>
+    <dt>autoria</dt><dd>design + eng</dd>
+  </dl>
+
+  <div class="cover-boot">
+    <div><span class="ok">OK</span>&nbsp;&nbsp;protótipo aprovado → congelado como referência visual</div>
+    <div><span class="ok">OK</span>&nbsp;&nbsp;traduzindo 3 landings + trilhas + dashboard p/ produção</div>
+    <div><span class="ok">OK</span>&nbsp;&nbsp;meta: 1 landing escolhida em prod, demais como variantes A/B</div>
+    <div style="margin-top:8px;">$ npm create astro@latest encodere-se <span class="blink"></span></div>
+  </div>
+</section>
+
+<!-- ════════════════ TOC ════════════════ -->
+<section class="page">
+  <div class="eyebrow">índice</div>
+  <h2 style="font-size:28px; margin-bottom:26px;">o que tem aqui dentro.</h2>
+  <ol class="toc-list">
+    <li><span class="n">01</span><span class="t">Objetivo & princípios</span><span class="pg">o que estamos construindo</span></li>
+    <li><span class="n">02</span><span class="t">Stack & decisões de arquitetura</span><span class="pg">por que Astro + islands</span></li>
+    <li><span class="n">03</span><span class="t">Estrutura de pastas</span><span class="pg">monorepo do projeto</span></li>
+    <li><span class="n">04</span><span class="t">Design tokens</span><span class="pg">cores oklch, tipo, espaço</span></li>
+    <li><span class="n">05</span><span class="t">Modo claro / escuro</span><span class="pg">estratégia sem flash</span></li>
+    <li><span class="n">06</span><span class="t">Biblioteca de componentes</span><span class="pg">.astro vs ilhas react</span></li>
+    <li><span class="n">07</span><span class="t">Rotas & páginas</span><span class="pg">mapa do site</span></li>
+    <li><span class="n">08</span><span class="t">Modelagem de conteúdo</span><span class="pg">content collections</span></li>
+    <li><span class="n">09</span><span class="t">Microinterações</span><span class="pg">boot, glitch, scanline</span></li>
+    <li><span class="n">10</span><span class="t">Dashboard & autenticação</span><span class="pg">área logada</span></li>
+    <li><span class="n">11</span><span class="t">Performance, A11y & SEO</span><span class="pg">orçamentos e metas</span></li>
+    <li><span class="n">12</span><span class="t">Deploy & ambientes</span><span class="pg">CI/CD</span></li>
+    <li><span class="n">13</span><span class="t">Roadmap de implementação</span><span class="pg">fases de entrega</span></li>
+  </ol>
+
+  <div class="note violet" style="margin-top:28px;">
+    <span class="nh">premissa central</span>
+    <p>O protótipo aprovado é a <strong>fonte da verdade visual</strong>. Esta spec traduz aquele
+    HTML/JSX exploratório para uma base de produção sustentável — sem reinventar o visual, e
+    mantendo o mesmo vocabulário (tecnomancia, cybermagia, ciclos lunares, "rituais").</p>
+  </div>
+</section>
+
+<!-- ════════════════ 01 OBJETIVO ════════════════ -->
+<section class="page">
+  <div class="sec">
+    <div class="sencodere-head"><span class="sencodere-num">01</span><h2>Objetivo &amp; princípios</h2><span class="sencodere-tag">por quê</span></div>
+
+    <p>Construir o site público da encodere.se e a área logada da aluna como um único projeto
+    Astro, otimizado para conteúdo (marketing/currículo é estático) mas com ilhas React onde há
+    interatividade real (filtros de trilha, dashboard, toggles).</p>
+
+    <h3>Princípios de engenharia</h3>
+    <ul>
+      <li><strong>Estático por padrão, JS sob demanda.</strong> Cada quilobyte de JavaScript precisa se justificar. Landing e trilhas renderizam como HTML puro; React só "hidrata" onde há estado.</li>
+      <li><strong>O conteúdo é dado, não markup.</strong> Disciplinas, mestras, depoimentos e fases vivem em <code class="inline">content collections</code> tipadas — não hardcoded em JSX como no protótipo.</li>
+      <li><strong>Tokens primeiro.</strong> Nenhuma cor literal em componente. Tudo via CSS custom properties já modeladas no protótipo (oklch violeta/cyan).</li>
+      <li><strong>Acessível e legível no claro e no escuro.</strong> O cyberpunk é sutil — contraste AA é inegociável.</li>
+      <li><strong>Direct-editável e tipado.</strong> TypeScript em tudo; componentes pequenos e single-purpose.</li>
+    </ul>
+
+    <h3>Não-objetivos (v1)</h3>
+    <ul>
+      <li>Não construir CMS próprio — conteúdo em arquivos versionados (MDX/JSON) basta para o volume atual.</li>
+      <li>Não construir LMS completo. O dashboard v1 é um painel de leitura + links; entregas e vídeo-aulas ficam em ferramentas externas (Discord, Zoom, repositório).</li>
+      <li>Não suportar i18n agora — só PT-BR. A estrutura deve permitir adicionar depois.</li>
+    </ul>
+  </div>
+</section>
+
+<!-- ════════════════ 02 STACK ════════════════ -->
+<section class="page">
+  <div class="sec">
+    <div class="sencodere-head"><span class="sencodere-num">02</span><h2>Stack &amp; decisões</h2><span class="sencodere-tag">arquitetura</span></div>
+
+    <table>
+      <thead><tr><th>camada</th><th>escolha</th><th>razão</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Framework</strong></td><td>Astro 4</td><td>HTML-first, zero-JS por padrão, ilhas sob demanda. Ideal p/ site majoritariamente estático.</td></tr>
+        <tr><td><strong>UI interativa</strong></td><td>React 18 + <code class="inline">@astrojs/react</code></td><td>Reaproveita o protótipo direto. Só onde há estado.</td></tr>
+        <tr><td><strong>Linguagem</strong></td><td>TypeScript (strict)</td><td>Tipagem do conteúdo + props.</td></tr>
+        <tr><td><strong>Estilo</strong></td><td>Tailwind + CSS vars</td><td>Tokens como CSS custom properties; utilitários p/ layout. <code class="inline">@theme</code> mapeia os tokens.</td></tr>
+        <tr><td><strong>Conteúdo</strong></td><td>Content Collections (MDX/JSON)</td><td>Tipado via Zod. Disciplinas, mestras, depoimentos, fases.</td></tr>
+        <tr><td><strong>Fonte</strong></td><td>JetBrains Mono (self-host)</td><td><code class="inline">@fontsource-variable/jetbrains-mono</code> — sem FOIT, sem CORS, offline-ok.</td></tr>
+        <tr><td><strong>Dashboard</strong></td><td>Astro SSR + ilha React</td><td>Rota protegida; render no servidor com sessão.</td></tr>
+        <tr><td><strong>Auth</strong></td><td>Lucia / Auth.js</td><td>Sessão por cookie. Magic-link no e-mail (combina com "processo por carta").</td></tr>
+        <tr><td><strong>Hospedagem</strong></td><td>Vercel ou Netlify</td><td>Adapter híbrido: estático + funções p/ rotas SSR.</td></tr>
+      </tbody>
+    </table>
+
+    <div class="note">
+      <span class="nh">decisão-chave · híbrido</span>
+      <p>Output <code class="inline">hybrid</code>: site inteiro pré-renderizado (estático), exceto
+      <code class="inline">/aluna/*</code> que roda SSR sob demanda com a sessão. O melhor dos dois
+      mundos — marketing voa, dashboard é dinâmico.</p>
+    </div>
+
+    <h3>astro.config — esqueleto</h3>
+<pre><span class="k">import</span> { defineConfig } <span class="k">from</span> <span class="s">'astro/config'</span>;
+<span class="k">import</span> react <span class="k">from</span> <span class="s">'@astrojs/react'</span>;
+<span class="k">import</span> tailwind <span class="k">from</span> <span class="s">'@astrojs/tailwind'</span>;
+<span class="k">import</span> vercel <span class="k">from</span> <span class="s">'@astrojs/vercel/serverless'</span>;
+
+<span class="k">export default</span> defineConfig({
+  output: <span class="s">'hybrid'</span>,          <span class="c">// estático + SSR pontual</span>
+  adapter: vercel(),
+  integrations: [react(), tailwind({ applyBaseStyles: <span class="k">false</span> })],
+  site: <span class="s">'https://encodere.se'</span>,
+});</pre>
+  </div>
+</section>
+
+<!-- ════════════════ 03 ESTRUTURA ════════════════ -->
+<section class="page">
+  <div class="sec">
+    <div class="sencodere-head"><span class="sencodere-num">03</span><h2>Estrutura de pastas</h2><span class="sencodere-tag">organização</span></div>
+
+    <p>Mapeamento direto: cada arquivo <code class="inline">.jsx</code> do protótipo vira um diretório
+    de componentes + uma rota. O <code class="inline">shared.jsx</code> vira <code class="inline">components/ui/</code> + <code class="inline">styles/tokens.css</code>.</p>
+
+<pre class="filetree"><span class="d">encodere-se/</span>
+├─ <span class="d">src/</span>
+│  ├─ <span class="d">pages/</span>                      <span class="cm"># rotas (file-based)</span>
+│  │  ├─ index.astro             <span class="cm"># landing escolhida em prod</span>
+│  │  ├─ trilhas.astro           <span class="cm"># ← cursos.jsx</span>
+│  │  ├─ mestras.astro
+│  │  ├─ manifesto.astro
+│  │  ├─ matricula.astro         <span class="cm"># processo por carta</span>
+│  │  └─ <span class="d">aluna/</span>                   <span class="cm"># SSR · protegido</span>
+│  │     ├─ index.astro          <span class="cm"># ← dashboard.jsx</span>
+│  │     └─ entrar.astro         <span class="cm"># magic-link</span>
+│  ├─ <span class="d">layouts/</span>
+│  │  ├─ BaseLayout.astro        <span class="cm"># &lt;head&gt;, tokens, theme-init</span>
+│  │  ├─ SiteLayout.astro        <span class="cm"># TopNav + Footer públicos</span>
+│  │  └─ AlunaLayout.astro       <span class="cm"># DashNav + guarda de sessão</span>
+│  ├─ <span class="d">components/</span>
+│  │  ├─ <span class="d">ui/</span>                      <span class="cm"># ← shared.jsx (primitivos)</span>
+│  │  │  ├─ GlitchTitle.tsx      <span class="cm"># ilha · hover glitch</span>
+│  │  │  ├─ MonoButton.astro
+│  │  │  ├─ AsciiRule.astro
+│  │  │  ├─ Stat.astro
+│  │  │  ├─ BootSequence.tsx     <span class="cm"># ilha · client:load</span>
+│  │  │  └─ ThemeToggle.tsx      <span class="cm"># ilha · client:idle</span>
+│  │  ├─ <span class="d">site/</span>
+│  │  │  ├─ TopNav.astro
+│  │  │  ├─ Footer.astro
+│  │  │  ├─ Roadmap.astro        <span class="cm"># 5 fases lunares</span>
+│  │  │  ├─ Depoimentos.astro
+│  │  │  └─ CtaMatricula.astro
+│  │  ├─ <span class="d">trilhas/</span>
+│  │  │  └─ CatalogoTrilhas.tsx  <span class="cm"># ilha · filtro por fase</span>
+│  │  └─ <span class="d">aluna/</span>
+│  │     ├─ ProgressoCiclo.tsx
+│  │     ├─ ProximoEncontro.astro
+│  │     ├─ RituaisPendentes.tsx
+│  │     └─ DiarioFeiticos.astro
+│  ├─ <span class="d">content/</span>                    <span class="cm"># content collections</span>
+│  │  ├─ config.ts               <span class="cm"># schemas Zod</span>
+│  │  ├─ <span class="d">disciplinas/</span>            <span class="cm"># 12× .md</span>
+│  │  ├─ <span class="d">mestras/</span>
+│  │  ├─ <span class="d">depoimentos/</span>
+│  │  └─ fases.json
+│  ├─ <span class="d">styles/</span>
+│  │  ├─ tokens.css              <span class="cm"># :root + [data-theme]</span>
+│  │  └─ global.css
+│  └─ <span class="d">lib/</span>
+│     ├─ auth.ts                 <span class="cm"># sessão / magic-link</span>
+│     └─ theme.ts                <span class="cm"># helper anti-flash</span>
+├─ astro.config.mjs
+├─ tailwind.config.ts
+└─ tsconfig.json</pre>
+  </div>
+</section>
+
+<!-- ════════════════ 04 TOKENS ════════════════ -->
+<section class="page">
+  <div class="sec">
+    <div class="sencodere-head"><span class="sencodere-num">04</span><h2>Design tokens</h2><span class="sencodere-tag">fundação</span></div>
+
+    <p>Portados <em>literalmente</em> do protótipo (objetos <code class="inline">DARK</code>/<code class="inline">LIGHT</code> do <code class="inline">shared.jsx</code>) para <code class="inline">styles/tokens.css</code>. Nenhum componente usa cor crua.</p>
+
+    <h4>Acentos da marca</h4>
+    <div class="swatch-grid">
+      <div class="swatch"><div class="chip" style="background:oklch(0.72 0.21 305)"></div><div class="meta"><b>--encodere-violet</b><span>oklch(0.72 0.21 305) · escuro<br>oklch(0.45 0.22 305) · claro</span></div></div>
+      <div class="swatch"><div class="chip" style="background:oklch(0.84 0.14 195)"></div><div class="meta"><b>--encodere-cyan</b><span>oklch(0.84 0.14 195) · escuro<br>oklch(0.55 0.14 200) · claro</span></div></div>
+      <div class="swatch"><div class="chip" style="background:oklch(0.13 0.02 295)"></div><div class="meta"><b>--encodere-bg</b><span>oklch(0.13 0.02 295) · escuro<br>oklch(0.97 0.005 295) · claro</span></div></div>
+      <div class="swatch"><div class="chip" style="background:oklch(0.96 0.008 295); border-color:#bbb"></div><div class="meta"><b>--encodere-fg</b><span>oklch(0.96 0.008 295) · escuro<br>oklch(0.18 0.02 295) · claro</span></div></div>
+    </div>
+
+    <div class="note amber">
+      <span class="nh">regra de contraste</span>
+      <p>O violeta escuro de marca (<code class="inline">0.72 0.21 305</code>) <strong>não</strong> tem contraste AA sobre o <code class="inline">--encodere-bg</code> escuro para texto pequeno. Use-o em texto ≥18px/bold, bordas e fills — nunca em corpo de texto. Para links/labels pequenos no escuro, suba a luminância para <code class="inline">~0.80</code>.</p>
+    </div>
+
+    <h4>tokens.css — forma</h4>
+<pre><span class="c">/* claro = base; escuro sobrescreve via [data-theme="dark"] */</span>
+<span class="k">:root</span> {
+  --encodere-bg:      oklch(0.97 0.005 295);
+  --encodere-fg:      oklch(0.18 0.02 295);
+  --encodere-violet:  oklch(0.45 0.22 305);
+  --encodere-cyan:    oklch(0.55 0.14 200);
+  <span class="c">/* …rule, fg-2, fg-3, bg-elev, bg-card… */</span>
+  --encodere-step: 4px;            <span class="c">/* escala de espaço base */</span>
+  --encodere-font: <span class="s">'JetBrains Mono'</span>, ui-monospace, monospace;
+}
+<span class="k">[data-theme=</span><span class="s">"dark"</span><span class="k">]</span> {
+  --encodere-bg:      oklch(0.13 0.02 295);
+  --encodere-fg:      oklch(0.96 0.008 295);
+  --encodere-violet:  oklch(0.72 0.21 305);
+  --encodere-cyan:    oklch(0.84 0.14 195);
+}</pre>
+
+    <h4>Escalas</h4>
+    <div class="kv">
+      <dt>tipo</dt><dd>11 · 12 · 13 · 14 · 16 · 22 · 38 · 56 · 76 · 120 px (mono, pesos 300–800)</dd>
+      <dt>espaço</dt><dd>múltiplos de 4px (gap/padding sempre via Tailwind sobre <code class="inline">--encodere-step</code>)</dd>
+      <dt>borda</dt><dd>1px sólida <code class="inline">--encodere-rule</code> · sem border-radius (estética terminal)</dd>
+      <dt>letter-spacing</dt><dd>títulos grandes negativos (-1 a -5px); labels caixa-alta +1.5px</dd>
+    </div>
+  </div>
+</section>
+
+<!-- ════════════════ 05 THEME ════════════════ -->
+<section class="page">
+  <div class="sec">
+    <div class="sencodere-head"><span class="sencodere-num">05</span><h2>Modo claro / escuro</h2><span class="sencodere-tag">sem flash</span></div>
+
+    <p>O protótipo detecta <code class="inline">prefers-color-scheme</code> e persiste por artboard no
+    <code class="inline">localStorage</code>. Em produção, unificamos num único tema global com
+    <strong>script anti-flash</strong> inline no <code class="inline">&lt;head&gt;</code>, antes do paint.</p>
+
+    <ol class="steps">
+      <li><b>Script bloqueante no <code class="inline">&lt;head&gt;</code>:</b> lê <code class="inline">localStorage['encodere-theme']</code>; se ausente, cai em <code class="inline">matchMedia('(prefers-color-scheme: dark)')</code>; aplica <code class="inline">data-theme</code> no <code class="inline">&lt;html&gt;</code> <em>antes</em> de qualquer render.</li>
+      <li><b>Toggle (ilha React, <code class="inline">client:idle</code>):</b> alterna <code class="inline">data-theme</code> e grava no <code class="inline">localStorage</code>. É o único JS de tema na página.</li>
+      <li><b>CSS reage</b> só via <code class="inline">[data-theme="dark"]</code> — nenhum componente sabe do tema, apenas consome tokens.</li>
+    </ol>
+
+<pre><span class="c">&lt;!-- BaseLayout.astro · inline, antes do CSS --&gt;</span>
+&lt;<span class="k">script</span> is:inline&gt;
+  <span class="k">const</span> k = <span class="s">'encodere-theme'</span>;
+  <span class="k">const</span> saved = localStorage.getItem(k);
+  <span class="k">const</span> sys = matchMedia(<span class="s">'(prefers-color-scheme: dark)'</span>).matches;
+  <span class="k">const</span> theme = saved ?? (sys ? <span class="s">'dark'</span> : <span class="s">'light'</span>);
+  document.documentElement.dataset.theme = theme;
+&lt;/<span class="k">script</span>&gt;</pre>
+
+    <div class="note violet">
+      <span class="nh">acessibilidade</span>
+      <p>Respeitar <code class="inline">prefers-reduced-motion</code>: glitch, scanline e boot só
+      animam em <code class="inline">@media (prefers-reduced-motion: no-preference)</code>. O estado
+      final (conteúdo visível) é sempre o default — animações partem <em>dele</em>, nunca o escondem.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ════════════════ 06 COMPONENTES ════════════════ -->
+<section class="page">
+  <div class="sec">
+    <div class="sencodere-head"><span class="sencodere-num">06</span><h2>Biblioteca de componentes</h2><span class="sencodere-tag">.astro vs ilha</span></div>
+
+    <p>Regra de ouro: <strong>tem estado/evento? é ilha React. É só markup? é <code class="inline">.astro</code></strong> (zero JS no cliente).</p>
+
+    <table>
+      <thead><tr><th>componente</th><th>tipo</th><th>hidratação</th><th>origem no protótipo</th></tr></thead>
+      <tbody>
+        <tr><td><strong>TopNav</strong></td><td>.astro</td><td>—</td><td>shared · TopNav</td></tr>
+        <tr><td><strong>Footer</strong></td><td>.astro</td><td>—</td><td>inline nas landings</td></tr>
+        <tr><td><strong>MonoButton</strong></td><td>.astro</td><td>—</td><td>shared · MonoButton</td></tr>
+        <tr><td><strong>AsciiRule / Stat</strong></td><td>.astro</td><td>—</td><td>shared</td></tr>
+        <tr><td><strong>Roadmap</strong></td><td>.astro</td><td>—</td><td>seção das 5 fases</td></tr>
+        <tr><td><strong>Depoimentos</strong></td><td>.astro</td><td>—</td><td>seção depoimentos</td></tr>
+        <tr><td><strong>GlitchTitle</strong></td><td>ilha</td><td><code class="inline">client:visible</code></td><td>shared · GlitchTitle</td></tr>
+        <tr><td><strong>BootSequence</strong></td><td>ilha</td><td><code class="inline">client:load</code></td><td>shared · BootSequence</td></tr>
+        <tr><td><strong>ThemeToggle</strong></td><td>ilha</td><td><code class="inline">client:idle</code></td><td>useArtboardMode</td></tr>
+        <tr><td><strong>CatalogoTrilhas</strong></td><td>ilha</td><td><code class="inline">client:visible</code></td><td>cursos · filtro+linhas</td></tr>
+        <tr><td><strong>Dashboard*</strong></td><td>ilha</td><td><code class="inline">client:load</code></td><td>dashboard.jsx</td></tr>
+      </tbody>
+    </table>
+
+    <div class="note">
+      <span class="nh">nota sobre GlitchTitle</span>
+      <p>O glitch é <strong>puramente CSS</strong> (pseudo-elementos <code class="inline">::before/::after</code> + <code class="inline">@keyframes</code>, já no protótipo). Pode até virar <code class="inline">.astro</code> com classe utilitária e dispensar a ilha — só precisa do atributo <code class="inline">data-text</code>. Preferir essa versão sem-JS quando o título não muda em runtime.</p>
+    </div>
+
+    <h3>Exemplo · MonoButton.astro</h3>
+<pre><span class="c">---</span>
+<span class="k">interface</span> Props { variant?: <span class="s">'primary'|'ghost'|'violet'|'cyan'</span>; size?: <span class="s">'sm'|'md'|'lg'</span>; href?: string; }
+<span class="k">const</span> { variant=<span class="s">'primary'</span>, size=<span class="s">'md'</span>, href } = Astro.props;
+<span class="k">const</span> Tag = href ? <span class="s">'a'</span> : <span class="s">'button'</span>;
+<span class="c">---</span>
+&lt;Tag class={`btn btn--${variant} btn--${size}`} href={href}&gt;
+  &lt;slot /&gt;
+&lt;/Tag&gt;</pre>
+  </div>
+</section>
+
+<!-- ════════════════ 07 ROTAS ════════════════ -->
+<section class="page">
+  <div class="sec">
+    <div class="sencodere-head"><span class="sencodere-num">07</span><h2>Rotas &amp; páginas</h2><span class="sencodere-tag">mapa do site</span></div>
+
+    <table>
+      <thead><tr><th>rota</th><th>render</th><th>conteúdo</th></tr></thead>
+      <tbody>
+        <tr><td><code class="inline">/</code></td><td>estático</td><td>Landing escolhida (hero + manifesto + roadmap + depoimentos + CTA). Demais variantes ficam atrás de flag p/ A/B.</td></tr>
+        <tr><td><code class="inline">/trilhas</code></td><td>estático</td><td>Catálogo de 12 disciplinas + filtro por fase (ilha) + mestras.</td></tr>
+        <tr><td><code class="inline">/mestras</code></td><td>estático</td><td>Perfis completos das mestras (de <code class="inline">content/mestras</code>).</td></tr>
+        <tr><td><code class="inline">/manifesto</code></td><td>estático</td><td>Manifesto longo + definições (tecnomancia, cybermagia).</td></tr>
+        <tr><td><code class="inline">/matricula</code></td><td>híbrido</td><td>Processo "por carta": formulário → e-mail. POST p/ função serverless.</td></tr>
+        <tr><td><code class="inline">/aluna</code></td><td><strong>SSR</strong></td><td>Dashboard. Exige sessão; sem ela → redirect p/ <code class="inline">/aluna/entrar</code>.</td></tr>
+        <tr><td><code class="inline">/aluna/entrar</code></td><td>híbrido</td><td>Magic-link por e-mail (Lucia/Auth.js).</td></tr>
+      </tbody>
+    </table>
+
+    <h3>Sobre as 3 variações de landing</h3>
+    <p>O protótipo entregou três direções (terminal sutil, manifesto-zine, holo grid). Em produção:</p>
+    <ul>
+      <li><strong>Escolher uma</strong> como <code class="inline">/</code> canônica (recomendo a <span class="pill v">manifesto-zine</span> — mais identidade, melhor pra topo de funil).</li>
+      <li>Manter as outras como <strong>variantes A/B</strong> sob <code class="inline">/v/terminal</code> e <code class="inline">/v/holo</code>, ou atrás de middleware de experimento, reaproveitando as <em>mesmas</em> seções (Roadmap, Depoimentos, CTA) com layouts diferentes.</li>
+      <li>As seções compartilhadas vivem em <code class="inline">components/site/</code> e recebem o conteúdo por props — landing é só composição.</li>
+    </ul>
+  </div>
+</section>
+
+<!-- ════════════════ 08 CONTEÚDO ════════════════ -->
+<section class="page">
+  <div class="sec">
+    <div class="sencodere-head"><span class="sencodere-num">08</span><h2>Modelagem de conteúdo</h2><span class="sencodere-tag">collections</span></div>
+
+    <p>No protótipo, disciplinas e depoimentos são arrays hardcoded dentro do JSX. Em produção viram
+    <strong>content collections tipadas por Zod</strong> — editáveis sem tocar em componente.</p>
+
+    <h3>content/config.ts</h3>
+<pre><span class="k">import</span> { defineCollection, z } <span class="k">from</span> <span class="s">'astro:content'</span>;
+
+<span class="k">const</span> disciplinas = defineCollection({
+  type: <span class="s">'content'</span>,
+  schema: z.object({
+    fase:   z.enum([<span class="s">'I'</span>,<span class="s">'II'</span>,<span class="s">'III'</span>,<span class="s">'IV'</span>,<span class="s">'V'</span>]),
+    nome:   z.string(),
+    horas:  z.number(),
+    mestra: z.string(),          <span class="c">// ref → mestras</span>
+    resumo: z.string(),
+    tags:   z.array(z.string()),
+    ordem:  z.number(),
+  }),
+});
+
+<span class="k">const</span> depoimentos = defineCollection({
+  type: <span class="s">'data'</span>,
+  schema: z.object({
+    nome: z.string(), turma: z.string(), papel: z.string(),
+    texto: z.string(), projeto: z.string().optional(),
+  }),
+});
+
+<span class="k">export const</span> collections = { disciplinas, depoimentos, <span class="c">/* mestras, fases */</span> };</pre>
+
+    <p>A página de trilhas então consome assim — totalmente data-driven:</p>
+<pre><span class="c">---</span>
+<span class="k">import</span> { getCollection } <span class="k">from</span> <span class="s">'astro:content'</span>;
+<span class="k">const</span> disciplinas = (<span class="k">await</span> getCollection(<span class="s">'disciplinas'</span>))
+  .sort((a,b) =&gt; a.data.ordem - b.data.ordem);
+<span class="c">---</span>
+&lt;CatalogoTrilhas client:visible disciplinas={disciplinas.map(d =&gt; d.data)} /&gt;</pre>
+
+    <div class="note">
+      <span class="nh">benefício</span>
+      <p>As mestras editam um <code class="inline">.md</code> por disciplina; o build valida o schema e
+      quebra cedo se algo estiver errado. Nada de procurar string em JSX.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ════════════════ 09 MICROINTERAÇÕES ════════════════ -->
+<section class="page">
+  <div class="sec">
+    <div class="sencodere-head"><span class="sencodere-num">09</span><h2>Microinterações</h2><span class="sencodere-tag">o "cyberpunk sutil"</span></div>
+
+    <table>
+      <thead><tr><th>efeito</th><th>técnica</th><th>onde</th><th>custo</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Boot sequence</strong></td><td>React + <code class="inline">setInterval</code>; ~1.1s; uma vez por sessão (<code class="inline">sessionStorage</code>)</td><td>topo das landings</td><td>ilha pequena</td></tr>
+        <tr><td><strong>Glitch hover</strong></td><td>CSS puro · <code class="inline">::before/::after</code> + <code class="inline">clip-path</code></td><td>títulos</td><td>0 JS</td></tr>
+        <tr><td><strong>Scanline</strong></td><td>CSS <code class="inline">repeating-linear-gradient</code> + <code class="inline">mix-blend</code></td><td>cards holo / dashboard</td><td>0 JS</td></tr>
+        <tr><td><strong>Cursor piscante</strong></td><td>CSS <code class="inline">@keyframes</code> steps(1)</td><td>terminais</td><td>0 JS</td></tr>
+        <tr><td><strong>Toggle tema</strong></td><td>React mínimo</td><td>nav</td><td>ilha idle</td></tr>
+      </tbody>
+    </table>
+
+    <div class="note amber">
+      <span class="nh">orçamento de animação</span>
+      <p>Nada de loop decorativo infinito em conteúdo (só o cursor, que é pequeno e semântico).
+      Tudo gated em <code class="inline">prefers-reduced-motion</code>. Boot roda <strong>uma vez por sessão</strong> — não a cada navegação — pra não irritar.</p>
+    </div>
+
+    <h3>Boot só uma vez · padrão</h3>
+<pre><span class="k">const</span> [booting, setBooting] = useState(
+  () =&gt; !sessionStorage.getItem(<span class="s">'encodere-booted'</span>)
+);
+<span class="k">function</span> <span class="f">finish</span>() {
+  sessionStorage.setItem(<span class="s">'encodere-booted'</span>, <span class="s">'1'</span>);
+  setBooting(<span class="k">false</span>);
+}</pre>
+
+    <p>O glitch e a scanline já estão prontos como CSS no protótipo (bloco <code class="inline">#encodere-keyframes</code> em <code class="inline">shared.jsx</code>) — basta migrar para <code class="inline">styles/global.css</code> e referenciar por classe.</p>
+  </div>
+</section>
+
+<!-- ════════════════ 10 DASHBOARD ════════════════ -->
+<section class="page">
+  <div class="sec">
+    <div class="sencodere-head"><span class="sencodere-num">10</span><h2>Dashboard &amp; auth</h2><span class="sencodere-tag">área da aluna</span></div>
+
+    <p>A rota <code class="inline">/aluna</code> é SSR e protegida. Render no servidor já com os dados da
+    aluna; React hidrata só as partes interativas (rituais que marcam, toggle de tema).</p>
+
+    <h3>Fluxo de sessão</h3>
+    <ol class="steps">
+      <li><b>Entrar:</b> aluna informa e-mail em <code class="inline">/aluna/entrar</code> → recebe magic-link (combina com o tom "processo por carta").</li>
+      <li><b>Callback:</b> link valida token, cria sessão (cookie <code class="inline">httpOnly</code>, Lucia/Auth.js).</li>
+      <li><b>Guarda:</b> <code class="inline">AlunaLayout.astro</code> checa sessão no topo; sem ela → <code class="inline">Astro.redirect('/aluna/entrar')</code>.</li>
+      <li><b>Dados:</b> progresso, próximo encontro, rituais e diário vêm de uma API/DB (v1 pode ser JSON por aluna + Turso/SQLite).</li>
+    </ol>
+
+<pre><span class="c">--- // src/pages/aluna/index.astro</span>
+<span class="k">import</span> AlunaLayout <span class="k">from</span> <span class="s">'../../layouts/AlunaLayout.astro'</span>;
+<span class="k">const</span> session = <span class="k">await</span> getSession(Astro.request);
+<span class="k">if</span> (!session) <span class="k">return</span> Astro.redirect(<span class="s">'/aluna/entrar'</span>);
+<span class="k">const</span> aluna = <span class="k">await</span> getPainel(session.userId);
+<span class="c">---</span>
+&lt;AlunaLayout aluna={aluna}&gt;
+  &lt;ProgressoCiclo client:load fase={aluna.fase} pct={aluna.pct} /&gt;
+  &lt;ProximoEncontro encontro={aluna.proximo} /&gt;
+  &lt;RituaisPendentes client:visible rituais={aluna.rituais} /&gt;
+  &lt;DiarioFeiticos commits={aluna.diario} /&gt;
+&lt;/AlunaLayout&gt;</pre>
+
+    <div class="note violet">
+      <span class="nh">modelo de dados mínimo (v1)</span>
+      <p><code class="inline">Aluna</code> { id, nome, turma, fase, pct } · <code class="inline">Ritual</code> { id, alunaId, titulo, prazo, feito } · <code class="inline">EntradaDiario</code> { id, alunaId, quando, texto, ref }. Turso/SQLite cobre de sobra o volume de uma turma.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ════════════════ 11 PERF/A11Y/SEO ════════════════ -->
+<section class="page">
+  <div class="sec">
+    <div class="sencodere-head"><span class="sencodere-num">11</span><h2>Performance · A11y · SEO</h2><span class="sencodere-tag">orçamentos</span></div>
+
+    <h3>Orçamentos de performance</h3>
+    <table>
+      <thead><tr><th>métrica</th><th>meta</th><th>como</th></tr></thead>
+      <tbody>
+        <tr><td>JS na landing</td><td><strong>&lt; 30 KB</strong> (gz)</td><td>só ilhas glitch/boot/toggle; resto é HTML</td></tr>
+        <tr><td>LCP</td><td>&lt; 1.5s</td><td>fonte self-host + preload; sem hero-JS bloqueante</td></tr>
+        <tr><td>CLS</td><td>&lt; 0.02</td><td>theme anti-flash; <code class="inline">font-display: swap</code> + métrica reservada</td></tr>
+        <tr><td>Lighthouse</td><td>≥ 98</td><td>orçamento no CI</td></tr>
+      </tbody>
+    </table>
+
+    <h3>Acessibilidade</h3>
+    <ul>
+      <li>Contraste AA em ambos os temas — violeta de marca só em texto grande/bold (ver §04).</li>
+      <li><code class="inline">prefers-reduced-motion</code> desliga glitch/scanline/boot.</li>
+      <li>Navegação por teclado em nav, filtros de trilha e dashboard; <code class="inline">focus-visible</code> com anel cyan.</li>
+      <li>HTML semântico: <code class="inline">&lt;nav&gt; &lt;main&gt; &lt;section&gt; &lt;article&gt;</code>; títulos hierárquicos reais (não só tamanho).</li>
+      <li><code class="inline">aria-label</code> nos toggles; estados do filtro anunciados.</li>
+    </ul>
+
+    <h3>SEO</h3>
+    <ul>
+      <li>Metatags por página + OpenGraph (gerar OG-image estática no estilo terminal).</li>
+      <li><code class="inline">sitemap</code> via <code class="inline">@astrojs/sitemap</code>; <code class="inline">robots.txt</code>.</li>
+      <li>JSON-LD <code class="inline">Course</code>/<code class="inline">EducationalOrganization</code> nas trilhas.</li>
+    </ul>
+  </div>
+</section>
+
+<!-- ════════════════ 12 DEPLOY ════════════════ -->
+<section class="page">
+  <div class="sec">
+    <div class="sencodere-head"><span class="sencodere-num">12</span><h2>Deploy &amp; ambientes</h2><span class="sencodere-tag">CI/CD</span></div>
+
+    <div class="kv">
+      <dt>host</dt><dd>Vercel (adapter serverless) — estático na edge, <code class="inline">/aluna/*</code> em função</dd>
+      <dt>preview</dt><dd>deploy por PR (preview URL automática)</dd>
+      <dt>produção</dt><dd>merge em <code class="inline">main</code> → build → deploy</dd>
+      <dt>secrets</dt><dd>chaves de e-mail (magic-link), DB (Turso), session secret</dd>
+      <dt>domínio</dt><dd>encodere.se + <code class="inline">www</code> → apex</dd>
+    </div>
+
+    <h3>Pipeline (CI)</h3>
+    <ol class="steps">
+      <li><b>Lint + typecheck:</b> <code class="inline">astro check</code> + ESLint/Prettier.</li>
+      <li><b>Build:</b> <code class="inline">astro build</code> — falha se schema de conteúdo inválido.</li>
+      <li><b>Lighthouse CI:</b> orçamentos de perf/a11y; bloqueia merge se regredir.</li>
+      <li><b>Deploy:</b> preview no PR, produção no merge.</li>
+    </ol>
+
+    <div class="note">
+      <span class="nh">.env.example</span>
+      <p><code class="inline">EMAIL_API_KEY</code> · <code class="inline">DATABASE_URL</code> · <code class="inline">AUTH_SECRET</code> · <code class="inline">PUBLIC_SITE_URL</code> — documentar todas; nunca commitar valores.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ════════════════ 13 ROADMAP ════════════════ -->
+<section class="page">
+  <div class="sec">
+    <div class="sencodere-head"><span class="sencodere-num">13</span><h2>Roadmap de implementação</h2><span class="sencodere-tag">fases</span></div>
+
+    <p>Ordenado pra entregar valor cedo: site público no ar primeiro, dashboard depois.</p>
+
+    <h3 style="color:var(--violet)">Fase 0 · fundação <span style="color:var(--ink-3);font-weight:400;font-size:11px">— ~2 dias</span></h3>
+    <ul>
+      <li>Scaffold Astro + React + Tailwind + TS strict.</li>
+      <li>Portar <code class="inline">tokens.css</code> e <code class="inline">global.css</code> (incl. keyframes do glitch/scanline).</li>
+      <li>BaseLayout + script anti-flash + self-host da fonte.</li>
+    </ul>
+
+    <h3 style="color:var(--violet)">Fase 1 · biblioteca de UI <span style="color:var(--ink-3);font-weight:400;font-size:11px">— ~3 dias</span></h3>
+    <ul>
+      <li>Primitivos: MonoButton, AsciiRule, Stat, TopNav, Footer, GlitchTitle, ThemeToggle, BootSequence.</li>
+      <li>Storybook/página de showcase pra validar claro+escuro.</li>
+    </ul>
+
+    <h3 style="color:var(--cyan)">Fase 2 · site público <span style="color:var(--ink-3);font-weight:400;font-size:11px">— ~4 dias</span></h3>
+    <ul>
+      <li>Content collections + migração do conteúdo hardcoded.</li>
+      <li><code class="inline">/</code> (manifesto-zine), <code class="inline">/trilhas</code> (+filtro), <code class="inline">/mestras</code>, <code class="inline">/manifesto</code>.</li>
+      <li>SEO, sitemap, OG-images. <strong>→ marco: site no ar.</strong></li>
+    </ul>
+
+    <h3 style="color:var(--cyan)">Fase 3 · matrícula <span style="color:var(--ink-3);font-weight:400;font-size:11px">— ~2 dias</span></h3>
+    <ul>
+      <li><code class="inline">/matricula</code> + função serverless de e-mail (carta).</li>
+    </ul>
+
+    <h3 style="color:var(--ink)">Fase 4 · área da aluna <span style="color:var(--ink-3);font-weight:400;font-size:11px">— ~5 dias</span></h3>
+    <ul>
+      <li>Auth (magic-link) + sessão + guarda de rota.</li>
+      <li>DB (Turso) + dashboard data-driven. <strong>→ marco: turma 04 usando.</strong></li>
+    </ul>
+
+    <h3 style="color:var(--ink)">Fase 5 · polimento <span style="color:var(--ink-3);font-weight:400;font-size:11px">— contínuo</span></h3>
+    <ul>
+      <li>A/B das landings, OG dinâmica, analytics, Lighthouse no CI.</li>
+    </ul>
+
+    <hr class="soft">
+    <div style="display:flex; justify-content:space-between; align-items:baseline; font-size:11px; color:var(--ink-3);">
+      <span>encodere.se · especificação técnica v1.0 · junho 2026</span>
+      <span class="mono-accent">$ npm run build &amp;&amp; deploy</span>
+    </div>
+  </div>
+</section>
+
+</body>
+</html>

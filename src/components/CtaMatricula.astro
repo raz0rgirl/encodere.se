@@ -1,0 +1,21 @@
+---
+import MonoButton from './ui/MonoButton.astro';
+import AsciiRule from './ui/AsciiRule.astro';
+import { Marquee } from '@/components/thegridcn/marquee';
+---
+
+
+<section class="encodere-section encodere-cta" aria-labelledby="cta-title">
+  <p class="encodere-section__eyebrow">processo por carta</p>
+  <h2 id="cta-title">pronta para iniciar o ritual?</h2>
+  <AsciiRule />
+  <Marquee children="matrícula por carta — sem formulários automáticos, cada candidata é lida com atenção." />
+  <p>
+  A matrícula na encodere.se segue um processo deliberado — como uma carta enviada
+  ao círculo. Sem formulários automáticos de conversão; cada candidata é lida com atenção.
+  </p>
+  <div class="encodere-cta__actions">
+    <MonoButton href="/matricula" variant="primary" size="lg">iniciar matrícula</MonoButton>
+    <MonoButton href="/manifesto" variant="ghost" size="lg">ler o manifesto</MonoButton>
+  </div>
+</section>

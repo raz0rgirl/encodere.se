@@ -1,0 +1,31 @@
+---
+import SiteLayout from '../../layouts/SiteLayout.astro';
+import GlitchTitle from '../../components/ui/GlitchTitle.astro';
+import AsciiRule from '../../components/ui/AsciiRule.astro';
+import MonoButton from '../../components/ui/MonoButton.astro';
+
+const title = 'Área da aluna';
+const description = 'Entrar na área logada — magic-link por e-mail.';
+---
+
+<SiteLayout title={title} description={description}>
+  <section class="encodere-section">
+    <p class="encodere-section__eyebrow">área da aluna</p>
+    <GlitchTitle text="entrar" as="h1" />
+    <AsciiRule />
+
+    <p>Informe seu e-mail cadastrado. Enviaremos um link mágico — como uma carta selada.</p>
+
+    <form class="encodere-form encodere-form--narrow" method="POST" action="/api/auth/magic-link">
+      <label>
+        <span>e-mail</span>
+        <input type="email" name="email" required autocomplete="email" />
+      </label>
+      <MonoButton type="submit" variant="cyan" size="lg">receber link</MonoButton>
+    </form>
+
+    <p class="encodere-form__note">
+      <em>Nota:</em> autenticação (Lucia/Auth.js) será implementada na Fase 4.
+    </p>
+  </section>
+</SiteLayout>

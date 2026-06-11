@@ -1,0 +1,34 @@
+---
+import { ThemeToggle } from './ui/ThemeToggle';
+
+const links = [
+  { href: '/', label: 'início' },
+  // { href: '/trilhas', label: 'trilhas' },
+  // { href: '/mestras', label: 'mestras' },
+  { href: '/manifesto', label: 'manifesto' },
+  // { href: '/matricula', label: 'matrícula' },
+  { href: '/blog', label: 'blog' },
+];
+---
+
+<header class="encodere-topnav">
+  <a href="/" class="encodere-topnav__brand">
+    <span class="encodere-topnav__brand-name">encodere</span><span class="encodere-topnav__brand-dot">.se</span>
+  </a>
+  <nav class="encodere-topnav__links" aria-label="Navegação principal">
+    {
+      links.map((link) => (
+        <a
+          href={link.href}
+          class:list={['encodere-topnav__link', { 'encodere-topnav__link--active': Astro.url.pathname === link.href }]}
+        >
+          {link.label}
+        </a>
+      ))
+    }
+  </nav>
+  <nav class="encodere-topnav__actions">
+    <a href="/aluna/entrar" class="encodere-topnav__aluna">área da aluna</a>
+    <ThemeToggle client:idle />
+  </nav>
+</header>

@@ -1,0 +1,36 @@
+---
+import SiteLayout from '../layouts/SiteLayout.astro';
+import GlitchTitle from '../components/ui/GlitchTitle.astro';
+import AsciiRule from '../components/ui/AsciiRule.astro';
+import { getCollection, render } from 'astro:content';
+
+const mestrasRaw = (await getCollection('mestras')).sort((a, b) => a.data.ordem - b.data.ordem);
+
+const title = 'Mestras';
+const description = 'Quem guia os rituais de aprendizado na encodere.se.';
+---
+
+<SiteLayout title={title} description={description}>
+  <section class="encodere-section">
+    <p class="encodere-section__eyebrow">o círculo</p>
+    <GlitchTitle text="mestras" as="h1" />
+    <p>Perfis de quem conduz disciplinas, revisa feitiços e acompanha cada turma.</p>
+    <AsciiRule />
+    <div class="encodere-mestras">
+      {
+        await Promise.all(
+          mestrasRaw.map(async (entry) => {
+            const { Content } = await render(entry);
+            return (
+              <article class="encodere-mestra encodere-scanline">
+                <h2 class="encodere-mestra__nome">{entry.data.nome}</h2>
+                <p class="encodere-mestra__titulo">{entry.data.titulo} · {entry.data.especialidade}</p>
+                <Content />
+              </article>
+            );
+          }),
+        )
+      }
+    </div>
+  </section>
+</SiteLayout>

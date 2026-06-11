@@ -1,0 +1,11 @@
+---
+interface Props {
+  char?: string;
+  repeat?: number;
+}
+
+const { char = '─', repeat = 48 } = Astro.props;
+const line = char.repeat(repeat);
+---
+
+<p class="encodere-ascii-rule" aria-hidden="true">{line}</p>

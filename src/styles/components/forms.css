@@ -1,0 +1,43 @@
+/* Forms */
+
+.encodere-form {
+  display: flex;
+  flex-direction: column;
+  gap: calc(var(--encodere-step) * 4);
+  margin-top: calc(var(--encodere-step) * 6);
+  max-width: 520px;
+}
+
+.encodere-form--narrow {
+  max-width: 400px;
+}
+
+.encodere-form label {
+  display: flex;
+  flex-direction: column;
+  gap: calc(var(--encodere-step) * 2);
+}
+
+.encodere-form label span {
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  color: var(--encodere-fg-3);
+}
+
+.encodere-form input,
+.encodere-form textarea {
+  font-family: var(--encodere-font);
+  font-size: 13px;
+  background: var(--encodere-bg-card);
+  border: 1px solid var(--encodere-rule);
+  color: var(--encodere-fg);
+  padding: calc(var(--encodere-step) * 3);
+  border-radius: var(--encodere-radius);
+}
+
+.encodere-form__note {
+  margin-top: calc(var(--encodere-step) * 6);
+  font-size: 12px;
+  color: var(--encodere-fg-3);
+}

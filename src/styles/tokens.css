@@ -1,0 +1,71 @@
+/* encodere.se design tokens — claro = base; escuro via [data-theme="dark"] */
+
+:root {
+  --encodere-bg: oklch(0.97 0.005 295);
+  --encodere-fg: oklch(0.18 0.02 295);
+  --encodere-fg-2: oklch(0.35 0.02 295);
+  --encodere-fg-3: oklch(0.55 0.02 295);
+  --encodere-violet: oklch(0.45 0.22 305);
+  --encodere-violet-bright: oklch(0.55 0.2 305);
+  --encodere-cyan: oklch(0.55 0.14 200);
+  --encodere-rule: oklch(0.88 0.01 295);
+  --encodere-rule-2: oklch(0.94 0.008 295);
+  --encodere-bg-elev: oklch(0.99 0.003 295);
+  --encodere-bg-card: oklch(1 0 295);
+  --encodere-step: 4px;
+  --encodere-font: 'JetBrains Mono Variable', 'JetBrains Mono', ui-monospace, monospace;
+  --encodere-radius: 0;
+  --encodere-shadow: 0 2px 8px color-mix(in oklch, var(--encodere-fg) 8%, transparent);
+
+  /* shadcn/ui + TheGrid CN bridge */
+  --background: var(--encodere-bg);
+  --foreground: var(--encodere-fg);
+  --card: var(--encodere-bg-card);
+  --card-foreground: var(--encodere-fg);
+  --popover: var(--encodere-bg-elev);
+  --popover-foreground: var(--encodere-fg);
+  --primary: var(--encodere-violet);
+  --primary-foreground: var(--encodere-bg);
+  --secondary: var(--encodere-rule-2);
+  --secondary-foreground: var(--encodere-fg);
+  --muted: var(--encodere-rule-2);
+  --muted-foreground: var(--encodere-fg-3);
+  --accent: var(--encodere-cyan);
+  --accent-foreground: var(--encodere-bg);
+  --destructive: oklch(0.55 0.25 30);
+  --border: var(--encodere-rule);
+  --input: var(--encodere-rule);
+  --ring: var(--encodere-cyan);
+  --radius: var(--encodere-radius);
+  --glow: var(--encodere-violet);
+  --glow-muted: var(--encodere-violet-bright);
+}
+
+[data-theme='dark'] {
+  --encodere-bg: oklch(0.13 0.02 295);
+  --encodere-fg: oklch(0.96 0.008 295);
+  --encodere-fg-2: oklch(0.75 0.015 295);
+  --encodere-fg-3: oklch(0.55 0.02 295);
+  --encodere-violet: oklch(0.72 0.21 305);
+  --encodere-violet-bright: oklch(0.8 0.18 305);
+  --encodere-cyan: oklch(0.84 0.14 195);
+  --encodere-rule: oklch(0.25 0.02 295);
+  --encodere-rule-2: oklch(0.18 0.02 295);
+  --encodere-bg-elev: oklch(0.16 0.02 295);
+  --encodere-bg-card: oklch(0.15 0.02 295);
+}
+
+@theme inline {
+  --color-encodere-bg: var(--encodere-bg);
+  --color-encodere-fg: var(--encodere-fg);
+  --color-encodere-fg-2: var(--encodere-fg-2);
+  --color-encodere-fg-3: var(--encodere-fg-3);
+  --color-encodere-violet: var(--encodere-violet);
+  --color-encodere-violet-bright: var(--encodere-violet-bright);
+  --color-encodere-cyan: var(--encodere-cyan);
+  --color-encodere-rule: var(--encodere-rule);
+  --color-encodere-rule-2: var(--encodere-rule-2);
+  --color-encodere-bg-elev: var(--encodere-bg-elev);
+  --color-encodere-bg-card: var(--encodere-bg-card);
+  --font-ec: var(--encodere-font);
+}

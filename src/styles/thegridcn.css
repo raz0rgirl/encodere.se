@@ -1,0 +1,49 @@
+/* TheGrid CN glow — usa tokens --encodere-* via bridge em tokens.css */
+
+:root {
+  --tron-glow-spread-sm: 4px;
+  --tron-glow-spread-md: 10px;
+  --tron-glow-spread-lg: 20px;
+  --tron-transition: 0.25s ease-out;
+  --tron-border-glow:
+    0 0 var(--tron-glow-spread-sm) var(--glow),
+    0 0 var(--tron-glow-spread-md) color-mix(in oklch, var(--glow-muted) 50%, transparent);
+  --tron-hover-glow:
+    0 0 var(--tron-glow-spread-md) var(--glow),
+    0 0 var(--tron-glow-spread-lg) color-mix(in oklch, var(--glow-muted) 60%, transparent);
+}
+
+[data-slot='button'] {
+  box-shadow: var(--tron-border-glow);
+  transition: box-shadow var(--tron-transition);
+}
+
+[data-slot='button']:hover:not(:disabled) {
+  box-shadow: var(--tron-hover-glow);
+}
+
+[data-slot='card'],
+[data-slot='tron-data-card'] {
+  box-shadow: var(--tron-border-glow);
+  transition: box-shadow var(--tron-transition);
+}
+
+[data-slot='card']:hover,
+[data-slot='tron-data-card']:hover {
+  box-shadow: var(--tron-hover-glow);
+}
+
+[data-slot='input']:focus,
+[data-slot='textarea']:focus {
+  box-shadow: var(--tron-hover-glow);
+}
+
+[data-slot='alert'],
+[data-slot='tron-alert'] {
+  box-shadow: var(--tron-border-glow);
+}
+
+[data-slot='dialog-content'],
+[data-slot='sheet-content'] {
+  box-shadow: var(--tron-hover-glow);
+}

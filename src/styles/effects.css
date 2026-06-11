@@ -1,0 +1,82 @@
+/* Microinterações — cyberpunk sutil */
+
+@keyframes encodere-blink {
+  0%, 49% { opacity: 1; }
+  50%, 100% { opacity: 0; }
+}
+
+@keyframes encodere-glitch-1 {
+  0% { clip-path: inset(20% 0 60% 0); transform: translate(-2px, 0); }
+  20% { clip-path: inset(60% 0 10% 0); transform: translate(2px, 0); }
+  40% { clip-path: inset(40% 0 40% 0); transform: translate(-1px, 0); }
+  60% { clip-path: inset(80% 0 5% 0); transform: translate(1px, 0); }
+  80% { clip-path: inset(10% 0 70% 0); transform: translate(-2px, 0); }
+  100% { clip-path: inset(50% 0 30% 0); transform: translate(0, 0); }
+}
+
+@keyframes encodere-glitch-2 {
+  0% { clip-path: inset(10% 0 80% 0); transform: translate(2px, 0); }
+  25% { clip-path: inset(70% 0 15% 0); transform: translate(-2px, 0); }
+  50% { clip-path: inset(30% 0 50% 0); transform: translate(1px, 0); }
+  75% { clip-path: inset(55% 0 25% 0); transform: translate(-1px, 0); }
+  100% { clip-path: inset(15% 0 75% 0); transform: translate(0, 0); }
+}
+
+.encodere-blink {
+  animation: encodere-blink 1s steps(1) infinite;
+}
+
+.encodere-scanline {
+  position: relative;
+}
+
+.encodere-scanline::after {
+  content: '';
+  pointer-events: none;
+  position: absolute;
+  inset: 0;
+  background: repeating-linear-gradient(
+    0deg,
+    transparent,
+    transparent 2px,
+    color-mix(in oklch, var(--encodere-cyan) 4%, transparent) 2px,
+    color-mix(in oklch, var(--encodere-cyan) 4%, transparent) 4px
+  );
+  mix-blend-mode: overlay;
+}
+
+.encodere-glitch {
+  position: relative;
+  display: inline-block;
+}
+
+.encodere-glitch::before,
+.encodere-glitch::after {
+  content: attr(data-text);
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  pointer-events: none;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .encodere-glitch:hover::before {
+    opacity: 0.8;
+    color: var(--encodere-cyan);
+    animation: encodere-glitch-1 0.3s steps(2) infinite;
+  }
+
+  .encodere-glitch:hover::after {
+    opacity: 0.8;
+    color: var(--encodere-violet);
+    animation: encodere-glitch-2 0.3s steps(2) infinite reverse;
+  }
+}
+
+:focus-visible {
+  outline: 2px solid var(--encodere-cyan);
+  outline-offset: 2px;
+}

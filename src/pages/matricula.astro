@@ -1,0 +1,42 @@
+---
+import SiteLayout from '../layouts/SiteLayout.astro';
+import GlitchTitle from '../components/ui/GlitchTitle.astro';
+import AsciiRule from '../components/ui/AsciiRule.astro';
+import MonoButton from '../components/ui/MonoButton.astro';
+
+const title = 'Matrícula';
+const description = 'Processo de matrícula por carta — encodere.se';
+---
+
+<SiteLayout title={title} description={description}>
+  <section class="encodere-section">
+    <p class="encodere-section__eyebrow">processo por carta</p>
+    <GlitchTitle text="matrícula" as="h1" />
+    <AsciiRule />
+
+    <p>
+      Preencha o formulário abaixo. Sua carta será lida pela equipe — resposta em até
+      7 dias lunares (aproximadamente uma semana).
+    </p>
+
+    <form class="encodere-form" method="POST" action="/api/matricula">
+      <label>
+        <span>nome</span>
+        <input type="text" name="nome" required autocomplete="name" />
+      </label>
+      <label>
+        <span>e-mail</span>
+        <input type="email" name="email" required autocomplete="email" />
+      </label>
+      <label>
+        <span>carta de intenção</span>
+        <textarea name="carta" rows="8" required placeholder="Por que você quer entrar no círculo?"></textarea>
+      </label>
+      <MonoButton type="submit" variant="primary" size="lg">enviar carta</MonoButton>
+    </form>
+
+    <p class="encodere-form__note">
+      <em>Nota:</em> o endpoint de envio será ativado na Fase 3 (serverless + e-mail).
+    </p>
+  </section>
+</SiteLayout>

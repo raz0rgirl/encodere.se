@@ -1,0 +1,41 @@
+---
+import SiteLayout from '../layouts/SiteLayout.astro';
+import GlitchTitle from '../components/ui/GlitchTitle.astro';
+import AsciiRule from '../components/ui/AsciiRule.astro';
+
+const title = 'Manifesto';
+const description = 'Tecnomancia, cybermagia e o método encodere.se.';
+---
+
+<SiteLayout title={title} description={description}>
+  <article class="encodere-section">
+    <p class="encodere-section__eyebrow">por que existimos</p>
+    <GlitchTitle text="manifesto" as="h1" />
+    <AsciiRule />
+
+    <h2>tecnomancia</h2>
+    <p>
+      Tecnomancia é a arte de criar com tecnologia de forma consciente. Não é sobre
+      decorar sintaxe — é sobre entender intenção, consequência e cuidado com quem
+      usa o que você constrói.
+    </p>
+
+    <h2>cybermagia</h2>
+    <p>
+      Cybermagia é o vocabulário da escola: rituais de commit, grimórios de versão,
+      ciclos lunares de entrega. Metáfora que organiza o aprendizado sem perder o rigor técnico.
+    </p>
+
+    <h2>criar com intenção</h2>
+    <p>
+      Rejeitamos o bootcamp que promete transformação em 12 semanas sem contexto.
+      A encodere.se é lenta de propósito — cada turma é pequena, cada aluna é lida.
+    </p>
+
+    <h2>o que não somos</h2>
+    <p>
+      Não somos LMS. Não somos agência de empregabilidade. Não somos conteúdo
+      gravado infinito. Somos um círculo de aprendizado com mestras, rituais e entrega real.
+    </p>
+  </article>
+</SiteLayout>

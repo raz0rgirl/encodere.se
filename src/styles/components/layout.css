@@ -1,0 +1,101 @@
+/* Layout — topnav, footer, theme toggle */
+
+.encodere-topnav {
+  display: flex;
+  align-items: center;
+  gap: calc(var(--encodere-step) * 4);
+  padding: calc(var(--encodere-step) * 4) calc(var(--encodere-step) * 6);
+  border-bottom: 1px solid var(--encodere-rule);
+  background: var(--encodere-bg-elev);
+  flex-wrap: wrap;
+}
+
+.encodere-topnav__brand {
+  text-decoration: none;
+  border: none;
+  font-weight: 800;
+  font-size: 14px;
+  letter-spacing: -0.5px;
+  color: var(--encodere-fg);
+}
+
+.encodere-topnav__brand-dot {
+  color: var(--encodere-violet);
+}
+
+.encodere-topnav__links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: calc(var(--encodere-step) * 3);
+  flex: 1;
+}
+
+.encodere-topnav__link {
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  color: var(--encodere-fg-2);
+  text-decoration: none;
+  border: none;
+  padding: calc(var(--encodere-step) * 1) 0;
+}
+
+.encodere-topnav__link:hover,
+.encodere-topnav__link--active {
+  color: var(--encodere-cyan);
+}
+
+.encodere-topnav__actions {
+  display: flex;
+  align-items: center;
+  gap: calc(var(--encodere-step) * 3);
+  margin-left: auto;
+}
+
+.encodere-topnav__aluna {
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: var(--encodere-violet-bright);
+  text-decoration: none;
+  border: 1px solid var(--encodere-rule);
+  padding: calc(var(--encodere-step) * 2) calc(var(--encodere-step) * 3);
+}
+
+.encodere-theme-toggle {
+  font-family: var(--encodere-font);
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  background: transparent;
+  border: 1px solid var(--encodere-rule);
+  color: var(--encodere-fg-2);
+  padding: calc(var(--encodere-step) * 2) calc(var(--encodere-step) * 3);
+  cursor: pointer;
+}
+
+.encodere-theme-toggle:hover {
+  color: var(--encodere-cyan);
+  border-color: var(--encodere-cyan);
+}
+
+.encodere-footer {
+  border-top: 1px solid var(--encodere-rule);
+  padding: calc(var(--encodere-step) * 8) calc(var(--encodere-step) * 6);
+  text-align: center;
+  background: var(--encodere-bg-elev);
+}
+
+.encodere-footer__copy {
+  margin: 0 0 calc(var(--encodere-step) * 2);
+  font-size: 12px;
+  color: var(--encodere-fg-2);
+}
+
+.encodere-footer__tagline {
+  margin: 0;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  color: var(--encodere-fg-3);
+}

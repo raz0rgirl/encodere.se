@@ -1,0 +1,29 @@
+---
+import BaseHead from '../components/BaseHead.astro';
+
+interface Props {
+  title: string;
+  description: string;
+}
+
+const { title, description } = Astro.props;
+import { ThemeProvider } from "@/components/theme";
+
+---
+
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <script is:inline>
+      const k = 'encodere-theme';
+      const saved = localStorage.getItem(k);
+      const sys = matchMedia('(prefers-color-scheme: dark)').matches;
+      const theme = saved ?? (sys ? 'dark' : 'light');
+      document.documentElement.dataset.theme = theme;
+    </script>
+    <BaseHead title={title} description={description} />
+  </head>
+  <body>
+    <slot />
+  </body>
+</html>

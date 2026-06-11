@@ -1,0 +1,49 @@
+---
+import { getCollection } from 'astro:content';
+import SiteLayout from '../../layouts/SiteLayout.astro';
+import GlitchTitle from '../../components/ui/GlitchTitle.astro';
+import AsciiRule from '../../components/ui/AsciiRule.astro';
+import FormattedDate from '../../components/FormattedDate.astro';
+import { Tag } from '@/components/thegridcn/tag';
+import { SITE_DESCRIPTION, SITE_TITLE } from '../../consts';
+
+const posts = (await getCollection('blog')).sort(
+  (a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf(),
+);
+---
+
+<SiteLayout title={`Blog · ${SITE_TITLE}`} description={SITE_DESCRIPTION}>
+  <section class="encodere-section">
+    <p class="encodere-section__eyebrow">grimório</p>
+    <GlitchTitle text="blog" as="h1" />
+    <AsciiRule />
+
+    <ul class="encodere-blog-index__list">
+      {
+        posts.map((post, index) => (
+          <li class:list={['encodere-blog-index__item', { 'encodere-blog-index__item--featured': index === 0 }]}>
+            <article>
+              <a href={`/blog/${post.id}/`} class="encodere-blog-index__link">
+                <header>
+                  <h2 class="encodere-blog-index__title">{post.data.title}</h2>
+                  {
+                    post.data.tags && post.data.tags.length > 0 && (
+                      <div class="encodere-blog-index__tags">
+                        {post.data.tags.map((tag) => (
+                          <Tag>{tag}</Tag>
+                        ))}
+                      </div>
+                    )
+                  }
+                </header>
+                <p class="encodere-blog-index__date">
+                  <FormattedDate date={post.data.pubDate} />
+                </p>
+              </a>
+            </article>
+          </li>
+        ))
+      }
+    </ul>
+  </section>
+</SiteLayout>

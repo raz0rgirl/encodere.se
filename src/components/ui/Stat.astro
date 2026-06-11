@@ -1,0 +1,13 @@
+---
+interface Props {
+  value: string;
+  label: string;
+}
+
+const { value, label } = Astro.props;
+---
+
+<div class="encodere-stat">
+  <span class="encodere-stat__value">{value}</span>
+  <span class="encodere-stat__label">{label}</span>
+</div>
