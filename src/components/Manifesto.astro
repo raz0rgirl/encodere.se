@@ -1,0 +1,34 @@
+---
+import AsciiRule from './ui/AsciiRule.astro';
+
+interface Fase {
+  id: string;
+  nome: string;
+  descricao: string;
+}
+
+interface Props {
+  fases: Fase[];
+}
+
+const { fases } = Astro.props;
+---
+
+<section class="encodere-section encodere-roadmap" aria-labelledby="roadmap-title">
+  <p class="encodere-section__eyebrow">ciclos lunares</p>
+  <h2 id="roadmap-title">cinco fases da trilha</h2>
+  <AsciiRule />
+  <ol class="encodere-roadmap__list">
+    {
+      fases.map((fase) => (
+        <li class="encodere-roadmap__item encodere-scanline">
+          <span class="encodere-roadmap__phase">{fase.id}</span>
+          <div>
+            <h3 class="encodere-roadmap__name">{fase.nome}</h3>
+            <p class="encodere-roadmap__desc">{fase.descricao}</p>
+          </div>
+        </li>
+      ))
+    }
+  </ol>
+</section>

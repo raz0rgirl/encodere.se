@@ -340,9 +340,12 @@ img {
   margin-bottom: calc(var(--encodere-step) * 4);
 }
 
-/* Hero landing */
+
+/* Hero
+ landing */
 .encodere-hero {
   margin-bottom: calc(var(--encodere-step) * 12);
+ 
 }
 
 .encodere-hero__lede {

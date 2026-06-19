@@ -1,0 +1,157 @@
+Starting Nmap 7.94SVN ( https://nmap.org ) at 2026-06-11 08:18 -03
+Nmap scan report for 172.30.0.15
+Host is up (0.22s latency).
+Not shown: 996 closed tcp ports (reset)
+PORT      STATE SERVICE
+22/tcp    open  ssh
+80/tcp    open  http
+111/tcp   open  rpcbind
+10000/tcp open  snet-sensor-mgmt
+No exact OS matches for host (If you know what OS is running on it, see https://nmap.org/submit/ ).
+TCP/IP fingerprint:
+OS:SCAN(V=7.94SVN%E=4%D=6/11%OT=22%CT=1%CU=33660%PV=Y%DS=2%DC=I%G=Y%TM=6A2A
+OS:9A36%P=x86_64-pc-linux-gnu)SEQ(SP=101%GCD=1%ISR=107%TI=Z%CI=I%TS=8)SEQ(S
+OS:P=107%GCD=1%ISR=10B%TI=Z%CI=I%TS=8)OPS(O1=M515ST11NW4%O2=M515ST11NW4%O3=
+OS:M515NNT11NW4%O4=M515ST11NW4%O5=M515ST11NW4%O6=M515ST11)WIN(W1=3890%W2=38
+OS:90%W3=3890%W4=3890%W5=3890%W6=3890)ECN(R=Y%DF=Y%T=40%W=3908%O=M515NNSNW4
+OS:%CC=Y%Q=)T1(R=Y%DF=Y%T=40%S=O%A=S+%F=AS%RD=0%Q=)T2(R=N)T3(R=N)T4(R=Y%DF=
+OS:Y%T=40%W=0%S=A%A=Z%F=R%O=%RD=0%Q=)T5(R=Y%DF=Y%T=40%W=0%S=Z%A=S+%F=AR%O=%
+OS:RD=0%Q=)T6(R=Y%DF=Y%T=40%W=0%S=A%A=Z%F=R%O=%RD=0%Q=)T7(R=Y%DF=Y%T=40%W=0
+OS:%S=Z%A=S+%F=AR%O=%RD=0%Q=)U1(R=Y%DF=N%T=40%IPL=164%UN=0%RIPL=G%RID=G%RIP
+OS:CK=G%RUCK=G%RUD=G)IE(R=N)
+
+Network Distance: 2 hops
+
+Nmap scan report for 172.30.0.20
+Host is up (0.22s latency).
+Not shown: 997 closed tcp ports (reset)
+PORT     STATE SERVICE
+22/tcp   open  ssh
+80/tcp   open  http
+3306/tcp open  mysql
+No exact OS matches for host (If you know what OS is running on it, see https://nmap.org/submit/ ).
+TCP/IP fingerprint:
+OS:SCAN(V=7.94SVN%E=4%D=6/11%OT=22%CT=1%CU=44430%PV=Y%DS=2%DC=I%G=Y%TM=6A2A
+OS:9A36%P=x86_64-pc-linux-gnu)SEQ(SP=101%GCD=1%ISR=104%TI=Z%CI=Z%II=I%TS=8)
+OS:SEQ(SP=101%GCD=1%ISR=107%TI=Z%CI=Z%II=I%TS=8)OPS(O1=M515ST11NW5%O2=M515S
+OS:T11NW5%O3=M515NNT11NW5%O4=M515ST11NW5%O5=M515ST11NW5%O6=M515ST11)WIN(W1=
+OS:16A0%W2=16A0%W3=16A0%W4=16A0%W5=16A0%W6=16A0)ECN(R=Y%DF=Y%T=40%W=16D0%O=
+OS:M515NNSNW5%CC=Y%Q=)T1(R=Y%DF=Y%T=40%S=O%A=S+%F=AS%RD=0%Q=)T2(R=N)T3(R=N)
+OS:T4(R=Y%DF=Y%T=40%W=0%S=A%A=Z%F=R%O=%RD=0%Q=)T5(R=Y%DF=Y%T=40%W=0%S=Z%A=S
+OS:+%F=AR%O=%RD=0%Q=)T6(R=Y%DF=Y%T=40%W=0%S=A%A=Z%F=R%O=%RD=0%Q=)T7(R=Y%DF=
+OS:Y%T=40%W=0%S=Z%A=S+%F=AR%O=%RD=0%Q=)U1(R=Y%DF=N%T=40%IPL=164%UN=0%RIPL=G
+OS:%RID=G%RIPCK=G%RUCK=G%RUD=G)IE(R=Y%DFI=N%T=40%CD=S)
+
+Network Distance: 2 hops
+
+Nmap scan report for 172.30.0.30
+Host is up (0.22s latency).
+Not shown: 997 closed tcp ports (reset)
+PORT    STATE SERVICE
+22/tcp  open  ssh
+80/tcp  open  http
+111/tcp open  rpcbind
+Aggressive OS guesses: Linux 3.2 - 3.16 (96%), ASUS RT-N56U WAP (Linux 3.4) (95%), Linux 3.2 (95%), Linux 3.2 - 3.10 (95%), Olivetti 65C-9 printer (95%), Linux 3.16 (95%), Linux 3.5 (94%), XBMCbuntu Frodo v12.2 (Linux 3.X) (94%), Linux 2.6.32 - 3.10 (94%), Linux 2.6.32 - 3.9 (94%)
+No exact OS matches for host (test conditions non-ideal).
+Network Distance: 2 hops
+
+Nmap scan report for 172.30.0.40
+Host is up (0.22s latency).
+Not shown: 998 closed tcp ports (reset)
+PORT   STATE SERVICE
+22/tcp open  ssh
+80/tcp open  http
+Aggressive OS guesses: Linux 2.6.32 (96%), MikroTik RouterOS 6.0 (96%), AXIS 210A or 211 Network Camera (Linux 2.6.17) (95%), Linux 3.1 (95%), Linux 3.2 (95%), Linux 2.6.31 - 2.6.32 (94%), Linux 2.6.22 (94%), Canon imageRUNNER ADVANCE C3320i or C3325 copier (93%), ASUS RT-N56U WAP (Linux 3.4) (93%), Linux 3.16 (93%)
+No exact OS matches for host (test conditions non-ideal).
+Network Distance: 2 hops
+
+Nmap scan report for 172.30.0.103
+Host is up (0.22s latency).
+Not shown: 996 filtered tcp ports (no-response)
+PORT     STATE SERVICE
+135/tcp  open  msrpc
+139/tcp  open  netbios-ssn
+445/tcp  open  microsoft-ds
+8080/tcp open  http-proxy
+Warning: OSScan results may be unreliable because we could not find at least 1 open and 1 closed port
+Device type: general purpose
+Running (JUST GUESSING): Microsoft Windows 2012 (86%)
+OS CPE: cpe:/o:microsoft:windows_server_2012
+Aggressive OS guesses: Microsoft Windows Server 2012 (86%), Microsoft Windows Server 2012 or Windows Server 2012 R2 (86%), Microsoft Windows Server 2012 R2 (86%)
+No exact OS matches for host (test conditions non-ideal).
+
+Nmap scan report for 172.30.0.106
+Host is up (0.22s latency).
+Not shown: 998 closed tcp ports (reset)
+PORT    STATE SERVICE
+80/tcp  open  http
+111/tcp open  rpcbind
+Aggressive OS guesses: Linux 3.12 (96%), Linux 3.13 (96%), Linux 3.16 (96%), Linux 3.2 - 4.9 (96%), Linux 3.8 - 3.11 (96%), Linux 4.8 (96%), Linux 4.4 (95%), Linux 4.9 (95%), Linux 3.18 (95%), Linux 4.2 (95%)
+No exact OS matches for host (test conditions non-ideal).
+Network Distance: 2 hops
+
+Nmap scan report for 172.30.0.125
+Host is up (0.22s latency).
+Not shown: 998 closed tcp ports (reset)
+PORT   STATE SERVICE
+22/tcp open  ssh
+80/tcp open  http
+Aggressive OS guesses: Linux 3.12 (96%), Linux 3.13 (96%), Linux 3.16 (96%), Linux 3.2 - 4.9 (96%), Linux 4.8 (96%), Linux 4.4 (95%), Linux 4.9 (95%), Linux 3.18 (95%), Linux 3.8 - 3.11 (95%), Linux 4.2 (95%)
+No exact OS matches for host (test conditions non-ideal).
+Network Distance: 2 hops
+
+Nmap scan report for 172.30.0.126
+Host is up (0.22s latency).
+Not shown: 999 closed tcp ports (reset)
+PORT   STATE SERVICE
+80/tcp open  http
+Aggressive OS guesses: Linux 3.12 (96%), Linux 3.13 (96%), Linux 3.16 (96%), Linux 3.18 (96%), Linux 3.2 - 4.9 (96%), Linux 3.8 - 3.11 (96%), Linux 4.8 (96%), Linux 4.4 (95%), Linux 4.9 (95%), Linux 4.2 (95%)
+No exact OS matches for host (test conditions non-ideal).
+Network Distance: 2 hops
+
+Nmap scan report for 172.30.0.128
+Host is up (0.22s latency).
+Not shown: 996 closed tcp ports (reset)
+PORT   STATE SERVICE
+22/tcp open  ssh
+25/tcp open  smtp
+53/tcp open  domain
+80/tcp open  http
+Aggressive OS guesses: Linux 3.18 (96%), Linux 3.2 - 4.9 (96%), Linux 3.16 (95%), ASUS RT-N56U WAP (Linux 3.4) (95%), Linux 3.1 (93%), Linux 3.2 (93%), Linux 3.10 - 4.11 (93%), Linux 3.13 (93%), DD-WRT v3.0 (Linux 4.4.2) (93%), Linux 4.10 (93%)
+No exact OS matches for host (test conditions non-ideal).
+Network Distance: 2 hops
+
+Nmap scan report for 172.30.0.130
+Host is up (0.22s latency).
+Not shown: 998 closed tcp ports (reset)
+PORT   STATE SERVICE
+22/tcp open  ssh
+80/tcp open  http
+Aggressive OS guesses: Linux 3.2 - 4.9 (96%), Linux 3.16 (95%), Linux 3.18 (95%), ASUS RT-N56U WAP (Linux 3.4) (95%), Linux 3.1 (93%), Linux 3.2 (93%), Linux 3.10 - 4.11 (93%), Oracle VM Server 3.4.2 (Linux 4.1) (93%), Linux 3.12 (93%), Linux 3.13 (93%)
+No exact OS matches for host (test conditions non-ideal).
+Network Distance: 2 hops
+
+Nmap scan report for 172.30.0.200
+Host is up (0.22s latency).
+Not shown: 998 closed tcp ports (reset)
+PORT   STATE SERVICE
+22/tcp open  ssh
+80/tcp open  http
+No exact OS matches for host (If you know what OS is running on it, see https://nmap.org/submit/ ).
+TCP/IP fingerprint:
+OS:SCAN(V=7.94SVN%E=4%D=6/11%OT=22%CT=1%CU=37182%PV=Y%DS=2%DC=I%G=Y%TM=6A2A
+OS:9A36%P=x86_64-pc-linux-gnu)SEQ(SP=102%GCD=1%ISR=109%TI=Z%CI=I%II=I%TS=8)
+OS:SEQ(SP=102%GCD=1%ISR=10A%TI=Z%CI=I%TS=8)SEQ(SP=102%GCD=1%ISR=10A%TI=Z%CI
+OS:=I%II=I%TS=8)OPS(O1=M515ST11NW3%O2=M515ST11NW3%O3=M515NNT11NW3%O4=M515ST
+OS:11NW3%O5=M515ST11NW3%O6=M515ST11)WIN(W1=3890%W2=3890%W3=3890%W4=3890%W5=
+OS:3890%W6=3890)ECN(R=Y%DF=Y%T=40%W=3908%O=M515NNSNW3%CC=Y%Q=)T1(R=Y%DF=Y%T
+OS:=40%S=O%A=S+%F=AS%RD=0%Q=)T2(R=N)T3(R=N)T4(R=Y%DF=Y%T=40%W=0%S=A%A=Z%F=R
+OS:%O=%RD=0%Q=)T5(R=Y%DF=Y%T=40%W=0%S=Z%A=S+%F=AR%O=%RD=0%Q=)T6(R=Y%DF=Y%T=
+OS:40%W=0%S=A%A=Z%F=R%O=%RD=0%Q=)T7(R=Y%DF=Y%T=40%W=0%S=Z%A=S+%F=AR%O=%RD=0
+OS:%Q=)U1(R=Y%DF=N%T=40%IPL=164%UN=0%RIPL=G%RID=G%RIPCK=G%RUCK=G%RUD=G)IE(R
+OS:=Y%DFI=N%T=40%CD=S)
+
+Network Distance: 2 hops
+
+OS detection performed. Please report any incorrect results at https://nmap.org/submit/ .
+Nmap done: 256 IP addresses (11 hosts up) scanned in 197.72 seconds

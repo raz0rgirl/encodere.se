@@ -1,33 +1,56 @@
 ---
-import SiteLayout from '../layouts/SiteLayout.astro';
-import GlitchTitle from '../components/ui/GlitchTitle.astro';
-import AsciiRule from '../components/ui/AsciiRule.astro';
-import Stat from '../components/ui/Stat.astro';
-import Roadmap from '../components/Roadmap.astro';
-import Depoimentos from '../components/Depoimentos.astro';
-import CtaMatricula from '../components/CtaMatricula.astro';
-import { LandingBoot } from '../components/ui/LandingBoot';
-import { getCollection } from 'astro:content';
-import { SITE_DESCRIPTION, SITE_TITLE } from '../consts';
-import fasesData from '../content/fases.json';
+import SiteLayout from "../layouts/SiteLayout.astro";
+import GlitchTitle from "../components/ui/GlitchTitle.astro";
+import AsciiRule from "../components/ui/AsciiRule.astro";
+import Stat from "../components/ui/Stat.astro";
+import Roadmap from "../components/Roadmap.astro";
+import Depoimentos from "../components/Depoimentos.astro";
+import CtaMatricula from "../components/CtaMatricula.astro";
+import { getCollection } from "astro:content";
+import { SITE_DESCRIPTION, SITE_TITLE } from "../consts";
+import fasesData from "../content/fases.json";
+import * as styles from "../styles/index.css";
 
 const fases = fasesData.fases;
 
-const depoimentosRaw = await getCollection('depoimentos');
+const depoimentosRaw = await getCollection("depoimentos");
 const depoimentos = depoimentosRaw.map((d) => d.data);
 ---
 
 <SiteLayout title={SITE_TITLE} description={SITE_DESCRIPTION}>
-  <LandingBoot client:load />
+  <!-- <LandingBoot client:load /> -->
 
   <section class="encodere-hero encodere-section">
-    <p class="encodere-section__eyebrow">escola de tecnomancia</p>
-    <GlitchTitle text="criar com intenção." as="h1" />
-    <p class="encodere-hero__lede">
-      A encodere.se une tecnologia atual com metodologia deliberada — cybermagia como
-      prática, não como estética vazia. Programar é ritual; o código é grimório.
+    <p class="encodere-section__eyebrow">criar com intenção</p>
+    <GlitchTitle text="Encodere.se" as="h1" />
+    <p class="encodere-hero__lede">o terminal é o primeiro altar da tecnomante.</p>
+    <p>
+      Para quem não quer ser apenas usuário, mas arquiteto da própria realidade.
     </p>
   </section>
+
+  <article class="encodere-section">
+    <p class="encodere-section__eyebrow">por que existimos</p>
+    <GlitchTitle text="manifesto" as="h1" />
+    <AsciiRule />
+
+    <h2>Tecnomancia</h2>
+    <p>
+      Tecnomancer é aquele que alcança o véu entre o código e a realidade, e
+      aprende a manipular ambos com intenção.
+    </p>
+
+    <h2>Encantamentos</h2>
+    <p>
+      Encantamentos é a prática de usar a tecnologia para criar experiências
+      transformadoras, tanto para quem cria quanto para quem usa.
+    </p>
+
+    <h2>Cybermagia</h2>
+    <p>
+      Cybermagia é a arte de utilizar tecnologia, símbolos e informação para produzir transformações na consciência e na realidade.
+      </p>
+  </article>
 
   <Roadmap fases={fases} />
   <!-- <Depoimentos depoimentos={depoimentos} /> -->
