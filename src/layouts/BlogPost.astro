@@ -3,37 +3,157 @@ import { Image } from 'astro:assets';
 import type { CollectionEntry } from 'astro:content';
 import SiteLayout from './SiteLayout.astro';
 import FormattedDate from '../components/FormattedDate.astro';
+import { BreadcrumbNav } from '@/components/thegridcn/breadcrumb-nav';
+import { BlogPostCard } from '@/components/thegridcn/blog-post-card';
+import { BlogTableOfContents } from '@/components/thegridcn/blog-table-of-contents';
+import { BlogScrollTop } from '@/components/thegridcn/blog-scroll-top';
+import { Tag } from '@/components/thegridcn/tag';
 
-type Props = CollectionEntry<'blog'>['data'];
+type PostData = CollectionEntry<'blog'>['data'];
 
-const { title, description, pubDate, updatedDate, heroImage } = Astro.props;
+interface RelatedPost {
+  id: string;
+  title: string;
+  description: string;
+  pubDate: Date;
+}
+
+interface Props extends PostData {
+  relatedPosts?: RelatedPost[];
+}
+
+const {
+  title,
+  description,
+  pubDate,
+  updatedDate,
+  heroImage,
+  tags,
+  relatedPosts = [],
+} = Astro.props;
+
+function formatDate(date: Date) {
+  return date.toLocaleDateString('pt-BR', {
+    year: 'numeric',
+    month: 'short',
+    day: 'numeric',
+  });
+}
 ---
 
 <SiteLayout title={title} description={description}>
   <article class="encodere-blog-post">
-    {
-      heroImage && (
-        <header class="encodere-blog-post__hero">
-          <Image width={1020} height={510} src={heroImage} alt="" />
+    <BreadcrumbNav
+      items={[
+        { label: 'início', href: '/' },
+        { label: 'blog', href: '/blog/' },
+        { label: title, active: true },
+      ]}
+    />
+
+    <div class="encodere-blog-post__layout">
+      <div class="encodere-blog-post__main">
+        <header class="encodere-blog-post__header">
+          {
+            tags && tags.length > 0 && (
+              <div class="encodere-blog-post__tags">
+                {tags.map((tag) => (
+                  <Tag variant="outline" size="sm">{tag}</Tag>
+                ))}
+              </div>
+            )
+          }
+
+          <h1 class="encodere-blog-post__title">{title}</h1>
+          <p class="encodere-blog-post__subtitle">{description}</p>
+
+          <div class="encodere-blog-post__meta">
+            <time class="encodere-blog-post__date" datetime={pubDate.toISOString()}>
+              <FormattedDate date={pubDate} />
+            </time>
+            {
+              updatedDate && (
+                <span class="encodere-blog-post__updated">
+                  · atualizado em <FormattedDate date={updatedDate} />
+                </span>
+              )
+            }
+          </div>
         </header>
-      )
-    }
-    <div class="encodere-blog-post__header">
-      <div class="encodere-blog-post__date">
-        <FormattedDate date={pubDate} />
+
         {
-          updatedDate && (
-            <div class="encodere-blog-post__updated">
-              atualizado em <FormattedDate date={updatedDate} />
+          heroImage && (
+            <div class="encodere-blog-post__hero">
+              <Image width={1020} height={438} src={heroImage} alt="" />
             </div>
           )
         }
+
+        <div class="encodere-blog-post__content">
+          <slot />
+        </div>
+
+        {
+          relatedPosts.length > 0 && (
+            <footer class="encodere-blog-post__related">
+              <div class="encodere-blog-index__divider" aria-hidden="true">
+                <span>transmissões relacionadas</span>
+                <div class="encodere-blog-index__divider-line" />
+              </div>
+
+              <ul class="encodere-blog-post__related-grid">
+                {
+                  relatedPosts.map((post) => (
+                    <li>
+                      <BlogPostCard
+                        title={post.title}
+                        excerpt={post.description}
+                        date={formatDate(post.pubDate)}
+                        href={`/blog/${post.id}/`}
+                      />
+                    </li>
+                  ))
+                }
+              </ul>
+            </footer>
+          )
+        }
       </div>
-      <h1>{title}</h1>
-      <hr />
+
+      <aside class="encodere-blog-post__sidebar">
+        <BlogTableOfContents client:load />
+
+        {
+          relatedPosts.length > 0 && (
+            <div class="encodere-tron-panel encodere-blog-post__sidebar-related">
+              <div class="encodere-tron-panel__scanlines" aria-hidden="true" />
+              <div class="encodere-tron-panel__content">
+                <p class="encodere-blog-post__sidebar-label">transmissões relacionadas</p>
+                <ul class="encodere-blog-post__sidebar-list">
+                  {
+                    relatedPosts.map((post) => (
+                      <li>
+                        <a href={`/blog/${post.id}/`} class="encodere-blog-post__sidebar-link">
+                          <span class="encodere-blog-post__sidebar-date">{formatDate(post.pubDate)}</span>
+                          <span class="encodere-blog-post__sidebar-title">{post.title}</span>
+                        </a>
+                      </li>
+                    ))
+                  }
+                </ul>
+              </div>
+              <span class="encodere-tron-panel__corner encodere-tron-panel__corner--tl" aria-hidden="true" />
+              <span class="encodere-tron-panel__corner encodere-tron-panel__corner--tr" aria-hidden="true" />
+              <span class="encodere-tron-panel__corner encodere-tron-panel__corner--bl" aria-hidden="true" />
+              <span class="encodere-tron-panel__corner encodere-tron-panel__corner--br" aria-hidden="true" />
+            </div>
+          )
+        }
+
+        <a href="/blog/" class="encodere-blog-post__back-link">← voltar ao grimório</a>
+      </aside>
     </div>
-    <div class="encodere-blog-post__content">
-      <slot />
-    </div>
+
+    <BlogScrollTop client:load />
   </article>
 </SiteLayout>

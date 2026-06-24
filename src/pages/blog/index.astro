@@ -3,47 +3,102 @@ import { getCollection } from 'astro:content';
 import SiteLayout from '../../layouts/SiteLayout.astro';
 import GlitchTitle from '../../components/ui/GlitchTitle.astro';
 import AsciiRule from '../../components/ui/AsciiRule.astro';
-import FormattedDate from '../../components/FormattedDate.astro';
-import { Tag } from '@/components/thegridcn/tag';
+import GrimoireAtrium from '../../components/grimoire/GrimoireAtrium.astro';
+import GrimoireRoom from '../../components/grimoire/GrimoireRoom.astro';
+import { BreadcrumbNav } from '@/components/thegridcn/breadcrumb-nav';
+import { resolveSigil, roomLabel } from '@/lib/grimoire/sigils';
 import { SITE_DESCRIPTION, SITE_TITLE } from '../../consts';
 
 const posts = (await getCollection('blog')).sort(
   (a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf(),
 );
+
+const [featured, ...rest] = posts;
+
+function formatDate(date: Date) {
+  return date.toLocaleDateString('pt-BR', {
+    year: 'numeric',
+    month: 'short',
+    day: 'numeric',
+  });
+}
 ---
 
-<SiteLayout title={`Blog · ${SITE_TITLE}`} description={SITE_DESCRIPTION}>
-  <section class="encodere-section">
-    <p class="encodere-section__eyebrow">grimório</p>
-    <GlitchTitle text="blog" as="h1" />
-    <AsciiRule />
+<SiteLayout title={`Grimório · ${SITE_TITLE}`} description={SITE_DESCRIPTION} wide>
+  <section class="encodere-section encodere-blog-index encodere-blog-index--grimoire">
+    <BreadcrumbNav
+      items={[
+        { label: 'início', href: '/' },
+        { label: 'grimório', active: true },
+      ]}
+    />
 
-    <ul class="encodere-blog-index__list">
+    <header class="encodere-blog-index__header">
+      <p class="encodere-section__eyebrow">casa do círculo</p>
+      <GlitchTitle text="grimório" as="h1" />
+      <p class="encodere-blog-index__lede">
+        cada transmissão mora numa sala — entre lareira, janelas e sigilos. este é o lar das
+        experiências do círculo.
+      </p>
+      <AsciiRule />
+    </header>
+
+    <GrimoireAtrium roomCount={posts.length}>
       {
-        posts.map((post, index) => (
-          <li class:list={['encodere-blog-index__item', { 'encodere-blog-index__item--featured': index === 0 }]}>
-            <article>
-              <a href={`/blog/${post.id}/`} class="encodere-blog-index__link">
-                <header>
-                  <h2 class="encodere-blog-index__title">{post.data.title}</h2>
-                  {
-                    post.data.tags && post.data.tags.length > 0 && (
-                      <div class="encodere-blog-index__tags">
-                        {post.data.tags.map((tag) => (
-                          <Tag>{tag}</Tag>
-                        ))}
-                      </div>
-                    )
-                  }
-                </header>
-                <p class="encodere-blog-index__date">
-                  <FormattedDate date={post.data.pubDate} />
-                </p>
-              </a>
-            </article>
-          </li>
-        ))
+        featured && (
+          <GrimoireRoom
+            href={`/blog/${featured.id}/`}
+            title={featured.data.title}
+            description={featured.data.description}
+            dateLabel={formatDate(featured.data.pubDate)}
+            dateTime={featured.data.pubDate.toISOString()}
+            sigil="hearth"
+            roomLabel={roomLabel(0)}
+            heroImage={featured.data.heroImage}
+            tags={featured.data.tags}
+            featured
+          />
+        )
       }
-    </ul>
+
+      {
+        rest.length > 0 && (
+          <>
+            <div class="grimoire-atrium__divider" aria-hidden="true">
+              <svg viewBox="0 0 24 24" width="18" height="18">
+                <path
+                  d="M12 3v4M8 7h8M6 11h12v10H6V11Z"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="1.2"
+                  stroke-linejoin="round"></path>
+              </svg>
+              <span>corredor das transmissões</span>
+              <div class="grimoire-atrium__divider-line" />
+            </div>
+
+            <ul class="grimoire-atrium__rooms">
+              {
+                rest.map((post, index) => (
+                  <li>
+                    <GrimoireRoom
+                      href={`/blog/${post.id}/`}
+                      title={post.data.title}
+                      description={post.data.description}
+                      dateLabel={formatDate(post.data.pubDate)}
+                      dateTime={post.data.pubDate.toISOString()}
+                      sigil={resolveSigil(post.data.tags, post.id)}
+                      roomLabel={roomLabel(index + 1)}
+                      heroImage={post.data.heroImage}
+                      tags={post.data.tags}
+                    />
+                  </li>
+                ))
+              }
+            </ul>
+          </>
+        )
+      }
+    </GrimoireAtrium>
   </section>
 </SiteLayout>

@@ -1,0 +1,217 @@
+---
+import SiteLayout from '../../layouts/SiteLayout.astro';
+import GlitchTitle from '../../components/ui/GlitchTitle.astro';
+import AsciiRule from '../../components/ui/AsciiRule.astro';
+import { getKiwifyBruxaUrl } from '@/lib/bruxa-desenvolvedora/kiwify';
+
+const title = 'Bruxa Desenvolvedora — Mentoria';
+const description =
+  'Da tutorial hell à bruxa desenvolvedora: mentoria para mulheres e pessoas em transição que querem codar com intenção, identidade e método.';
+
+const kiwifyUrl = getKiwifyBruxaUrl();
+---
+
+<SiteLayout title={title} description={description} wide>
+  <section class="encodere-section bd-hero">
+    <p class="encodere-section__eyebrow">mentoria · encodere.se</p>
+    <GlitchTitle text="bruxa desenvolvedora" as="h1" />
+    <AsciiRule />
+    <p class="bd-hero__lede">
+      Você sabe abrir o terminal. Já fez um CRUD. Talvez até tenha deployado algo.
+      Mas ainda sente que <mark>falta algo</mark> — e ninguém te contou o quê.
+    </p>
+    <p>
+      Esta página é a história de quem aprendeu sozinha, quase desistiu, e descobriu que
+      programar também é ritual: intenção, prática e uma mentora que já atravessou o véu.
+    </p>
+    <div class="encodere-cta__actions" style="margin-top: var(--space-6);">
+      <a class="btn btn--ghost btn--lg" href="#historia">ler a história</a>
+      <a
+        class="btn btn--primary btn--lg"
+        href={kiwifyUrl}
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        entrar na mentoria
+      </a>
+    </div>
+  </section>
+
+  <section class="encodere-section" id="historia">
+    <p class="encodere-section__eyebrow">a jornada</p>
+    <h2>de impostora a bruxa</h2>
+    <p>
+      Não é um curso de sintaxe. É um arco — capítulo por capítulo — até você se ver
+      do outro lado do véu, codando com autonomia e identidade.
+    </p>
+
+    <div class="bd-chapters">
+      <article class="bd-chapter">
+        <span class="bd-chapter__num">capítulo i · o despertar</span>
+        <h3>você aprendeu sozinha. e achou que era só você.</h3>
+        <p>
+          Começou com um tutorial no YouTube às 23h. Depois veio o bootcamp acelerado,
+          a lista infinita de certificações, o LinkedIn cheio de gente que "virou dev
+          em 3 meses". Você copiou código, colou, funcionou — e mesmo assim a sensação
+          persistiu: <em>eu não sou dev de verdade</em>.
+        </p>
+        <p>
+          Isso tem nome. Chama-se tutorial hell. Não é falta de inteligência — é falta
+          de mapa. Ninguém te mostrou que aprender a codar e aprender a <em>ser</em>
+          desenvolvedora são rituais diferentes.
+        </p>
+      </article>
+
+      <article class="bd-chapter">
+        <span class="bd-chapter__num">capítulo ii · o véu</span>
+        <h3>o que ninguém te conta sobre a indústria</h3>
+        <p>
+          Existe um véu entre quem consome tecnologia e quem a cria. Do lado de cá,
+          há regras não escritas: como pedir ajuda sem parecer burra, como negociar
+          salário, como lidar com ambientes que ainda tratam mulher dev como exceção.
+        </p>
+        <p>
+          Você não precisa quebrar o véu sozinha. Precisa de alguém que já passou por
+          ele — que sabe onde estão os atalhos e, mais importante, onde estão as
+          armadilhas.
+        </p>
+      </article>
+
+      <article class="bd-chapter">
+        <span class="bd-chapter__num">capítulo iii · a bruxa desenvolvedora</span>
+        <h3>tecnomancia não é decorar — é criar com intenção</h3>
+        <p>
+          Na encodere.se, chamamos isso de tecnomancia: usar código, símbolos e
+          informação para transformar realidade — a sua e a de quem usa o que você
+          constrói. A Bruxa Desenvolvedora não é um título de ego. É um estado: quando
+          você para de pedir permissão e começa a <em>encantar</em> sistemas.
+        </p>
+        <p>
+          A mentoria Bruxa Desenvolvedora nasceu para quem quer esse estado — com
+          acompanhamento real, não gravações genéricas. Uma mentora que codou em
+          produção, que errou em público, que sabe a diferença entre stack hype e
+          stack que paga conta.
+        </p>
+      </article>
+
+      <article class="bd-chapter">
+        <span class="bd-chapter__num">capítulo iv · o ritual</span>
+        <h3>o que acontece dentro da mentoria</h3>
+        <p>
+          Não existe fórmula mágica. Existe método: encontros ao vivo, revisão de
+          código com olhar de quem já contratou e já foi contratada, trilhas adaptadas
+          ao seu momento (júnior estagnada, transição de carreira, dev que quer
+          especializar).
+        </p>
+        <p>
+          Você traz seus bloqueios — impostora, síndrome do código perfeito, medo de
+          entrevista técnica. A mentoria devolve clareza, próximos passos concretos e
+          uma rede de pessoas que falam a mesma língua: terminal, café e magia.
+        </p>
+      </article>
+
+      <article class="bd-chapter">
+        <span class="bd-chapter__num">capítulo v · a transformação</span>
+        <h3>do outro lado do véu</h3>
+        <p>
+          Imagina daqui a seis meses: você abre o editor sem aquele aperto no peito.
+          Sabe explicar suas decisões técnicas. Tem um portfólio que conta <em>sua</em>
+          história, não a do tutorial que você copiou. Participa de code review sem
+          medo. Talvez até mentore alguém.
+        </p>
+        <p>
+          Isso não é fantasia — é o que acontece quando você para de estudar sozinha
+          e entra num círculo. A mentoria Bruxa Desenvolvedora é o convite para esse
+          círculo.
+        </p>
+      </article>
+    </div>
+  </section>
+
+  <section class="encodere-section" id="inclui">
+    <p class="encodere-section__eyebrow">o que você recebe</p>
+    <h2>dentro da mentoria</h2>
+    <div class="bd-includes">
+      <div class="bd-include">
+        <span class="bd-include__icon" aria-hidden="true">◈</span>
+        <h3>encontros ao vivo</h3>
+        <p>
+          Sessões em grupo e momentos individuais para destravar dúvidas, revisar
+          código e definir rumo.
+        </p>
+      </div>
+      <div class="bd-include">
+        <span class="bd-include__icon" aria-hidden="true">◇</span>
+        <h3>trilha personalizada</h3>
+        <p>
+          Plano adaptado ao seu nível e objetivo — emprego CLT, freelance, produto
+          próprio ou especialização.
+        </p>
+      </div>
+      <div class="bd-include">
+        <span class="bd-include__icon" aria-hidden="true">✦</span>
+        <h3>comunidade círculo</h3>
+        <p>
+          Rede de bruxas desenvolvedoras: troca de vagas, indicações, accountability
+          sem julgamento.
+        </p>
+      </div>
+      <div class="bd-include">
+        <span class="bd-include__icon" aria-hidden="true">☽</span>
+        <h3>mindset & carreira</h3>
+        <p>
+          Negociação, entrevistas, impostora, burnout — o que os cursos de código
+          nunca ensinam.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <section class="encodere-section" id="para-quem">
+    <p class="encodere-section__eyebrow">filtro honesto</p>
+    <h2>para quem é (e para quem não é)</h2>
+    <div class="bd-audience">
+      <div class="bd-audience__col bd-audience__col--yes">
+        <h3>✓ é para você se</h3>
+        <ul>
+          <li>já escreveu código, mas se sente estagnada ou impostora</li>
+          <li>está em transição de carreira e quer mentoria, não só conteúdo</li>
+          <li>valoriza ambiente acolhedor e direto, sem papo de guru</li>
+          <li>está disposta a praticar entre encontros — magia exige ritual</li>
+        </ul>
+      </div>
+      <div class="bd-audience__col bd-audience__col--no">
+        <h3>✗ não é para você se</h3>
+        <ul>
+          <li>busca certificado rápido sem prática</li>
+          <li>quer que alguém escreva o código por você</li>
+          <li>não tem tempo mínimo para dedicar ao processo</li>
+          <li>procura curso gravado massivo com milhares de aulas</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section class="encodere-section bd-cta-final" id="comprar">
+    <p class="encodere-section__eyebrow">próximo passo</p>
+    <h2>sua história continua do outro lado do véu</h2>
+    <p>
+      Você leu até aqui porque algo ressoou. A mentoria Bruxa Desenvolvedora é o
+      próximo capítulo — com mentora, método e um círculo que te espera.
+    </p>
+    <div class="bd-cta-final__actions">
+      <a
+        class="btn btn--primary btn--lg"
+        href={kiwifyUrl}
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        garantir minha vaga na mentoria
+      </a>
+      <a class="btn btn--ghost btn--lg" href="#historia">reler a história</a>
+    </div>
+    <p class="bd-cta-final__note">
+      Pagamento seguro via Kiwify · acesso imediato após confirmação
+    </p>
+  </section>
+</SiteLayout>

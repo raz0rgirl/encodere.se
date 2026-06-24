@@ -1,5 +1,50 @@
-/* Microinterações — cyberpunk sutil */
+/* GRIMÓRIO // XEQUE — efeitos & texturas */
 
+/* Scanlines CRT (overlay global) */
+body::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 50;
+  background: repeating-linear-gradient(
+    to bottom,
+    rgba(0, 0, 0, 0) 0 2px,
+    rgba(0, 0, 0, 0.2) 2px 3px
+  );
+  mix-blend-mode: multiply;
+  opacity: 0.45;
+}
+
+::selection {
+  background: rgba(255, 0, 170, 0.3);
+  color: #fff;
+}
+
+:focus-visible {
+  outline: 2px solid var(--gold);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation: none !important;
+    transition: none !important;
+  }
+
+  body::after {
+    display: none;
+  }
+}
+
+/* Microinterações — cyberpunk sutil */
 @keyframes encodere-blink {
   0%, 49% { opacity: 1; }
   50%, 100% { opacity: 0; }
@@ -39,8 +84,8 @@
     0deg,
     transparent,
     transparent 2px,
-    color-mix(in oklch, var(--encodere-cyan) 4%, transparent) 2px,
-    color-mix(in oklch, var(--encodere-cyan) 4%, transparent) 4px
+    rgba(0, 255, 240, 0.04) 2px,
+    rgba(0, 255, 240, 0.04) 4px
   );
   mix-blend-mode: overlay;
 }
@@ -65,18 +110,13 @@
 @media (prefers-reduced-motion: no-preference) {
   .encodere-glitch:hover::before {
     opacity: 0.8;
-    color: var(--encodere-cyan);
+    color: var(--cyan);
     animation: encodere-glitch-1 0.3s steps(2) infinite;
   }
 
   .encodere-glitch:hover::after {
     opacity: 0.8;
-    color: var(--encodere-violet);
+    color: var(--magenta);
     animation: encodere-glitch-2 0.3s steps(2) infinite reverse;
   }
-}
-
-:focus-visible {
-  outline: 2px solid var(--encodere-cyan);
-  outline-offset: 2px;
 }

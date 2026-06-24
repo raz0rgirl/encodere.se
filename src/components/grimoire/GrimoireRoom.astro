@@ -1,0 +1,99 @@
+---
+import { Image } from 'astro:assets';
+import type { ImageMetadata } from 'astro';
+import GrimoireSigil from './GrimoireSigil.astro';
+import type { SigilKind } from '@/lib/grimoire/sigils';
+
+interface Props {
+  href: string;
+  title: string;
+  description: string;
+  dateLabel: string;
+  dateTime: string;
+  sigil: SigilKind;
+  roomLabel: string;
+  heroImage?: ImageMetadata;
+  tags?: string[];
+  featured?: boolean;
+}
+
+const {
+  href,
+  title,
+  description,
+  dateLabel,
+  dateTime,
+  sigil,
+  roomLabel,
+  heroImage,
+  tags,
+  featured = false,
+} = Astro.props;
+---
+
+<a
+  href={href}
+  class:list={['grimoire-room', { 'grimoire-room--featured': featured }]}
+>
+  <div class="grimoire-room__frame" aria-hidden="true">
+    <span class="grimoire-room__corner grimoire-room__corner--tl" />
+    <span class="grimoire-room__corner grimoire-room__corner--tr" />
+    <span class="grimoire-room__corner grimoire-room__corner--bl" />
+    <span class="grimoire-room__corner grimoire-room__corner--br" />
+  </div>
+
+  <div class="grimoire-room__header">
+    <div class="grimoire-room__sigil-wrap">
+      <GrimoireSigil kind={sigil} />
+    </div>
+    <div class="grimoire-room__meta">
+      <span class="grimoire-room__label">
+        {featured ? 'lareira · sala principal' : `sala ${roomLabel}`}
+      </span>
+      <time class="grimoire-room__date" datetime={dateTime}>{dateLabel}</time>
+    </div>
+  </div>
+
+  {
+    heroImage && (
+      <div class="grimoire-room__window">
+        <Image
+          src={heroImage}
+          alt=""
+          width={featured ? 820 : 400}
+          height={featured ? 280 : 160}
+          class="grimoire-room__image"
+        />
+        <span class="grimoire-room__window-glow" aria-hidden="true" />
+      </div>
+    )
+  }
+
+  <div class="grimoire-room__body">
+    {
+      tags && tags.length > 0 && (
+        <ul class="grimoire-room__tags" aria-label="tags">
+          {tags.slice(0, 3).map((tag) => (
+            <li>{tag}</li>
+          ))}
+        </ul>
+      )
+    }
+
+    <h2 class="grimoire-room__title">{title}</h2>
+    <p class="grimoire-room__excerpt">{description}</p>
+
+    <span class="grimoire-room__enter">
+      <svg viewBox="0 0 16 16" width="14" height="14" aria-hidden="true">
+        <path
+          d="M3 8h8M8 5l3 3-3 3"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="1.2"
+          stroke-linecap="round"
+          stroke-linejoin="round"></path>
+      </svg>
+      entrar na sala
+    </span>
+  </div>
+</a>

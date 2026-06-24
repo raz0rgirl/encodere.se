@@ -1,0 +1,42 @@
+/* Fluid layout primitives — auto-fill grids, container-aware columns */
+
+.encodere-fluid-grid {
+  display: grid;
+  grid-template-columns: repeat(
+    auto-fill,
+    minmax(min(100%, var(--encodere-col-min)), 1fr)
+  );
+  gap: var(--space-4);
+}
+
+.encodere-fluid-grid--sm {
+  --encodere-col-min: var(--encodere-col-min-sm);
+}
+
+.encodere-fluid-grid--card {
+  --encodere-col-min: var(--encodere-col-min-card);
+}
+
+.encodere-fluid-grid--loose {
+  gap: var(--space-6);
+}
+
+.encodere-fluid-sidebar {
+  container-type: inline-size;
+  container-name: fluid-sidebar;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: clamp(var(--space-6), 4vw, var(--space-10));
+  align-items: start;
+}
+
+@container fluid-sidebar (min-width: 48rem) {
+  .encodere-fluid-sidebar {
+    grid-template-columns: minmax(0, 1fr) var(--encodere-sidebar);
+  }
+
+  .encodere-fluid-sidebar__aside {
+    position: sticky;
+    top: 5rem;
+  }
+}

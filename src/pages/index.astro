@@ -20,14 +20,16 @@ const depoimentos = depoimentosRaw.map((d) => d.data);
 <SiteLayout title={SITE_TITLE} description={SITE_DESCRIPTION}>
   <!-- <LandingBoot client:load /> -->
 
-  <section class="encodere-hero encodere-section">
-    <p class="encodere-section__eyebrow">criar com intenção</p>
-    <GlitchTitle text="Encodere.se" as="h1" />
-    <p class="encodere-hero__lede">o terminal é o primeiro altar da tecnomante.</p>
-    <p>
-      Para quem não quer ser apenas usuário, mas arquiteto da própria realidade.
-    </p>
-  </section>
+  <header slot="hero" class="encodere-hero__header">
+    <div class="encodere-content">
+      <p class="encodere-section__eyebrow">criar com intenção</p>
+      <GlitchTitle text="Encodere.se" as="h1" />
+      <p class="encodere-hero__lede">o terminal é o primeiro <mark>altar</mark> da tecnomante.</p>
+      <p>
+        Para quem não quer ser apenas usuário, mas arquiteto da própria realidade.
+      </p>
+    </div>
+  </header>
 
   <article class="encodere-section">
     <p class="encodere-section__eyebrow">por que existimos</p>
@@ -52,7 +54,7 @@ const depoimentos = depoimentosRaw.map((d) => d.data);
       </p>
   </article>
 
-  <Roadmap fases={fases} />
+   <!-- <Roadmap fases={fases} />-->
   <!-- <Depoimentos depoimentos={depoimentos} /> -->
   <CtaMatricula />
 </SiteLayout>

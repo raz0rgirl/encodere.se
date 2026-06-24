@@ -1,0 +1,42 @@
+---
+import { PRICING_TIERS } from '@/lib/micro-saas/pricing';
+import { buildPricingWhatsAppMessage, buildWhatsAppUrl } from '@/lib/micro-saas/whatsapp';
+import WhatsAppButton from './WhatsAppButton.astro';
+---
+
+<section class="encodere-section ms-pricing" id="precos" aria-labelledby="pricing-title">
+  <p class="encodere-section__eyebrow">investimento</p>
+  <h2 id="pricing-title">pacotes de consultoria</h2>
+  <p class="ms-pricing__lede">
+    Preços transparentes para micro SaaS. Sem surpresa, sem contrato de enterprise de seis dígitos.
+  </p>
+
+  <div class="ms-pricing__grid">
+    {
+      PRICING_TIERS.map((tier) => (
+        <article
+          class:list={['ms-pricing__card', { 'ms-pricing__card--highlight': tier.highlight }]}
+        >
+          {tier.highlight && <span class="ms-pricing__badge">mais pedido</span>}
+          <h3>{tier.name}</h3>
+          <p class="ms-pricing__price">
+            {tier.price}
+            {tier.priceNote && <span class="ms-pricing__price-note">{tier.priceNote}</span>}
+          </p>
+          <p class="ms-pricing__desc">{tier.description}</p>
+          <ul class="ms-pricing__list">
+            {tier.deliverables.map((item) => (
+              <li>{item}</li>
+            ))}
+          </ul>
+          <WhatsAppButton
+            href={buildWhatsAppUrl(buildPricingWhatsAppMessage(tier.id))}
+            variant={tier.highlight ? 'primary' : 'ghost'}
+          >
+            quero {tier.name.toLowerCase()}
+          </WhatsAppButton>
+        </article>
+      ))
+    }
+  </div>
+</section>

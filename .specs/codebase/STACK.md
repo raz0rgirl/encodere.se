@@ -13,7 +13,7 @@
 
 - UI: React 19 + `@astrojs/react` (islands)
 - Styling: Tailwind CSS 4 via `@tailwindcss/vite`
-- Components: shadcn/ui (`components/ui/`), TheGrid CN (`components/thegridcn/`)
+- Components: shadcn/ui (`components/ui/`), TheGrid CN (`components/thegridcn/`) — ver [THEGRIDCN.md](./THEGRIDCN.md)
 - Font (alvo): JetBrains Mono via `@fontsource-variable/jetbrains-mono`
 
 ## Content

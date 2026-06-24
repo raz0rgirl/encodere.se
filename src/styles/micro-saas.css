@@ -1,0 +1,570 @@
+/* Micro SaaS landing — /micro-saas */
+
+.ms-hero {
+  --encodere-hero-bg-image: url('/images/hero-bg.png');
+}
+
+.ms-hero__lede {
+  font-size: var(--text-md);
+  max-width: 560px;
+  line-height: var(--leading-relaxed);
+  letter-spacing: var(--tracking-normal);
+}
+
+.ms-hero mark {
+  background-color: transparent;
+  color: var(--encodere-cyan);
+  font-weight: 700;
+}
+
+.ms-stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: var(--space-4);
+  margin: var(--space-8) 0;
+}
+
+.ms-stat {
+  padding: var(--space-5);
+  border: 1px solid var(--encodere-rule);
+  background: var(--encodere-bg-card);
+}
+
+.ms-stat__value {
+  display: block;
+  font-size: var(--text-2xl);
+  font-weight: 800;
+  color: var(--encodere-violet);
+  letter-spacing: var(--tracking-tight);
+  line-height: var(--leading-tight);
+  margin-bottom: var(--space-2);
+}
+
+.ms-stat__label {
+  font-size: var(--text-xs);
+  color: var(--encodere-fg-2);
+  margin: 0;
+}
+
+.ms-steps {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  margin-top: var(--space-6);
+}
+
+.ms-step {
+  display: grid;
+  grid-template-columns: 40px 1fr;
+  gap: var(--space-4);
+  padding: var(--space-4);
+  border: 1px solid var(--encodere-rule);
+  background: var(--encodere-bg-card);
+}
+
+.ms-step__num {
+  font-size: var(--text-xl);
+  font-weight: 800;
+  color: var(--encodere-cyan);
+  line-height: var(--leading-none);
+}
+
+.ms-step h3 {
+  margin: 0 0 var(--space-2);
+  font-size: var(--text-base);
+}
+
+.ms-step p {
+  margin: 0;
+  font-size: var(--text-sm);
+  color: var(--encodere-fg-2);
+}
+
+/* Quiz */
+
+.ms-quiz {
+  margin-top: var(--space-6);
+  padding: var(--space-6);
+  border: 1px solid var(--encodere-rule);
+  background: var(--encodere-bg-card);
+}
+
+.ms-quiz__progress {
+  height: 4px;
+  background: var(--encodere-rule-2);
+  margin-bottom: var(--space-6);
+}
+
+.ms-quiz__progress-bar {
+  height: 100%;
+  background: var(--encodere-cyan);
+  transition: width 0.3s ease;
+}
+
+.ms-quiz__step-meta {
+  font-size: var(--text-2xs);
+  text-transform: uppercase;
+  letter-spacing: var(--tracking-wider);
+  color: var(--encodere-fg-3);
+  margin: 0 0 var(--space-4);
+}
+
+.ms-quiz__fieldset {
+  border: none;
+  margin: 0;
+  padding: 0;
+}
+
+.ms-quiz__question {
+  font-size: var(--text-lg);
+  font-weight: 700;
+  margin-bottom: var(--space-3);
+  padding: 0;
+}
+
+.ms-quiz__helper {
+  font-size: var(--text-sm);
+  color: var(--encodere-fg-3);
+  margin: 0 0 var(--space-4);
+}
+
+.ms-quiz__input {
+  width: 100%;
+  font-family: var(--encodere-font);
+  font-size: var(--text-sm);
+  background: var(--encodere-bg);
+  border: 1px solid var(--encodere-rule);
+  color: var(--encodere-fg);
+  padding: var(--space-3);
+  border-radius: var(--encodere-radius);
+}
+
+.ms-quiz__options {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.ms-quiz__option {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-3);
+  padding: var(--space-3);
+  border: 1px solid var(--encodere-rule);
+  cursor: pointer;
+  transition: border-color 0.15s ease;
+}
+
+.ms-quiz__option:hover {
+  border-color: var(--encodere-cyan);
+}
+
+.ms-quiz__option input {
+  margin-top: 2px;
+  accent-color: var(--encodere-violet);
+}
+
+.ms-quiz__option span {
+  font-size: var(--text-sm);
+  line-height: var(--leading-snug);
+}
+
+.ms-quiz__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-3);
+  margin-top: var(--space-6);
+}
+
+.ms-quiz__result-title {
+  font-size: var(--text-xl);
+  margin-bottom: var(--space-6);
+}
+
+.ms-quiz__result-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: var(--space-4);
+  margin-bottom: var(--space-6);
+}
+
+.ms-quiz__result-card {
+  padding: var(--space-4);
+  border: 1px solid var(--encodere-rule);
+  background: var(--encodere-bg);
+}
+
+.ms-quiz__result-label {
+  display: block;
+  font-size: var(--text-2xs);
+  text-transform: uppercase;
+  letter-spacing: var(--tracking-wider);
+  color: var(--encodere-fg-3);
+  margin-bottom: var(--space-2);
+}
+
+.ms-quiz__result-value {
+  display: block;
+  font-size: var(--text-lg);
+  margin-bottom: var(--space-2);
+}
+
+.ms-quiz__result-price {
+  font-size: var(--text-sm);
+  color: var(--encodere-fg-2);
+}
+
+.ms-quiz__risk--baixo { color: oklch(0.55 0.15 145); }
+.ms-quiz__risk--médio { color: oklch(0.65 0.15 85); }
+.ms-quiz__risk--alto { color: oklch(0.6 0.18 45); }
+.ms-quiz__risk--crítico { color: oklch(0.55 0.22 25); }
+
+.ms-quiz__risk-badge {
+  display: inline-block;
+  font-size: var(--text-2xs);
+  text-transform: uppercase;
+  letter-spacing: var(--tracking-wider);
+  padding: var(--space-1) var(--space-2);
+  border: 1px solid currentColor;
+}
+
+.ms-quiz__summary {
+  margin: 0 0 var(--space-4);
+  padding-left: var(--space-5);
+  font-size: var(--text-sm);
+  color: var(--encodere-fg-2);
+}
+
+.ms-quiz__summary li {
+  margin-bottom: var(--space-1);
+}
+
+.ms-quiz__disclaimer {
+  font-size: var(--text-xs);
+  color: var(--encodere-fg-3);
+  font-style: italic;
+  margin-bottom: var(--space-6);
+}
+
+.ms-quiz__whatsapp {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+/* Pricing */
+
+.ms-pricing__lede {
+  color: var(--encodere-fg-2);
+  max-width: 52ch;
+}
+
+.ms-pricing__grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: var(--space-4);
+  margin-top: var(--space-8);
+}
+
+.ms-pricing__card {
+  position: relative;
+  padding: var(--space-6);
+  border: 1px solid var(--encodere-rule);
+  background: var(--encodere-bg-card);
+  display: flex;
+  flex-direction: column;
+}
+
+.ms-pricing__card--highlight {
+  border-color: var(--encodere-violet);
+  box-shadow: var(--encodere-shadow);
+}
+
+.ms-pricing__badge {
+  position: absolute;
+  top: var(--space-4);
+  right: var(--space-4);
+  font-size: var(--text-2xs);
+  text-transform: uppercase;
+  letter-spacing: var(--tracking-wider);
+  color: var(--encodere-violet);
+  border: 1px solid var(--encodere-violet);
+  padding: var(--space-1) var(--space-2);
+}
+
+.ms-pricing__card h3 {
+  margin-top: 0;
+  font-size: var(--text-base);
+}
+
+.ms-pricing__price {
+  font-size: var(--text-2xl);
+  font-weight: 800;
+  color: var(--encodere-violet);
+  margin: var(--space-2) 0;
+  letter-spacing: var(--tracking-tight);
+}
+
+.ms-pricing__price-note {
+  display: block;
+  font-size: var(--text-xs);
+  font-weight: 400;
+  color: var(--encodere-fg-3);
+}
+
+.ms-pricing__desc {
+  font-size: var(--text-sm);
+  color: var(--encodere-fg-2);
+  margin-bottom: var(--space-4);
+}
+
+.ms-pricing__list {
+  flex: 1;
+  margin: 0 0 var(--space-6);
+  padding-left: var(--space-5);
+  font-size: var(--text-sm);
+  color: var(--encodere-fg-2);
+}
+
+.ms-pricing__list li {
+  margin-bottom: var(--space-2);
+}
+
+/* WhatsApp button */
+
+.ms-whatsapp-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  text-decoration: none;
+}
+
+.ms-whatsapp-btn__icon {
+  flex-shrink: 0;
+}
+
+/* Final CTA */
+
+.ms-cta-final {
+  text-align: center;
+  padding: var(--space-10) var(--space-6);
+  border: 1px solid var(--encodere-rule);
+  background: var(--encodere-bg-card);
+  margin-top: var(--space-10);
+}
+
+.ms-cta-final h2 {
+  margin-bottom: var(--space-4);
+}
+
+.ms-cta-final p {
+  max-width: 48ch;
+  margin: 0 auto var(--space-6);
+  color: var(--encodere-fg-2);
+}
+
+.ms-cta-final__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-3);
+  justify-content: center;
+}
+
+@media (max-width: 640px) {
+  .ms-pricing__badge {
+    position: static;
+    align-self: flex-start;
+    margin-bottom: var(--space-3);
+  }
+}
+
+/* Breach threat map — The Gridcn dashboard */
+
+.ms-breach-map {
+  margin-top: var(--space-8);
+}
+
+.ms-breach-map__alert {
+  margin-bottom: var(--space-6);
+}
+
+.ms-breach-map__alert [data-slot='tron-anomaly-title'] {
+  font-family: var(--encodere-font);
+  font-size: clamp(1.5rem, 5vw, 2.75rem);
+  letter-spacing: 0.12em;
+  color: oklch(0.62 0.2 45);
+}
+
+.ms-breach-map__hud {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-4);
+  margin-bottom: var(--space-6);
+  padding: var(--space-3) var(--space-4);
+  border: 1px solid oklch(0.55 0.22 25 / 0.35);
+  background: oklch(0.55 0.22 25 / 0.06);
+}
+
+.ms-breach-map__live {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  font-size: var(--text-2xs);
+  text-transform: uppercase;
+  letter-spacing: var(--tracking-wider);
+  color: oklch(0.55 0.22 25);
+}
+
+.ms-breach-map__live-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: oklch(0.55 0.22 25);
+  box-shadow: 0 0 8px oklch(0.55 0.22 25 / 0.8);
+  animation: ms-breach-pulse 1.2s ease-in-out infinite;
+}
+
+@keyframes ms-breach-pulse {
+  0%,
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.45;
+    transform: scale(0.85);
+  }
+}
+
+.ms-breach-map__grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr);
+  gap: var(--space-4);
+}
+
+.ms-breach-map__panel-label {
+  margin: 0 0 var(--space-4);
+  font-size: var(--text-2xs);
+  text-transform: uppercase;
+  letter-spacing: var(--tracking-wider);
+  color: var(--encodere-fg-3);
+}
+
+.ms-breach-map__terrain {
+  position: relative;
+  min-height: 320px;
+  border: 1px solid var(--encodere-rule);
+  background:
+    radial-gradient(circle at 50% 50%, oklch(0.55 0.22 25 / 0.08) 0%, transparent 55%),
+    linear-gradient(180deg, var(--encodere-bg) 0%, oklch(0.15 0.02 280) 100%);
+  overflow: hidden;
+}
+
+.ms-breach-map__terrain-grid {
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(oklch(0.7 0.15 195 / 0.12) 1px, transparent 1px),
+    linear-gradient(90deg, oklch(0.7 0.15 195 / 0.12) 1px, transparent 1px);
+  background-size: 32px 32px;
+  mask-image: radial-gradient(ellipse 80% 70% at 50% 45%, black 20%, transparent 100%);
+}
+
+.ms-breach-map__marker-slot {
+  position: absolute;
+  z-index: 2;
+  transform: translate(-50%, -100%);
+}
+
+.ms-breach-map__marker-slot:nth-child(odd) [data-slot='tron-map-marker'] {
+  animation: ms-marker-flicker 2.4s ease-in-out infinite;
+}
+
+@keyframes ms-marker-flicker {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  48% {
+    opacity: 0.72;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+
+.ms-breach-map__radar-wrap {
+  position: absolute;
+  right: var(--space-3);
+  bottom: var(--space-3);
+  z-index: 1;
+  opacity: 0.92;
+  border: 1px solid var(--encodere-rule);
+  border-radius: 50%;
+  box-shadow: 0 0 24px oklch(0.55 0.22 25 / 0.25);
+}
+
+.ms-breach-map__terrain-caption {
+  position: absolute;
+  left: var(--space-3);
+  right: var(--space-3);
+  bottom: var(--space-3);
+  z-index: 3;
+  margin: 0;
+  max-width: 28ch;
+  font-size: var(--text-2xs);
+  line-height: var(--leading-snug);
+  color: var(--encodere-fg-3);
+}
+
+.ms-breach-map__metrics {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.ms-breach-map__gauges {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: var(--space-2);
+  padding: var(--space-4);
+  border: 1px solid var(--encodere-rule);
+  background: var(--encodere-bg-card);
+}
+
+.ms-breach-map__bottom {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: var(--space-4);
+  margin-top: var(--space-4);
+}
+
+.ms-breach-map__disclaimer {
+  margin: var(--space-4) 0 0;
+  font-size: var(--text-xs);
+  font-style: italic;
+  color: var(--encodere-fg-3);
+}
+
+@media (max-width: 768px) {
+  .ms-breach-map__grid,
+  .ms-breach-map__bottom {
+    grid-template-columns: 1fr;
+  }
+
+  .ms-breach-map__gauges {
+    grid-template-columns: 1fr;
+  }
+
+  .ms-breach-map__terrain {
+    min-height: 380px;
+  }
+
+  .ms-breach-map__terrain-caption {
+    max-width: none;
+    padding-right: 150px;
+  }
+}

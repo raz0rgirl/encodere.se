@@ -16,10 +16,8 @@ import { ThemeProvider } from "@/components/theme";
   <head>
     <script is:inline>
       const k = 'encodere-theme';
-      const saved = localStorage.getItem(k);
-      const sys = matchMedia('(prefers-color-scheme: dark)').matches;
-      const theme = saved ?? (sys ? 'dark' : 'light');
-      document.documentElement.dataset.theme = theme;
+      localStorage.setItem(k, 'dark');
+      document.documentElement.dataset.theme = 'dark';
     </script>
     <BaseHead title={title} description={description} />
   </head>

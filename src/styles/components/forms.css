@@ -3,41 +3,41 @@
 .encodere-form {
   display: flex;
   flex-direction: column;
-  gap: calc(var(--encodere-step) * 4);
-  margin-top: calc(var(--encodere-step) * 6);
-  max-width: 520px;
+  gap: var(--space-4);
+  margin-top: var(--space-6);
+  max-width: var(--encodere-form-max);
 }
 
 .encodere-form--narrow {
-  max-width: 400px;
+  max-width: var(--encodere-form-max-narrow);
 }
 
 .encodere-form label {
   display: flex;
   flex-direction: column;
-  gap: calc(var(--encodere-step) * 2);
+  gap: var(--space-2);
 }
 
 .encodere-form label span {
-  font-size: 11px;
+  font-size: var(--text-2xs);
   text-transform: uppercase;
-  letter-spacing: 1.5px;
+  letter-spacing: var(--tracking-wider);
   color: var(--encodere-fg-3);
 }
 
 .encodere-form input,
 .encodere-form textarea {
   font-family: var(--encodere-font);
-  font-size: 13px;
+  font-size: var(--text-sm);
   background: var(--encodere-bg-card);
   border: 1px solid var(--encodere-rule);
   color: var(--encodere-fg);
-  padding: calc(var(--encodere-step) * 3);
+  padding: var(--space-3);
   border-radius: var(--encodere-radius);
 }
 
 .encodere-form__note {
-  margin-top: calc(var(--encodere-step) * 6);
-  font-size: 12px;
+  margin-top: var(--space-6);
+  font-size: var(--text-xs);
   color: var(--encodere-fg-3);
 }

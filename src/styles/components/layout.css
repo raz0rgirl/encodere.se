@@ -1,101 +1,126 @@
-/* Layout — topnav, footer, theme toggle */
+/* Layout — shell, content column, topnav, footer */
+
+.encodere-shell--wide {
+  --encodere-content-max: var(--encodere-content-fluid-wide);
+}
+
+.encodere-content {
+  width: min(var(--encodere-content-max), 100%);
+  margin-inline: auto;
+  padding-inline: var(--encodere-gutter);
+}
+
+.encodere-shell:has(> .encodere-hero__header) .encodere-main {
+  padding-top: var(--space-10);
+}
 
 .encodere-topnav {
+  position: sticky;
+  top: 0;
+  z-index: 40;
   display: flex;
   align-items: center;
-  gap: calc(var(--encodere-step) * 4);
-  padding: calc(var(--encodere-step) * 4) calc(var(--encodere-step) * 6);
-  border-bottom: 1px solid var(--encodere-rule);
-  background: var(--encodere-bg-elev);
+  gap: var(--space-4);
+  padding: 12px 20px;
+  border-bottom: 1px solid var(--line);
+  background: linear-gradient(180deg, rgba(5, 3, 8, 0.92), rgba(5, 3, 8, 0.6));
+  backdrop-filter: blur(10px);
   flex-wrap: wrap;
 }
 
 .encodere-topnav__brand {
   text-decoration: none;
   border: none;
-  font-weight: 800;
-  font-size: 14px;
-  letter-spacing: -0.5px;
-  color: var(--encodere-fg);
+  font-family: var(--disp);
+  font-weight: 700;
+  font-size: clamp(17px, 3vw, 22px);
+  letter-spacing: 0.02em;
+  background: linear-gradient(92deg, var(--magenta), var(--cyan));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
 }
 
 .encodere-topnav__brand-dot {
-  color: var(--encodere-violet);
+  color: var(--gold);
+  -webkit-text-fill-color: var(--gold);
 }
 
 .encodere-topnav__links {
   display: flex;
   flex-wrap: wrap;
-  gap: calc(var(--encodere-step) * 3);
+  gap: var(--space-3);
   flex: 1;
 }
 
 .encodere-topnav__link {
-  font-size: 12px;
+  font-size: var(--text-xs);
   text-transform: uppercase;
-  letter-spacing: 1.5px;
+  letter-spacing: var(--tracking-wider);
   color: var(--encodere-fg-2);
   text-decoration: none;
   border: none;
-  padding: calc(var(--encodere-step) * 1) 0;
+  padding: var(--space-1) 0;
 }
 
 .encodere-topnav__link:hover,
 .encodere-topnav__link--active {
-  color: var(--encodere-cyan);
+  color: var(--cyan);
 }
 
 .encodere-topnav__actions {
   display: flex;
   align-items: center;
-  gap: calc(var(--encodere-step) * 3);
+  gap: var(--space-3);
   margin-left: auto;
 }
 
 .encodere-topnav__aluna {
-  font-size: 11px;
+  font-size: var(--text-2xs);
   text-transform: uppercase;
-  letter-spacing: 1px;
-  color: var(--encodere-violet-bright);
+  letter-spacing: var(--tracking-wide);
+  color: var(--magenta);
   text-decoration: none;
-  border: 1px solid var(--encodere-rule);
-  padding: calc(var(--encodere-step) * 2) calc(var(--encodere-step) * 3);
+  border: 1px solid var(--line);
+  padding: var(--space-2) var(--space-3);
+  border-radius: 9px;
 }
 
 .encodere-theme-toggle {
   font-family: var(--encodere-font);
-  font-size: 11px;
+  font-size: var(--text-2xs);
   text-transform: uppercase;
-  letter-spacing: 1px;
+  letter-spacing: var(--tracking-wide);
   background: transparent;
   border: 1px solid var(--encodere-rule);
   color: var(--encodere-fg-2);
-  padding: calc(var(--encodere-step) * 2) calc(var(--encodere-step) * 3);
+  padding: var(--space-2) var(--space-3);
   cursor: pointer;
 }
 
 .encodere-theme-toggle:hover {
-  color: var(--encodere-cyan);
-  border-color: var(--encodere-cyan);
+  color: var(--cyan);
+  border-color: var(--cyan);
+  box-shadow: var(--glow-cyan);
 }
 
 .encodere-footer {
-  border-top: 1px solid var(--encodere-rule);
-  padding: calc(var(--encodere-step) * 8) calc(var(--encodere-step) * 6);
+  border-top: 1px solid var(--line);
+  padding: var(--space-8) var(--space-6);
   text-align: center;
-  background: var(--encodere-bg-elev);
+  background: var(--void-2);
 }
 
 .encodere-footer__copy {
-  margin: 0 0 calc(var(--encodere-step) * 2);
-  font-size: 12px;
+  margin: 0 0 var(--space-2);
+  font-size: var(--text-xs);
   color: var(--encodere-fg-2);
 }
 
 .encodere-footer__tagline {
   margin: 0;
-  font-size: 11px;
+  font-size: var(--text-2xs);
   text-transform: uppercase;
-  letter-spacing: 1.5px;
+  letter-spacing: var(--tracking-wider);
   color: var(--encodere-fg-3);
 }
