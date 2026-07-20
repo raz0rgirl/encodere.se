@@ -2,10 +2,10 @@ import { useEffect, useState } from 'react';
 import { getStoredTheme, getSystemTheme, setTheme, type Theme } from '../../lib/theme';
 
 export function ThemeToggle() {
-  const [theme, setThemeState] = useState<Theme>('light');
+  const [theme, setThemeState] = useState<Theme>('dark');
 
   useEffect(() => {
-    setThemeState(getStoredTheme() ?? getSystemTheme());
+    setThemeState(getStoredTheme() ?? 'dark');
   }, []);
 
   function handleToggle() {

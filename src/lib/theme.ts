@@ -3,7 +3,7 @@ export const THEME_STORAGE_KEY = 'encodere-theme';
 export type Theme = 'light' | 'dark';
 
 export function getSystemTheme(): Theme {
-  if (typeof window === 'undefined') return 'light';
+  if (typeof window === 'undefined') return 'dark';
   return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
 }
 
@@ -14,7 +14,7 @@ export function getStoredTheme(): Theme | null {
 }
 
 export function resolveTheme(): Theme {
-  return getStoredTheme() ?? getSystemTheme();
+  return getStoredTheme() ?? 'dark';
 }
 
 export function applyTheme(theme: Theme): void {
