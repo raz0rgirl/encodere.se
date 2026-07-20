@@ -1,0 +1,913 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<title>XEQUE // CYBER — Sala de Estudo OSCP</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@400;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --void:#050308;
+    --void-2:#0c0a16;
+    --void-3:#13101f;
+    --cyan:#00fff0;     /* Blue team / defesa */
+    --magenta:#ff00aa;  /* Red team / ataque */
+    --gold:#ffe600;     /* Joia da Coroa / objetivo / acerto */
+    --danger:#ff3b3b;   /* dano / breach */
+    --ash:#7a7790;
+    --ash-2:#a9a6c0;
+    --ink:#e9e7f5;
+    --line:rgba(0,255,240,.14);
+    --mono:'JetBrains Mono',ui-monospace,SFMono-Regular,Menlo,monospace;
+    --disp:'Chakra Petch',var(--mono);
+    --team:var(--magenta); /* cor do lado ativo, trocada via JS */
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;height:100%}
+  body{
+    background:
+      radial-gradient(1200px 700px at 80% -10%, rgba(255,0,170,.07), transparent 60%),
+      radial-gradient(1000px 700px at -10% 110%, rgba(0,255,240,.06), transparent 60%),
+      var(--void);
+    color:var(--ink);
+    font-family:var(--mono);
+    -webkit-font-smoothing:antialiased;
+    overflow-x:hidden;
+  }
+  /* scanlines / CRT */
+  body::after{
+    content:"";position:fixed;inset:0;pointer-events:none;z-index:9;
+    background:repeating-linear-gradient(to bottom, rgba(0,0,0,0) 0 2px, rgba(0,0,0,.22) 2px 3px);
+    mix-blend-mode:multiply;opacity:.5;
+  }
+  .wrap{max-width:1180px;margin:0 auto;padding:18px 16px 40px}
+
+  /* ---------- header ---------- */
+  header.top{display:flex;flex-wrap:wrap;gap:14px 22px;align-items:flex-end;justify-content:space-between;
+    border-bottom:1px solid var(--line);padding-bottom:14px;margin-bottom:18px}
+  .brand{display:flex;flex-direction:column;gap:2px;min-width:0}
+  .brand .kicker{font-family:var(--mono);font-size:11px;letter-spacing:.34em;color:var(--ash);text-transform:uppercase}
+  .brand h1{font-family:var(--disp);font-weight:700;font-size:clamp(22px,4.4vw,34px);margin:0;line-height:1;
+    letter-spacing:.02em;
+    background:linear-gradient(92deg,var(--magenta),var(--cyan));-webkit-background-clip:text;background-clip:text;color:transparent}
+  .brand h1 .slash{color:var(--gold);-webkit-text-fill-color:var(--gold)}
+  .brand .sub{font-size:12px;color:var(--ash-2);letter-spacing:.04em;margin-top:4px}
+
+  .modeswap{display:flex;gap:8px;align-items:center}
+  .modeswap .lbl{font-size:10px;letter-spacing:.28em;color:var(--ash);text-transform:uppercase;margin-right:2px}
+  .seg{display:flex;border:1px solid var(--line);border-radius:10px;overflow:hidden;background:var(--void-2)}
+  .seg button{font-family:var(--disp);font-weight:600;letter-spacing:.12em;font-size:13px;color:var(--ash-2);
+    background:transparent;border:0;padding:9px 16px;cursor:pointer;transition:.18s}
+  .seg button.red.on{background:rgba(255,0,170,.16);color:#ffb9e6;box-shadow:inset 0 0 0 1px var(--magenta),0 0 18px rgba(255,0,170,.25)}
+  .seg button.blue.on{background:rgba(0,255,240,.14);color:#aafff8;box-shadow:inset 0 0 0 1px var(--cyan),0 0 18px rgba(0,255,240,.22)}
+  .seg button:not(.on):hover{color:var(--ink)}
+
+  /* ---------- bars ---------- */
+  .bars{display:grid;grid-template-columns:1fr 1fr;gap:10px 16px;margin-bottom:16px}
+  .bar{background:var(--void-2);border:1px solid var(--line);border-radius:10px;padding:9px 12px}
+  .bar .row{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:7px}
+  .bar .name{font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--ash)}
+  .bar .val{font-family:var(--disp);font-weight:700;font-size:14px}
+  .track{height:7px;border-radius:6px;background:#1a1726;overflow:hidden}
+  .fill{height:100%;width:0;border-radius:6px;transition:width .55s cubic-bezier(.4,1.2,.4,1)}
+  .fill.good{background:linear-gradient(90deg,var(--cyan),var(--gold))}
+  .fill.doom{background:linear-gradient(90deg,#8a1f55,var(--danger))}
+
+  /* ---------- layout ---------- */
+  .stage{display:grid;grid-template-columns:minmax(0,1fr) minmax(320px,420px);gap:20px;align-items:start}
+  @media(max-width:880px){.stage{grid-template-columns:1fr}.bars{grid-template-columns:1fr 1fr}}
+
+  .boardpanel{background:linear-gradient(180deg,var(--void-2),var(--void));border:1px solid var(--line);
+    border-radius:16px;padding:14px;position:relative;overflow:hidden}
+  .boardpanel .chainrail{display:flex;gap:5px;flex-wrap:wrap;margin-bottom:11px}
+  .node{flex:1 1 auto;min-width:0;font-size:9px;letter-spacing:.06em;text-transform:uppercase;color:var(--ash);
+    border:1px solid var(--line);border-radius:6px;padding:5px 6px;text-align:center;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+    transition:.3s;background:var(--void-3)}
+  .node.done{color:var(--void);background:var(--team);border-color:var(--team);font-weight:700;
+    box-shadow:0 0 12px color-mix(in srgb,var(--team) 60%,transparent)}
+  .node.active{color:var(--gold);border-color:var(--gold);box-shadow:0 0 0 1px var(--gold) inset,0 0 14px rgba(255,230,0,.3)}
+  canvas#board{width:100%;height:auto;display:block;border-radius:12px;touch-action:manipulation}
+  .boardpanel.shake{animation:glitch .4s steps(3)}
+  @keyframes glitch{0%{transform:translate(0,0)}20%{transform:translate(-4px,2px)}40%{transform:translate(3px,-3px)}
+    60%{transform:translate(-3px,-1px)}80%{transform:translate(2px,3px)}100%{transform:translate(0,0)}}
+
+  /* ---------- console ---------- */
+  .console{display:flex;flex-direction:column;gap:12px}
+  .card{background:var(--void-2);border:1px solid var(--line);border-radius:14px;padding:15px 16px}
+  .card .meta{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-bottom:9px}
+  .tag{font-size:9px;letter-spacing:.16em;text-transform:uppercase;padding:3px 7px;border-radius:999px;
+    border:1px solid var(--line);color:var(--ash-2)}
+  .tag.stage{border-color:var(--team);color:var(--team)}
+  .tag.mitre{border-color:rgba(255,230,0,.4);color:var(--gold)}
+  .card h2{font-family:var(--disp);font-weight:600;font-size:16px;margin:0 0 6px;letter-spacing:.01em;color:var(--ink)}
+  .card .situation{font-size:13px;line-height:1.6;color:var(--ash-2)}
+  .card .situation b{color:var(--ink);font-weight:600}
+
+  .choices{display:flex;flex-direction:column;gap:9px}
+  .choice{display:flex;gap:11px;align-items:flex-start;text-align:left;width:100%;
+    background:var(--void-3);border:1px solid var(--line);border-radius:11px;padding:12px 13px;cursor:pointer;
+    color:var(--ash-2);font-family:var(--mono);font-size:13px;line-height:1.5;transition:.16s}
+  .choice:hover{border-color:var(--team);color:var(--ink);transform:translateX(2px)}
+  .choice .k{font-family:var(--disp);font-weight:700;color:var(--team);flex:0 0 auto;
+    width:22px;height:22px;display:grid;place-items:center;border:1px solid var(--team);border-radius:6px;font-size:12px}
+  .choice:disabled{cursor:default;transform:none;opacity:.85}
+  .choice.correct{border-color:var(--gold);background:rgba(255,230,0,.08);color:var(--ink)}
+  .choice.correct .k{color:var(--gold);border-color:var(--gold)}
+  .choice.wrong{border-color:var(--danger);background:rgba(255,59,59,.08)}
+  .choice.wrong .k{color:var(--danger);border-color:var(--danger)}
+
+  .feedback{border-left:2px solid var(--team);padding:11px 0 4px 14px;display:none}
+  .feedback.show{display:block;animation:fade .4s ease}
+  @keyframes fade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+  .feedback .verdict{font-family:var(--disp);font-weight:700;letter-spacing:.08em;font-size:13px;margin-bottom:6px;text-transform:uppercase}
+  .feedback.ok .verdict{color:var(--gold)}
+  .feedback.bad .verdict{color:var(--danger)}
+  .feedback .verdict::before{content:"▚ ";opacity:.7}
+  .feedback .txt{font-size:12.5px;line-height:1.62;color:var(--ash-2)}
+  .feedback .txt b{color:var(--ink)}
+  .feedback .ref{margin-top:9px;font-size:10.5px;color:var(--ash);letter-spacing:.02em}
+  .feedback .ref b{color:var(--ash-2)}
+
+  .next{margin-top:12px;width:100%;font-family:var(--disp);font-weight:700;letter-spacing:.14em;text-transform:uppercase;
+    font-size:13px;color:var(--void);background:var(--team);border:0;border-radius:10px;padding:12px;cursor:pointer;
+    transition:.16s;box-shadow:0 0 22px color-mix(in srgb,var(--team) 45%,transparent)}
+  .next:hover{filter:brightness(1.12)}
+  .next.hidden{display:none}
+
+  /* ---------- end overlay ---------- */
+  .overlay{position:fixed;inset:0;z-index:20;display:none;place-items:center;padding:20px;
+    background:rgba(5,3,8,.86);backdrop-filter:blur(6px)}
+  .overlay.show{display:grid;animation:fade .35s ease}
+  .endcard{max-width:520px;width:100%;background:var(--void-2);border:1px solid var(--team);border-radius:18px;
+    padding:26px;text-align:center;box-shadow:0 0 60px color-mix(in srgb,var(--team) 30%,transparent)}
+  .endcard .eyebrow{font-size:11px;letter-spacing:.3em;text-transform:uppercase;color:var(--ash)}
+  .endcard h2{font-family:var(--disp);font-weight:700;font-size:clamp(24px,6vw,38px);margin:8px 0 6px;letter-spacing:.02em}
+  .endcard.win h2{color:var(--gold)}
+  .endcard.lose h2{color:var(--danger)}
+  .endcard p{font-size:13px;line-height:1.6;color:var(--ash-2);margin:0 0 18px}
+  .endcard p b{color:var(--ink)}
+  .endbtns{display:flex;gap:10px;flex-wrap:wrap;justify-content:center}
+  .endbtns button{font-family:var(--disp);font-weight:600;letter-spacing:.1em;font-size:13px;cursor:pointer;
+    border-radius:10px;padding:11px 18px;border:1px solid var(--line);background:var(--void-3);color:var(--ink);transition:.16s}
+  .endbtns button.primary{background:var(--team);color:var(--void);border-color:var(--team)}
+  .endbtns button:hover{filter:brightness(1.12)}
+
+  footer{margin-top:26px;border-top:1px solid var(--line);padding-top:14px;font-size:11px;color:var(--ash);line-height:1.7}
+  footer b{color:var(--ash-2)}
+  footer .refs{margin-top:6px}
+  .hud{display:flex;gap:14px;align-items:center;font-size:11px;color:var(--ash);letter-spacing:.06em;margin:2px 0 12px}
+  .hud b{color:var(--team);font-family:var(--disp)}
+  .restart-mini{margin-left:auto;background:transparent;border:1px solid var(--line);color:var(--ash-2);
+    border-radius:8px;padding:6px 11px;font-family:var(--mono);font-size:11px;cursor:pointer;letter-spacing:.08em}
+  .restart-mini:hover{border-color:var(--team);color:var(--ink)}
+
+  @media (prefers-reduced-motion: reduce){
+    *{animation:none!important;transition:none!important}
+    body::after{display:none}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="top">
+    <div class="brand">
+      <span class="kicker">encodere.se · sala de estudo</span>
+      <h1>XEQUE <span class="slash">//</span> CYBER</h1>
+      <span class="sub">O tabuleiro é a rede. A kill chain é o caminho até a Joia da Coroa.</span>
+    </div>
+    <div class="modeswap">
+      <span class="lbl">Lado</span>
+      <div class="seg" role="tablist" aria-label="Escolha de lado">
+        <button class="red on" id="btnRed" role="tab" aria-selected="true">▲ RED · OSCP</button>
+        <button class="blue" id="btnBlue" role="tab" aria-selected="false">▼ BLUE · SOC</button>
+      </div>
+    </div>
+  </header>
+
+  <div class="bars">
+    <div class="bar">
+      <div class="row"><span class="name" id="goodName">Acesso</span><span class="val" id="goodVal">0%</span></div>
+      <div class="track"><div class="fill good" id="goodFill"></div></div>
+    </div>
+    <div class="bar">
+      <div class="row"><span class="name" id="doomName">Detecção</span><span class="val" id="doomVal">0%</span></div>
+      <div class="track"><div class="fill doom" id="doomFill"></div></div>
+    </div>
+  </div>
+
+  <div class="hud">
+    <span>OPERAÇÃO: <b id="opName">INTRUSÃO</b></span>
+    <span>FASE <b id="turnNum">1</b>/<b id="turnTot">11</b></span>
+    <button class="restart-mini" id="restartMini">↺ reiniciar operação</button>
+  </div>
+
+  <div class="stage">
+    <section class="boardpanel" id="boardPanel" aria-label="Tabuleiro tático">
+      <div class="chainrail" id="chainRail"></div>
+      <canvas id="board" width="640" height="640" aria-hidden="true"></canvas>
+    </section>
+
+    <section class="console" id="console" aria-live="polite"></section>
+  </div>
+
+  <footer>
+    <b>Sala de estudo, não simulador de produção.</b> O conteúdo segue o OSCP+ atual (Active Directory obrigatório em cenário de <i>assumed breach</i>, sem buffer overflow garantido, Metasploit restrito, e <i>pivoting/tunneling</i> como ponto de falha número um). Cenários mapeados ao MITRE ATT&CK.
+    <div class="refs">Referências de estudo (legítimas e gratuitas): <b>OffSec PEN-200 / OSCP+ Exam Guide</b> · <b>MITRE ATT&CK</b> · <b>HackTricks</b> · <b>GTFOBins</b> · <b>NIST SP 800-61</b> (resposta a incidentes) · <b>BloodHound docs</b>.</div>
+  </footer>
+</div>
+
+<div class="overlay" id="overlay">
+  <div class="endcard" id="endCard">
+    <span class="eyebrow" id="endEyebrow">resultado</span>
+    <h2 id="endTitle">—</h2>
+    <p id="endBody">—</p>
+    <div class="endbtns">
+      <button class="primary" id="endAgain">Nova operação</button>
+      <button id="endSwap">Trocar de lado</button>
+    </div>
+  </div>
+</div>
+
+<script>
+/* ============================================================
+   XEQUE // CYBER  —  motor de jogo
+   Caminho B: kill chain como caminho no tabuleiro de xadrez.
+   ============================================================ */
+
+/* ---------- DECKS ---------- */
+/* Cada nó: stage (rótulo curto p/ trilho), title, mitre, situation,
+   options[3], correct (índice), okFeed, badFeed, ref, role (peça defensora) */
+
+const RED_DECK = [
+  {
+    stage:"Recon", role:"pawn",
+    title:"Alvo frio: 10.10.x.x",
+    mitre:"TA0043 · Reconnaissance",
+    situation:"Você recebe um IP e nada mais. A vontade é abrir o Metasploit e procurar um exploit pronto. <b>Qual o primeiro movimento?</b>",
+    options:[
+      "Rodar nmap completo: <b>-p- </b>e depois <b>-sC -sV</b> nas portas abertas, em segundo plano enquanto já cutuca 80/443/445 na mão.",
+      "Buscar no searchsploit o nome do SO e disparar o primeiro exploit que casar.",
+      "Usar um único <b>nmap -F</b> (top 100) e seguir, pra ganhar tempo."
+    ],
+    correct:0,
+    okFeed:"Enumeração antes de exploração. Você varre <b>todas</b> as 65535 portas (-p-), depois aprofunda só nas abertas. E não fica olhando o script terminar: ataca 80/443/445 manualmente em paralelo — a maioria das falhas no exame é <b>port 80 óbvia ignorada</b> enquanto se esperava a automação.",
+    badFeed:"Pressa é o inimigo. Pular pra exploit sem mapa, ou varrer só o top-100, é como dar o primeiro lance sem olhar o tabuleiro inteiro — uma porta alta esquecida (8080, 8443, 5985) é onde mora o foothold.",
+    ref:"OSCP: enumeração insuficiente é a causa nº1 de reprovação. Rode automação em background, mas cutuque portas de alto valor na mão."
+  },
+  {
+    stage:"Serviços", role:"pawn",
+    title:"Portas vivas: 80, 445, 5985",
+    mitre:"TA0007 · Discovery",
+    situation:"O scan voltou: HTTP (80), SMB (445) e WinRM (5985). <b>Como você abre o leque de superfície?</b>",
+    options:[
+      "Só fuzzar diretórios no 80 — web costuma ser o caminho mais curto.",
+      "Enumerar <b>em paralelo</b>: feroxbuster/gobuster no 80, <b>enum4linux-ng</b> e <b>smbclient -L</b> no 445, e guardar o 5985 pra quando tiver credencial.",
+      "Tentar login anônimo no WinRM primeiro, já que dá shell direto."
+    ],
+    correct:1,
+    okFeed:"Cada serviço é uma diagonal diferente do tabuleiro. SMB pode vazar shares anônimos, usuários, versão; web pode ter upload ou LFI; WinRM (5985) vira shell <b>quando</b> você já tiver credencial. Largura de enumeração vence profundidade prematura.",
+    badFeed:"Tunelar a atenção em um só serviço deixa material na mesa. WinRM não tem 'login anônimo' útil — ele espera credencial válida. Enumere os três; o foothold raramente está onde você apostou primeiro.",
+    ref:"enum4linux-ng / smbclient / crackmapexec p/ SMB; feroxbuster p/ web. WinRM = pós-credencial (evil-winrm)."
+  },
+  {
+    stage:"Web foothold", role:"bishop",
+    title:"Upload que aceita demais",
+    mitre:"TA0001 · Initial Access",
+    situation:"A web tem um formulário de upload de imagem. O filtro bloqueia <b>.php</b>, mas você suspeita que é fraco. <b>Como transforma isso em RCE?</b>",
+    options:[
+      "Desistir do upload e ir caçar SQL injection no login.",
+      "Testar bypass de extensão (<b>.phtml, .php5, .pHp</b>, duplo-ext, content-type forjado) pra subir um webshell e ganhar execução.",
+      "Subir um .txt com código PHP e torcer pra que o servidor execute."
+    ],
+    correct:1,
+    okFeed:"Filtro de extensão fraco = porta destrancada. Você testa variantes que o servidor ainda interpreta como PHP (.phtml/.php5), maiúsculas, duplo-ext (shell.php.jpg) e Content-Type forjado. Um webshell mínimo já te dá <b>execução de comando</b> — o pé na porta.",
+    badFeed:"Abandonar a pista certa pra perseguir um rabbit hole (SQLi onde a entrada é o upload) é como trocar uma peça avançada por nada. .txt não é interpretado como código. Quando o upload é o vetor, persista no bypass.",
+    ref:"Bypass de upload: extensões alternativas, double extension, magic bytes, Content-Type. Veja HackTricks 'File Upload'."
+  },
+  {
+    stage:"Shell estável", role:"pawn",
+    title:"Reverse shell — mas burra",
+    mitre:"TA0002 · Execution",
+    situation:"O webshell te deu um reverse shell, mas é um TTY quebrado: sem histórico, sem tab, Ctrl-C mata tudo. <b>Próximo passo antes de qualquer enum?</b>",
+    options:[
+      "Já rodar <b>sudo -l</b> e linpeas, sem perder tempo.",
+      "<b>Estabilizar o shell</b>: spawn de PTY (python3 pty), <b>export TERM=xterm</b>, e <b>stty raw -echo; fg</b> pra ter um terminal full-interactive.",
+      "Reconectar várias vezes esperando vir um shell melhor."
+    ],
+    correct:1,
+    okFeed:"Shell instável faz você perder a sessão no meio de um exploit de privesc — perda de tempo cara no exame. Você faz o upgrade: <code>python3 -c 'import pty;pty.spawn(\"/bin/bash\")'</code>, depois <b>Ctrl-Z → stty raw -echo; fg → export TERM=xterm</b>. Agora tem Ctrl-C, setas e tab.",
+    badFeed:"Rodar privesc num shell quebrado é receita pra travar e cair na hora errada. Estabilize <b>primeiro</b>: é o equivalente a rocar o rei antes de abrir o jogo.",
+    ref:"PTY upgrade: pty.spawn + stty raw -echo + fg. Essencial antes de privesc."
+  },
+  {
+    stage:"Enum local", role:"knight",
+    title:"De pé na máquina — e agora?",
+    mitre:"TA0007 · Discovery",
+    situation:"Você é www-data num Linux. A tentação é baixar um exploit de kernel e detonar. <b>Como conduzir a enumeração de privesc?</b>",
+    options:[
+      "Procurar a versão do kernel no Google e rodar o primeiro PoC público.",
+      "Enumerar metodicamente: <b>sudo -l</b>, SUID/SGID, cron, capabilities, arquivos com credencial, caminhos graváveis — apoiado por linpeas, mas lendo a saída.",
+      "Tentar trocar a senha do root direto, já que você tem shell."
+    ],
+    correct:1,
+    okFeed:"Kernel exploit é último recurso: instável, pode derrubar a máquina (e sua sessão) na frente do avaliador. O caminho limpo é misconfiguração: <b>sudo -l</b>, binários SUID, cron jobs graváveis, capabilities, senhas em config/history. linpeas acelera, mas <b>você</b> interpreta.",
+    badFeed:"PoC de kernel aleatório = peça sacrificada à toa: derruba o alvo, não compila, ou é honeypot de tempo. Misconfig é silenciosa e confiável. Leia a saída do linpeas, não só rode.",
+    ref:"linpeas/pspy + checagem manual. Kernel exploit por último. GTFOBins p/ SUID/sudo."
+  },
+  {
+    stage:"Privesc", role:"rook",
+    title:"sudo -l revela um GTFOBin",
+    mitre:"TA0004 · Privilege Escalation",
+    situation:"<b>sudo -l</b> mostra que você pode rodar <b>/usr/bin/find</b> como root sem senha. <b>Qual a jogada?</b>",
+    options:[
+      "Usar a técnica do <b>GTFOBins</b>: <code>sudo find . -exec /bin/sh \\; -quit</code> pra virar root.",
+      "Baixar um exploit de kernel mesmo assim, por garantia.",
+      "Copiar /etc/shadow com o find e tentar crackear todas as hashes offline."
+    ],
+    correct:0,
+    okFeed:"<b>find</b> com sudo é um GTFOBin clássico: <code>-exec</code> roda um shell <b>como root</b>. Você acabou de promover a peça — de www-data a coroa. Cada binário permitido no sudo -l tem uma técnica catalogada; consultar GTFOBins é o reflexo certo.",
+    badFeed:"Você já tinha xeque em uma jogada e foi procurar complicação. Crackear shadow é lento e desnecessário quando o <code>-exec</code> te dá root na hora. Kernel exploit aqui é risco gratuito.",
+    ref:"GTFOBins: find, vim, less, env, tar, etc. com sudo = shell root imediato."
+  },
+  {
+    stage:"Loot", role:"bishop",
+    title:"Root local: colher a colheita",
+    mitre:"TA0006 · Credential Access",
+    situation:"Você é root nessa máquina. Antes de pensar em rede, <b>o que extrair?</b>",
+    options:[
+      "Nada — root local já é o flag, pode fechar.",
+      "<b>Saquear credenciais</b>: /etc/shadow, chaves SSH (~/.ssh), senhas em configs/.bash_history/.env, e testar <b>reuso</b> dessas creds em outros hosts.",
+      "Apagar logs primeiro pra não ser detectado."
+    ],
+    correct:1,
+    okFeed:"Root local é meio do jogo, não o fim. Credenciais saqueadas aqui — chaves SSH, hashes, senhas em texto, tokens — são munição pra <b>lateralização</b>. Reuso de senha entre hosts é o vetor que conecta uma máquina à próxima.",
+    badFeed:"Parar em root local deixa o tabuleiro inteiro inexplorado — e no OSCP+ o ouro está no Active Directory adiante. (Apagar log não é objetivo do exame e não te aproxima do DC.)",
+    ref:"Credential reuse → pivô. secretsdump/mimikatz no Windows; ~/.ssh, shadow, configs no Linux."
+  },
+  {
+    stage:"Pivoting", role:"rook",
+    title:"Há uma rede atrás desta máquina",
+    mitre:"TA0008 · Lateral Movement",
+    situation:"<b>ip a</b> mostra uma segunda interface: <b>172.16.x.x</b>, uma sub-rede interna que você não alcança da sua máquina. É onde mora o AD. <b>Como entrar?</b>",
+    options:[
+      "Tentar nmap direto da sua Kali contra 172.16.x.x — talvez roteie.",
+      "Montar <b>tunneling/pivoting</b> com <b>Ligolo-ng</b> (ou chisel), criando uma interface que faz a sub-rede interna parecer local.",
+      "Desistir do AD e tentar ganhar mais pontos nas máquinas standalone."
+    ],
+    correct:1,
+    okFeed:"Esta é <b>a</b> casa onde mais gente perde o exame hoje. A sub-rede 172.16 não roteia da sua Kali — você precisa pivotar <b>através</b> do host comprometido. Ligolo-ng cria um <code>tun</code> e a rede interna vira praticamente local; foi quem destronou o chisel no meta OSCP.",
+    badFeed:"nmap direto não alcança rede não-roteável — você tem que tunelar pelo pivô. Pular o AD custa caro: ele vale <b>40/100</b> e virou obrigatório. Pivoting é músculo que se treina antes do exame, não na hora.",
+    ref:"Ligolo-ng > chisel no meta atual. Pivoting/tunneling = causa principal de stall no AD set."
+  },
+  {
+    stage:"AD foothold", role:"knight",
+    title:"Assumed breach: usuário de domínio",
+    mitre:"TA0007 · Discovery (AD)",
+    situation:"Você tunelou pra dentro e o exame te deu (assumed breach) <b>um usuário de domínio comum</b> + senha. Sem mapa do AD. <b>Primeiro movimento no domínio?</b>",
+    options:[
+      "Sair tentando <b>Pass-the-Hash</b> em todo host até algo abrir.",
+      "Coletar o grafo com <b>BloodHound</b> (SharpHound) e rodar <b>'shortest path to Domain Admin'</b> pra achar a rota de menor resistência.",
+      "Brute force no Administrator do domínio via SMB."
+    ],
+    correct:1,
+    okFeed:"Com um usuário low-priv, você <b>mapeia antes de mover</b>. SharpHound coleta sessões, ACLs, memberships; o BloodHound desenha o caminho mais curto até Domain Admin. É literalmente achar a sequência de lances forçados até o xeque-mate.",
+    badFeed:"Sair fazendo PtH ou brute force às cegas é barulho que dispara o Blue (e queima tempo). O AD recompensa quem enxerga o grafo: a query 'shortest path to DA' aparece em quase todo writeup aprovado.",
+    ref:"SharpHound → BloodHound 'Shortest Path to Domain Admins'. Mapear ACLs/sessões antes de agir."
+  },
+  {
+    stage:"Kerberoast", role:"queen",
+    title:"Conta de serviço com SPN",
+    mitre:"TA0006 · Credential Access (AD)",
+    situation:"O BloodHound aponta uma <b>conta de serviço Kerberoastable</b> (tem SPN) no caminho até DA. <b>Como explorar?</b>",
+    options:[
+      "<b>Kerberoasting</b>: pedir o TGS dessa conta (GetUserSPNs/Rubeus) e <b>crackear a hash offline</b> com hashcat.",
+      "AS-REP roasting nessa mesma conta, mesmo ela exigindo pré-autenticação.",
+      "DCSync agora, mesmo sem ter direitos de replicação ainda."
+    ],
+    correct:0,
+    okFeed:"Conta com SPN = alvo de <b>Kerberoasting</b>: qualquer usuário autenticado pode pedir o ticket TGS, cuja parte é cifrada com o hash da senha do serviço. Você extrai e crackeia <b>offline</b> (hashcat -m 13100) — zero barulho no DC durante o crack. Contas de serviço costumam ter senhas fracas e reutilizadas.",
+    badFeed:"AS-REP roasting só funciona em contas com <b>pré-autenticação desabilitada</b> — não é o caso aqui. E DCSync exige direitos de replicação (DS-Replication-Get-Changes) que você ainda não tem. Cada técnica AD tem sua pré-condição: usar a errada é lance ilegal.",
+    ref:"Kerberoast (SPN) vs AS-REP roast (preauth off). GetUserSPNs.py / Rubeus + hashcat -m 13100 / -m 18200."
+  },
+  {
+    stage:"Domain compromise", role:"king",
+    title:"Direitos de replicação → a Joia",
+    mitre:"TA0006 · DCSync / Domain Dominance",
+    situation:"A senha crackeada pertence a uma conta que, pelo grafo, tem direito de <b>replicação no domínio</b>. O Domain Controller — a Joia da Coroa — está a um lance. <b>Xeque-mate como?</b>",
+    options:[
+      "<b>DCSync</b> (secretsdump/mimikatz) pra replicar e extrair o hash do <b>krbtgt/Administrator</b> — comprometimento total do domínio.",
+      "Reiniciar o DC pra forçar um novo login de admin.",
+      "Tentar phishing do administrador de domínio."
+    ],
+    correct:0,
+    okFeed:"<b>Xeque-mate.</b> Com direito de replicação, o DCSync imita um Domain Controller e pede a sincronização dos segredos — você extrai o hash do <b>Administrator</b> (e do krbtgt, que permitiria Golden Ticket). Da rede de cima até o Rei: domínio comprometido, objetivo do exame cumprido.",
+    badFeed:"Reiniciar o DC ou phishing fogem da rota técnica que o grafo já te entregou. Quando você tem o direito de replicação, o DCSync é o lance forçado que captura o Rei diretamente.",
+    ref:"DCSync via secretsdump.py / mimikatz. krbtgt hash → Golden Ticket = persistência total."
+  }
+];
+
+const BLUE_DECK = [
+  {
+    stage:"Triagem", role:"pawn",
+    title:"06:14 — enxurrada de alertas",
+    mitre:"TA0040 · Detect / Triage",
+    situation:"O SIEM despeja 300 alertas de baixa severidade e <b>um</b> de acesso anômalo num servidor crítico. <b>Como começa o turno?</b>",
+    options:[
+      "Bloquear tudo que disparou alerta, por precaução.",
+      "<b>Triar por criticidade do ativo</b> e validar o alerta do servidor crítico primeiro — confirmar se é verdadeiro positivo antes de agir.",
+      "Fechar os 300 de baixa como ruído e ignorar o resto do turno."
+    ],
+    correct:1,
+    okFeed:"Defesa começa por <b>priorização</b>, não por reação. Você ancora no ativo de maior valor (o servidor crítico), valida se o alerta é real e só então age. Bloquear tudo gera <i>alert fatigue</i> e derruba serviço legítimo — exatamente o caos que o atacante adora.",
+    badFeed:"Bloqueio reflexivo em massa = autossabotagem (e DoS no seu próprio ambiente). Fechar tudo como ruído é como ignorar metade do tabuleiro. Triagem orientada a risco é o primeiro lance do SOC.",
+    ref:"Priorização por criticidade de ativo; validar TP/FP antes de conter. NIST SP 800-61 (Detection & Analysis)."
+  },
+  {
+    stage:"Recon detectado", role:"pawn",
+    title:"Varredura interna a partir de um host",
+    mitre:"TA0043 · Reconnaissance (det.)",
+    situation:"Um host interno está conectando em centenas de portas/IPs em segundos — padrão de <b>port scan</b>. <b>Resposta?</b>",
+    options:[
+      "Isolar o host imediatamente sem confirmar nada.",
+      "<b>Confirmar escopo e enriquecer</b>: é scanner de vulnerabilidade autorizado? host comprometido? Determinar antes de agir e aumentar o monitoramento sobre ele.",
+      "Avisar a empresa toda por e-mail que há um hacker na rede."
+    ],
+    correct:1,
+    okFeed:"Nem todo scan é ataque — pode ser o Nessus do time de TI. Você <b>confirma a origem e a autorização</b>, enriquece (quem é o host, que conta, é esperado?) e eleva o monitoramento. Agir cedo demais sem escopo pode alertar um intruso real de que você o viu — perdendo a vantagem.",
+    badFeed:"Isolar às cegas pode derrubar um scan legítimo e queima sua janela de observação. Pânico público amplia o problema sem contê-lo. Escopo primeiro, contenção depois — com intenção.",
+    ref:"Diferenciar scan autorizado de hostil; não 'tip off' o adversário cedo demais. Aumentar visibilidade."
+  },
+  {
+    stage:"Exploração", role:"bishop",
+    title:"IDS acende + processo novo no web server",
+    mitre:"TA0001 · Initial Access (det.)",
+    situation:"O IDS casa uma assinatura de exploração web e, segundos depois, um <b>processo estranho</b> nasce sob o usuário do servidor web. Verdadeiro positivo. <b>Ação?</b>",
+    options:[
+      "<b>Desligar o servidor</b> na tomada pra cortar o ataque.",
+      "<b>Isolar o host da rede</b> (conter), <b>preservar memória/disco</b> (snapshot) e iniciar análise — sem desligar, pra não perder evidência volátil.",
+      "Reiniciar o serviço web e seguir o expediente."
+    ],
+    correct:1,
+    okFeed:"Contenção ≠ destruição. Você <b>isola da rede</b> (corta o C2 e a lateralização) mas mantém a máquina <b>ligada</b>: RAM, processos e conexões são evidência volátil que some no desligamento. Snapshot/triagem preservam a cadeia. É conter o avanço sem queimar as provas.",
+    badFeed:"Desligar na tomada apaga memória, malware sem persistência e artefatos forenses — você cega a própria investigação. Reiniciar o serviço só esconde o sintoma e deixa o atacante dentro. Isolar > desligar.",
+    ref:"Conter isolando a rede; preservar dados voláteis (ordem de volatilidade). NIST SP 800-61 Containment."
+  },
+  {
+    stage:"C2 / beacon", role:"knight",
+    title:"Batida regular pra um domínio raro",
+    mitre:"TA0011 · Command & Control",
+    situation:"O host contido fazia conexões de saída <b>periódicas</b> (com jitter) a um domínio recém-registrado. Cheiro de <b>beacon de C2</b>. <b>O que fazer?</b>",
+    options:[
+      "Ignorar — saída HTTPS é normal, todo mundo faz.",
+      "Confirmar o padrão de <b>beaconing</b> (intervalo+jitter), <b>bloquear no egress</b>/DNS e <b>caçar o mesmo IOC</b> em outros hosts pra achar mais comprometidos.",
+      "Só adicionar o domínio numa planilha pra revisar depois."
+    ],
+    correct:1,
+    okFeed:"Beacon tem assinatura comportamental: intervalo regular + jitter + domínio novo/baixa reputação. Você bloqueia no <b>egress/DNS sinkhole</b> e — crucial — <b>pivota a caça</b>: o mesmo IOC em outro host revela o alcance real da intrusão. Um beacon nunca anda sozinho.",
+    badFeed:"'HTTPS é normal' é como o C2 se esconde — o que denuncia é o <b>padrão</b>, não o protocolo. Anotar pra depois dá tempo de exfiltração ao adversário. Bloqueie e expanda a caça pelo IOC.",
+    ref:"Beaconing = intervalo+jitter; bloqueio egress/DNS; threat hunting pelo IOC em toda a frota."
+  },
+  {
+    stage:"Privesc no host", role:"rook",
+    title:"Filho suspeito de um processo de sistema",
+    mitre:"TA0004 · Privilege Escalation (det.)",
+    situation:"Telemetria mostra um shell nascendo de um serviço privilegiado e abuso de um binário SUID. Sinal de <b>escalonamento local</b>. <b>Prioridade agora?</b>",
+    options:[
+      "Matar só o processo suspeito e considerar resolvido.",
+      "<b>Dimensionar o raio de explosão</b>: que conta foi obtida, há persistência (cron/serviço/chave), e quais credenciais podem ter vazado desse host.",
+      "Formatar a máquina imediatamente."
+    ],
+    correct:1,
+    okFeed:"Matar o processo trata o sintoma; o intruso já pode ter <b>persistência</b> e <b>credenciais</b>. Você mede o raio: qual privilégio foi alcançado, que mecanismos de persistência foram plantados, e — o ponto-chave — <b>que credenciais saquearam daqui</b>, porque é o que habilita o próximo salto lateral.",
+    badFeed:"Encerrar o processo isolado deixa backdoors de pé (reinfecção garantida). Formatar antes de investigar destrói a evidência e não te diz o que vazou. Escopo de comprometimento primeiro.",
+    ref:"Determinar privilégio obtido + persistência + credenciais expostas. Antecipar o movimento lateral."
+  },
+  {
+    stage:"Credential access", role:"bishop",
+    title:"Acesso anômalo ao LSASS",
+    mitre:"TA0006 · Credential Access (det.)",
+    situation:"Detecção de leitura de memória do <b>LSASS</b> numa estação. Provável dump de credenciais. <b>Hipótese de trabalho?</b>",
+    options:[
+      "Foi só o antivírus fazendo varredura — arquivar.",
+      "<b>Assumir credenciais comprometidas</b>: forçar reset das contas que logaram naquele host, validar MFA e vigiar <b>reuso</b> dessas contas em outros sistemas.",
+      "Trocar só a senha do usuário logado e encerrar."
+    ],
+    correct:1,
+    okFeed:"Dump de LSASS = todas as credenciais em cache naquele host devem ser tratadas como <b>queimadas</b>. Você reseta essas contas, confirma MFA e monitora reuso — porque a próxima jogada do atacante é autenticar-se <b>com credencial legítima</b>, que não dispara assinatura de exploit.",
+    badFeed:"Assumir que é o AV é o viés que deixa o adversário 'viver da terra' (LotL). Trocar só uma senha ignora as outras contas em cache no mesmo host. Trate o conjunto como comprometido.",
+    ref:"LSASS dump → reset em massa das contas em cache; MFA; caçar uso de credencial legítima (LotL)."
+  },
+  {
+    stage:"Kerberoast det.", role:"queen",
+    title:"Pico de 4769 com RC4",
+    mitre:"TA0008 · Lateral Movement (det.)",
+    situation:"O DC registra um pico de eventos <b>4769</b> (pedido de TGS) para uma conta de serviço, com cifra <b>RC4</b> — padrão clássico de <b>Kerberoasting</b>. <b>Contramedida?</b>",
+    options:[
+      "Desabilitar o Kerberos no domínio.",
+      "<b>Rotacionar a senha da conta de serviço</b> (longa/gerenciada — gMSA), reduzir seu privilégio e caçar onde o ticket foi usado pra crackear/autenticar.",
+      "Ignorar — 4769 é evento normal de autenticação."
+    ],
+    correct:1,
+    okFeed:"4769 + RC4 + conta com SPN = assinatura de Kerberoasting. O crack é <b>offline</b>, então você não vê o ataque acontecer — corta a raiz: <b>senha forte/gMSA</b> (inviável de crackear), menor privilégio na conta de serviço, e caça do uso posterior. É tirar a Dama do adversário do tabuleiro.",
+    badFeed:"Desligar Kerberos quebra o domínio inteiro — cura pior que a doença. Ignorar 4769 em massa com RC4 ignora justamente a pegada do ataque. A defesa real é senha não-crackeável (gMSA) + menor privilégio.",
+    ref:"Detecção: 4769 + RC4 + SPN. Defesa: gMSA/senha longa, least privilege, caçar uso do TGS."
+  },
+  {
+    stage:"Lateral (PtH)", role:"rook",
+    title:"Logon administrativo de host incomum",
+    mitre:"TA0008 · Lateral Movement",
+    situation:"Eventos <b>4624 tipo 3</b> + <b>4672</b> (privilégios especiais) de um host que <b>nunca</b> faz admin logon, usando uma conta de serviço. Cheiro de <b>Pass-the-Hash</b>. <b>Resposta?</b>",
+    options:[
+      "Desabilitar só a conta de serviço e dar por encerrado.",
+      "<b>Conter a origem</b> (isolar o host), <b>desabilitar/rotacionar</b> a conta abusada, <b>segmentar</b> pra cortar o caminho e caçar outros hosts onde a mesma credencial autenticou.",
+      "Esperar pra ver se acontece de novo antes de agir."
+    ],
+    correct:1,
+    okFeed:"PtH usa o <b>hash</b>, não a senha — por isso aparece como logon 'legítimo' de origem estranha. Você contém o host de origem, queima a credencial, <b>segmenta</b> a rede pra cortar a rota lateral, e caça onde mais esse hash autenticou. Não basta uma conta: o adversário replica o salto.",
+    badFeed:"Desabilitar uma conta só é tapar um buraco enquanto o atacante anda por outros. Esperar 'pra confirmar' cede iniciativa numa fase de movimento ativo. Contenção + segmentação + caça ampla.",
+    ref:"4624(type3)+4672 anômalo = PtH. Conter origem, rotacionar, segmentar, caçar reuso do hash."
+  },
+  {
+    stage:"Exfiltração", role:"bishop",
+    title:"Saída volumosa pra storage externo",
+    mitre:"TA0010 · Exfiltration",
+    situation:"Transferência de saída <b>grande e incomum</b> de um servidor de arquivos pra um storage em nuvem desconhecido, fora do horário. <b>Ação imediata?</b>",
+    options:[
+      "Esperar o backup terminar — pode ser job legítimo.",
+      "<b>Bloquear o egress</b> agora (DLP/firewall), <b>quantificar</b> o que saiu, <b>preservar</b> evidência e acionar a comunicação de incidente.",
+      "Só registrar o volume num relatório semanal."
+    ],
+    correct:1,
+    okFeed:"Exfiltração é a captura da sua Joia saindo pela porta. Você <b>corta o egress</b> imediatamente (DLP/regra de firewall/sinkhole), <b>mede</b> o que já vazou (escopo do dano = base da notificação legal/LGPD), preserva evidência e <b>aciona o plano de comunicação</b> de incidente.",
+    badFeed:"'Pode ser backup' fora de hora pra storage desconhecido é a desculpa que deixa os dados irem embora. Relatório semanal é tarde demais — exfiltração é janela curta. Bloqueie e quantifique já.",
+    ref:"Bloqueio de egress/DLP; quantificar dados (escopo p/ notificação); acionar IR comms. NIST 800-61."
+  },
+  {
+    stage:"Erradicação", role:"king",
+    title:"DC comprometido — fechar o ciclo",
+    mitre:"TA0040 · Eradicate & Recover",
+    situation:"A investigação confirma comprometimento que chegou ao <b>Domain Controller</b> (DCSync). Como <b>erradicar e recuperar</b> sem deixar a Joia envenenada?",
+    options:[
+      "Deletar o malware encontrado e reabrir o ambiente.",
+      "Ciclo completo de IR: <b>resetar o krbtgt duas vezes</b>, rotacionar credenciais privilegiadas, reconstruir de baseline confiável, validar e só então recuperar — fechando com lições aprendidas.",
+      "Restaurar o backup de ontem e seguir a vida."
+    ],
+    correct:1,
+    okFeed:"<b>Joia salva.</b> Com DCSync, o atacante pode ter o hash do <b>krbtgt</b> (Golden Ticket = acesso eterno) — por isso o reset <b>duplo</b> do krbtgt é obrigatório, além de rotacionar credenciais privilegiadas e reconstruir do baseline. Você fecha o ciclo NIST: erradicar → recuperar → <b>lições aprendidas</b>. Defesa em profundidade restabelecida.",
+    badFeed:"Deletar o malware deixa persistência e tickets forjados intactos — reinfecção quase garantida. Backup de ontem pode já estar comprometido e <b>não</b> resolve o krbtgt roubado. Erradicação real é metódica, não cosmética.",
+    ref:"Golden Ticket → reset krbtgt 2x; rotacionar privilegiadas; rebuild de baseline; lessons learned (NIST)."
+  }
+];
+
+/* ---------- estado ---------- */
+const state = {
+  side:"red",
+  deck:RED_DECK,
+  idx:0,
+  good:0,     // 0..100  (acesso / contenção)
+  doom:0,     // 0..100  (detecção / comprometimento)
+  answered:false,
+  pathProgress:0, // quantos nós conquistados (red) / segurados (blue)
+  enemyAdvance:0, // só blue: quão perto o atacante chegou do rei
+  reduced: window.matchMedia('(prefers-reduced-motion: reduce)').matches
+};
+
+const CFG = {
+  red:{
+    team:"var(--magenta)",
+    op:"INTRUSÃO",
+    goodName:"Acesso", doomName:"Detecção",
+    goodDesc:"progresso na kill chain",
+    winTitle:"DOMÍNIO COMPROMETIDO",
+    winBody:"Da rede de borda ao <b>Domain Controller</b> em uma cadeia limpa. Enumeração ampla, privesc por misconfig, pivoting pra dentro do AD, Kerberoast e <b>DCSync</b> no Rei. Isto é um relatório de OSCP+ que passa.",
+    loseTitle:"OPERAÇÃO QUEIMADA",
+    loseBody:"O barulho acumulado estourou a <b>Detecção</b> e o Blue Team te ejetou antes da Joia. No exame, decisões erradas custam tempo e sessões — reduza ruído, enumere mais, pivote com método."
+  },
+  blue:{
+    team:"var(--cyan)",
+    op:"DEFESA",
+    goodName:"Contenção", doomName:"Comprometimento",
+    goodDesc:"avanço da resposta",
+    winTitle:"ADVERSÁRIO EJETADO",
+    winBody:"Você quebrou a kill chain antes da Joia: triagem sem pânico, contenção preservando evidência, caça por IOC, e erradicação que <b>resetou o krbtgt</b>. Defesa em profundidade restabelecida — ciclo NIST fechado.",
+    loseTitle:"JOIA COMPROMETIDA",
+    loseBody:"O atacante atravessou as camadas até o <b>Domain Controller</b>. Reações tardias e contenção destrutiva deram tempo e evidência ao adversário. Contenha sem destruir, expanda a caça, assuma credenciais queimadas."
+  }
+};
+
+/* ---------- tabuleiro: caminho da kill chain ---------- */
+/* caminho em zigue-zague do canto inferior-esquerdo até o Rei (topo-centro) */
+let PATH = [];
+function buildPath(n){
+  // gera n casas únicas subindo o tabuleiro; rei fica fixo no topo
+  const cells=[];
+  const king={c:4,r:0};
+  // pontos de partida no fundo, serpenteando
+  let c=0,r=7;
+  cells.push({c,r});
+  const total=n;
+  for(let i=1;i<total-1;i++){
+    // sobe gradualmente e oscila horizontalmente em direção ao rei
+    const t=i/(total-1);
+    r = Math.max(1, Math.round(7 - t*6));
+    const wave = Math.sin(i*1.05)*2.4;
+    c = Math.min(7, Math.max(0, Math.round(2 + t*2 + wave)));
+    // evita repetição exata
+    if(cells.some(x=>x.c===c&&x.r===r)) c=Math.min(7,c+1);
+    cells.push({c,r});
+  }
+  cells.push(king);
+  return cells;
+}
+
+/* glyphs de xadrez por papel */
+const GLYPH={king:"♚",queen:"♛",rook:"♜",bishop:"♝",knight:"♞",pawn:"♟"};
+const ROLE_PT={king:"DC · Joia",queen:"SOC/IR",rook:"Firewall",bishop:"SIEM/Det.",knight:"Hunter",pawn:"Endpoint"};
+
+/* ---------- canvas render ---------- */
+const cv=document.getElementById('board');
+const ctx=cv.getContext('2d');
+let DPR=Math.min(window.devicePixelRatio||1,2);
+
+function sizeCanvas(){
+  const w=cv.clientWidth||cv.parentElement.clientWidth-28;
+  DPR=Math.min(window.devicePixelRatio||1,2);
+  cv.width=Math.round(w*DPR);
+  cv.height=Math.round(w*DPR);
+  draw();
+}
+function css(v){return getComputedStyle(document.documentElement).getPropertyValue(v).trim();}
+
+function draw(){
+  const S=cv.width, cell=S/8;
+  ctx.clearRect(0,0,S,S);
+  const teamCol=css(state.side==='red'?'--magenta':'--cyan');
+  const enemyCol=css(state.side==='red'?'--cyan':'--magenta');
+  const gold=css('--gold');
+
+  // casas
+  for(let r=0;r<8;r++)for(let c=0;c<8;c++){
+    const dark=(r+c)%2===1;
+    ctx.fillStyle=dark?'#0a0814':'#0f0c1c';
+    ctx.fillRect(c*cell,r*cell,cell,cell);
+  }
+  // grade glow
+  ctx.strokeStyle='rgba(0,255,240,.07)';ctx.lineWidth=1*DPR;
+  for(let i=0;i<=8;i++){
+    ctx.beginPath();ctx.moveTo(i*cell,0);ctx.lineTo(i*cell,S);ctx.stroke();
+    ctx.beginPath();ctx.moveTo(0,i*cell);ctx.lineTo(S,i*cell);ctx.stroke();
+  }
+
+  // rota da kill chain (linha entre nós)
+  if(PATH.length){
+    ctx.lineWidth=2.5*DPR;
+    ctx.strokeStyle='rgba(255,230,0,.18)';
+    ctx.setLineDash([6*DPR,6*DPR]);
+    ctx.beginPath();
+    PATH.forEach((p,i)=>{
+      const x=p.c*cell+cell/2,y=p.r*cell+cell/2;
+      i?ctx.lineTo(x,y):ctx.moveTo(x,y);
+    });
+    ctx.stroke();
+    ctx.setLineDash([]);
+  }
+
+  // peças ao longo da kill chain
+  PATH.forEach((p,i)=>{
+    if(i===PATH.length-1) return; // rei desenhado à parte
+    const role=state.deck[i]?state.deck[i].role:'pawn';
+    const isActive = (i===state.idx);
+    // "overrun": casa já atravessada pela frente de avanço do atacante
+    const overrun = state.side==='red' ? (i<state.pathProgress)
+                                       : (i<state.enemyAdvance);
+    // destaque do nó ativo
+    if(isActive){
+      ctx.save();
+      ctx.shadowColor=gold;ctx.shadowBlur=22*DPR;
+      ctx.strokeStyle=gold;ctx.lineWidth=2.5*DPR;
+      ctx.strokeRect(p.c*cell+3*DPR,p.r*cell+3*DPR,cell-6*DPR,cell-6*DPR);
+      ctx.restore();
+    }
+    // camada de defesa intacta = ciano; tombada = cinza
+    const col = overrun ? '#4a4a5a' : (state.side==='red' ? enemyCol : teamCol);
+    drawPiece(role,p.c*cell,p.r*cell,cell,col,gold,isActive);
+  });
+
+  // operativo / frente de avanço (magenta = atacante sempre)
+  const attackerCol=css('--magenta');
+  let opIdx;
+  if(state.side==='red'){ opIdx=Math.min(state.pathProgress, PATH.length-2); }
+  else { opIdx=Math.min(state.enemyAdvance, PATH.length-2); }
+  if(PATH[opIdx]){
+    const p=PATH[opIdx];
+    const x=p.c*cell+cell/2, y=p.r*cell+cell/2;
+    const t=performance.now()/600;
+    const pulse = state.reduced?0:Math.sin(t)*2*DPR;
+    ctx.save();
+    ctx.shadowColor=attackerCol;ctx.shadowBlur=(18+pulse*3)*DPR;
+    ctx.fillStyle=attackerCol;
+    // losango "cursor de operação"
+    const s=cell*0.16+pulse;
+    ctx.beginPath();
+    ctx.moveTo(x,y-cell*0.34);ctx.lineTo(x+s,y-cell*0.34+s);
+    ctx.lineTo(x,y-cell*0.34+2*s);ctx.lineTo(x-s,y-cell*0.34+s);
+    ctx.closePath();ctx.fill();
+    ctx.restore();
+  }
+
+  // Rei / Joia
+  const king=PATH[PATH.length-1];
+  if(king){
+    const t=performance.now()/700;
+    const pulse=state.reduced?0:(0.5+0.5*Math.sin(t));
+    ctx.save();
+    ctx.shadowColor=gold;ctx.shadowBlur=(16+pulse*20)*DPR;
+    drawPiece('king',king.c*cell,king.r*cell,cell,gold,gold,true);
+    ctx.restore();
+  }
+}
+
+function drawPiece(role,x,y,cell,col,glow,active){
+  const cx=x+cell/2, cy=y+cell/2;
+  ctx.save();
+  ctx.shadowColor=glow; ctx.shadowBlur=active?12*DPR:6*DPR;
+  ctx.fillStyle=col;
+  ctx.font=`${Math.round(cell*0.56)}px 'JetBrains Mono', monospace`;
+  ctx.textAlign='center'; ctx.textBaseline='middle';
+  ctx.fillText(GLYPH[role]||'♟', cx, cy-cell*0.06);
+  ctx.restore();
+  // rótulo do papel
+  ctx.save();
+  ctx.fillStyle='rgba(180,180,200,.6)';
+  ctx.font=`${Math.round(cell*0.13)}px 'JetBrains Mono', monospace`;
+  ctx.textAlign='center';ctx.textBaseline='middle';
+  ctx.fillText(ROLE_PT[role]||'', cx, cy+cell*0.34);
+  ctx.restore();
+}
+
+/* loop suave só p/ pulsos */
+function raf(){ if(!state.reduced){ draw(); } requestAnimationFrame(raf); }
+
+/* ---------- UI / fluxo ---------- */
+const el=id=>document.getElementById(id);
+const consoleEl=el('console');
+
+function setTeamVar(){
+  document.documentElement.style.setProperty('--team', state.side==='red'?'var(--magenta)':'var(--cyan)');
+}
+
+function renderBars(){
+  const cfg=CFG[state.side];
+  el('goodName').textContent=cfg.goodName;
+  el('doomName').textContent=cfg.doomName;
+  el('goodVal').textContent=Math.round(state.good)+'%';
+  el('doomVal').textContent=Math.round(state.doom)+'%';
+  el('goodFill').style.width=state.good+'%';
+  el('doomFill').style.width=state.doom+'%';
+  el('opName').textContent=cfg.op;
+  el('turnNum').textContent=Math.min(state.idx+1,state.deck.length);
+  el('turnTot').textContent=state.deck.length;
+}
+
+function renderRail(){
+  const rail=el('chainRail'); rail.innerHTML='';
+  state.deck.forEach((d,i)=>{
+    const n=document.createElement('div');
+    n.className='node'+(i<state.idx?' done':'')+(i===state.idx?' active':'');
+    n.textContent=(i+1)+'· '+d.stage;
+    rail.appendChild(n);
+  });
+}
+
+function renderCard(){
+  const d=state.deck[state.idx];
+  state.answered=false;
+  consoleEl.innerHTML='';
+  const card=document.createElement('div');
+  card.className='card';
+  card.innerHTML=`
+    <div class="meta">
+      <span class="tag stage">Fase ${state.idx+1} · ${d.stage}</span>
+      <span class="tag mitre">${d.mitre}</span>
+    </div>
+    <h2>${d.title}</h2>
+    <div class="situation">${d.situation}</div>
+  `;
+  const choices=document.createElement('div');
+  choices.className='choices';
+  d.options.forEach((opt,i)=>{
+    const b=document.createElement('button');
+    b.className='choice';
+    b.innerHTML=`<span class="k">${String.fromCharCode(65+i)}</span><span>${opt}</span>`;
+    b.onclick=()=>answer(i,b,choices);
+    choices.appendChild(b);
+  });
+  const fb=document.createElement('div');
+  fb.className='feedback'; fb.id='feedback';
+  const next=document.createElement('button');
+  next.className='next hidden'; next.id='nextBtn';
+  next.textContent='Próximo lance ▸';
+  next.onclick=advance;
+
+  consoleEl.appendChild(card);
+  consoleEl.appendChild(choices);
+  consoleEl.appendChild(fb);
+  consoleEl.appendChild(next);
+  renderRail(); renderBars(); draw();
+}
+
+function answer(i,btn,choicesWrap){
+  if(state.answered) return;
+  state.answered=true;
+  const d=state.deck[state.idx];
+  const ok = i===d.correct;
+  // trava botões
+  [...choicesWrap.children].forEach((b,bi)=>{
+    b.disabled=true;
+    if(bi===d.correct) b.classList.add('correct');
+    if(bi===i && !ok) b.classList.add('wrong');
+  });
+  // efeitos de estado
+  if(ok){
+    state.good=Math.min(100, state.good + (100/state.deck.length));
+    if(state.side==='red'){ state.pathProgress=Math.min(state.deck.length, state.pathProgress+1); }
+    else { /* blue segura: empurra o atacante 1 nó pra trás se possível */
+      state.enemyAdvance=Math.max(0, state.enemyAdvance-1);
+      state.pathProgress=Math.min(state.deck.length, state.pathProgress+1);
+    }
+  }else{
+    if(state.side==='red'){ state.doom=Math.min(100, state.doom+34); } // 3 erros queimam a op
+    else { state.enemyAdvance+=1; state.doom=Math.min(100, state.doom+ (100/Math.max(1,state.deck.length-1)) ); }
+    if(!state.reduced){ const bp=el('boardPanel'); bp.classList.remove('shake'); void bp.offsetWidth; bp.classList.add('shake'); }
+  }
+  // feedback
+  const fb=el('feedback');
+  fb.classList.add('show', ok?'ok':'bad');
+  fb.innerHTML=`
+    <div class="verdict">${ok?'Lance correto':'Armadilha'}</div>
+    <div class="txt">${ok?d.okFeed:d.badFeed}</div>
+    <div class="ref"><b>Estudo:</b> ${d.ref}</div>
+  `;
+  renderBars(); draw();
+
+  // checa derrota imediata
+  const blueBreached = state.side==='blue' && state.enemyAdvance>=PATH.length-1;
+  if(state.doom>=100 || blueBreached){ setTimeout(()=>endGame(false), 650); return; }
+  el('nextBtn').classList.remove('hidden');
+}
+
+function advance(){
+  // vitória se chegou ao fim
+  if(state.idx>=state.deck.length-1){
+    const won = state.doom<100;
+    return endGame(won);
+  }
+  state.idx++;
+  renderCard();
+}
+
+function endGame(win){
+  const cfg=CFG[state.side];
+  const ov=el('overlay'), card=el('endCard');
+  card.className='endcard '+(win?'win':'lose');
+  el('endEyebrow').textContent = win?'objetivo cumprido':'kill chain falhou';
+  el('endTitle').textContent = win?cfg.winTitle:cfg.loseTitle;
+  el('endBody').innerHTML = win?cfg.winBody:cfg.loseBody;
+  ov.classList.add('show');
+}
+
+/* ---------- controle de modo ---------- */
+function startSide(side){
+  state.side=side;
+  state.deck = side==='red'?RED_DECK:BLUE_DECK;
+  state.idx=0; state.good=0; state.doom=0; state.answered=false;
+  state.pathProgress=0; state.enemyAdvance=0;
+  if(side==='blue') state.enemyAdvance=0;
+  PATH=buildPath(state.deck.length);
+  setTeamVar();
+  // toggle visual
+  el('btnRed').classList.toggle('on', side==='red');
+  el('btnBlue').classList.toggle('on', side==='blue');
+  el('btnRed').setAttribute('aria-selected', side==='red');
+  el('btnBlue').setAttribute('aria-selected', side==='blue');
+  el('overlay').classList.remove('show');
+  sizeCanvas();
+  renderCard();
+}
+
+el('btnRed').onclick=()=>startSide('red');
+el('btnBlue').onclick=()=>startSide('blue');
+el('restartMini').onclick=()=>startSide(state.side);
+el('endAgain').onclick=()=>startSide(state.side);
+el('endSwap').onclick=()=>startSide(state.side==='red'?'blue':'red');
+
+window.addEventListener('resize', sizeCanvas);
+
+/* boot */
+startSide('red');
+raf();
+</script>
+</body>
+</html>

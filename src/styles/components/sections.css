@@ -12,16 +12,15 @@
   background-color: var(--encodere-bg-card);
   display: flex;
   flex-direction: column;
-  justify-content: flex-end;
-  background-image: var(
-    --encodere-hero-bg-image,
+  justify-content: center;
+  background-image:
+    var(--encodere-hero-bg-image, url('/images/bg-encodere-se.png')),
     linear-gradient(
       135deg,
       color-mix(in oklch, var(--encodere-violet) 10%, var(--encodere-bg-card)) 0%,
       var(--encodere-bg-card) 45%,
       color-mix(in oklch, var(--encodere-cyan) 8%, var(--encodere-bg-card)) 100%
-    )
-  );
+    );
   background-size: cover;
   background-position: center;
 }
@@ -63,8 +62,12 @@
   }
 }
 
+ mark {
+  background-color: var(--color-cyan);
+ }
+
 .encodere-hero mark {
-  background-color: transparent;
+  background-color: var(--color-cyan);
   color: var(--encodere-violet-bright);
   font-weight: 700;
   letter-spacing: var(--tracking-wide);

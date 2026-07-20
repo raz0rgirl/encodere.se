@@ -29,17 +29,17 @@ function formatDate(date: Date) {
     <BreadcrumbNav
       items={[
         { label: 'início', href: '/' },
-        { label: 'grimório', active: true },
+        { label: 'grimório digital', active: true },
       ]}
     />
 
     <header class="encodere-blog-index__header">
-      <p class="encodere-section__eyebrow">casa do círculo</p>
-      <GlitchTitle text="grimório" as="h1" />
-      <p class="encodere-blog-index__lede">
+      <p class="encodere-section__eyebrow">laboratório de experimentos</p>
+      <GlitchTitle text="grimório digital" as="h1" />
+      <!-- <p class="encodere-blog-index__lede">
         cada transmissão mora numa sala — entre lareira, janelas e sigilos. este é o lar das
         experiências do círculo.
-      </p>
+      </p> -->
       <AsciiRule />
     </header>
 
@@ -77,7 +77,7 @@ function formatDate(date: Date) {
               <div class="grimoire-atrium__divider-line" />
             </div>
 
-            <ul class="grimoire-atrium__rooms">
+            {/* <ul class="grimoire-atrium__rooms">
               {
                 rest.map((post, index) => (
                   <li>
@@ -95,7 +95,7 @@ function formatDate(date: Date) {
                   </li>
                 ))
               }
-            </ul>
+            </ul> */}
           </>
         )
       }

@@ -1,27 +1,7 @@
 /* GRIMÓRIO // XEQUE — design tokens (fonte canônica) */
 
 :root {
-  /* fundos (do mais fundo ao mais elevado) */
-  --void: #050308;
-  --void-2: #0c0a16;
-  --void-3: #13101f;
-
-  /* acentos de fósforo (semânticos) */
-  --cyan: #00fff0;
-  --magenta: #ff00aa;
-  --gold: #ffe600;
-  --danger: #ff3b3b;
-
-  /* texto */
-  --ink: #e9e7f5;
-  --ash-2: #a9a6c0;
-  --ash: #7a7790;
-
-  /* linhas */
-  --line: rgba(0, 255, 240, 0.14);
-  --line-soft: rgba(0, 255, 240, 0.08);
-
-  /* tipografia */
+  /* tipografia (tema-agnóstico) */
   --mono: 'JetBrains Mono Variable', 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
   --disp: 'Chakra Petch', var(--mono);
 
@@ -30,28 +10,10 @@
   --grimorio-sidebar: 14.25rem; /* 228px */
   --grimorio-topbar-offset: 4.625rem; /* 74px */
 
-  /* glows (receitas) */
-  --glow-cyan: 0 0 14px rgba(0, 255, 240, 0.25);
-  --glow-magenta: 0 0 14px rgba(255, 0, 170, 0.2);
-  --glow-gold: 0 0 14px rgba(255, 230, 0, 0.3);
-
-  /* ── aliases legado encodere.se (migração incremental) ── */
-  --encodere-bg: var(--void);
-  --encodere-fg: var(--ink);
-  --encodere-fg-2: var(--ash-2);
-  --encodere-fg-3: var(--ash);
-  --encodere-violet: var(--magenta);
-  --encodere-violet-bright: var(--magenta);
-  --encodere-cyan: var(--cyan);
-  --encodere-rule: var(--line);
-  --encodere-rule-2: var(--line-soft);
-  --encodere-bg-elev: var(--void-2);
-  --encodere-bg-card: var(--void-2);
   --encodere-step: 4px;
   --encodere-font: var(--mono);
   --encodere-display: var(--disp);
   --encodere-radius: 12px;
-  --encodere-shadow: var(--glow-cyan);
 
   /* layout — fluid rhythm */
   --encodere-gutter: clamp(var(--space-4), 4vw, var(--space-8));
@@ -62,13 +24,13 @@
   --encodere-col-min-sm: clamp(13rem, 30vw, 16rem);
   --encodere-col-min-card: clamp(16rem, 28vw, 22rem);
   --encodere-sidebar: var(--grimorio-sidebar);
-  --encodere-prose-measure: clamp(18rem, 55ch, 42.5rem); /* ~68ch */
+  --encodere-prose-measure: clamp(18rem, 55ch, 42.5rem);
   --encodere-form-max: clamp(18rem, 90vw, 32.5rem);
   --encodere-form-max-narrow: clamp(16rem, 85vw, 25rem);
   --encodere-content-max: var(--encodere-content-fluid);
   --encodere-topnav-height: 3.5rem;
 
-  /* spacing scale — derived from --encodere-step */
+  /* spacing scale */
   --space-1: calc(var(--encodere-step) * 1);
   --space-2: calc(var(--encodere-step) * 2);
   --space-3: calc(var(--encodere-step) * 3);
@@ -80,7 +42,7 @@
   --space-12: calc(var(--encodere-step) * 12);
   --space-16: calc(var(--encodere-step) * 16);
 
-  /* letter-spacing — em-based */
+  /* letter-spacing */
   --tracking-tighter: -0.04em;
   --tracking-tight: -0.025em;
   --tracking-snug: -0.015em;
@@ -109,7 +71,56 @@
   --leading-relaxed: 1.7;
   --leading-code: 1.7;
 
-  /* shadcn/ui + TheGrid CN bridge */
+  --radius: 0.75rem;
+  --on-phosphor: #050308;
+}
+
+/* ── Dark (grimório CRT) — default ── */
+:root,
+[data-theme='dark'] {
+  --void: #050308;
+  --void-2: #0c0a16;
+  --void-3: #13101f;
+
+  --cyan: #00fff0;
+  --magenta: #ff00aa;
+  --gold: #9d00ff;
+  --danger: #ff3b3b;
+
+  --ink: #e9e7f5;
+  --ash-2: #a9a6c0;
+  --ash: #7a7790;
+
+  --line: rgba(0, 255, 240, 0.14);
+  --line-soft: rgba(0, 255, 240, 0.08);
+
+  --glow-cyan: 0 0 14px rgba(0, 255, 240, 0.25);
+  --glow-magenta: 0 0 14px rgba(255, 0, 170, 0.2);
+  --glow-gold: 0 0 14px rgba(255, 230, 0, 0.3);
+
+  --page-bg:
+    radial-gradient(1100px 640px at 88% -8%, rgba(255, 0, 170, 0.07), transparent 60%),
+    radial-gradient(900px 640px at -8% 8%, rgba(0, 255, 240, 0.06), transparent 55%),
+    var(--void);
+
+  --topbar-bg: linear-gradient(180deg, rgba(5, 3, 8, 0.92), rgba(5, 3, 8, 0.6));
+  --selection-bg: rgba(255, 0, 170, 0.3);
+  --selection-fg: #fff;
+  --scanline-opacity: 0.45;
+
+  --encodere-bg: var(--void);
+  --encodere-fg: var(--ink);
+  --encodere-fg-2: var(--ash-2);
+  --encodere-fg-3: var(--ash);
+  --encodere-violet: var(--magenta);
+  --encodere-violet-bright: var(--magenta);
+  --encodere-cyan: var(--cyan);
+  --encodere-rule: var(--line);
+  --encodere-rule-2: var(--line-soft);
+  --encodere-bg-elev: var(--void-2);
+  --encodere-bg-card: var(--void-2);
+  --encodere-shadow: var(--glow-cyan);
+
   --background: var(--void);
   --foreground: var(--ink);
   --card: var(--void-2);
@@ -128,14 +139,42 @@
   --border: var(--line);
   --input: var(--line);
   --ring: var(--gold);
-  --radius: 0.75rem;
   --glow: var(--cyan);
   --glow-muted: var(--magenta);
 }
 
-/* Tema único — grimório é escuro por design; light herda mesma paleta */
-[data-theme='light'],
-[data-theme='dark'] {
+/* ── Light (papel técnico) ── */
+[data-theme='light'] {
+  --void: #f4f2f9;
+  --void-2: #ebe8f4;
+  --void-3: #e0dce8;
+
+  --cyan: #007a72;
+  --magenta: #b8007a;
+  --gold: #9d00ff;
+  --danger: #c62828;
+
+  --ink: #14101f;
+  --ash-2: #3a3650;
+  --ash: #6e6a82;
+
+  --line: rgba(0, 122, 114, 0.22);
+  --line-soft: rgba(0, 122, 114, 0.12);
+
+  --glow-cyan: 0 0 12px rgba(0, 122, 114, 0.18);
+  --glow-magenta: 0 0 12px rgba(184, 0, 122, 0.15);
+  --glow-gold: 0 0 12px rgba(154, 130, 0, 0.18);
+
+  --page-bg:
+    radial-gradient(1100px 640px at 88% -8%, rgba(184, 0, 122, 0.05), transparent 60%),
+    radial-gradient(900px 640px at -8% 8%, rgba(0, 122, 114, 0.05), transparent 55%),
+    var(--void);
+
+  --topbar-bg: linear-gradient(180deg, rgba(244, 242, 249, 0.95), rgba(244, 242, 249, 0.82));
+  --selection-bg: rgba(184, 0, 122, 0.18);
+  --selection-fg: var(--ink);
+  --scanline-opacity: 0;
+
   --encodere-bg: var(--void);
   --encodere-fg: var(--ink);
   --encodere-fg-2: var(--ash-2);
@@ -147,6 +186,28 @@
   --encodere-rule-2: var(--line-soft);
   --encodere-bg-elev: var(--void-2);
   --encodere-bg-card: var(--void-2);
+  --encodere-shadow: var(--glow-cyan);
+
+  --background: var(--void);
+  --foreground: var(--ink);
+  --card: var(--void-2);
+  --card-foreground: var(--ink);
+  --popover: var(--void-3);
+  --popover-foreground: var(--ink);
+  --primary: var(--magenta);
+  --primary-foreground: var(--void);
+  --secondary: var(--void-3);
+  --secondary-foreground: var(--ink);
+  --muted: var(--void-3);
+  --muted-foreground: var(--ash);
+  --accent: var(--cyan);
+  --accent-foreground: var(--void);
+  --destructive: var(--danger);
+  --border: var(--line);
+  --input: var(--line);
+  --ring: var(--gold);
+  --glow: var(--cyan);
+  --glow-muted: var(--magenta);
 }
 
 @theme inline {

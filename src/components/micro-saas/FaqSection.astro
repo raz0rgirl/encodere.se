@@ -1,0 +1,19 @@
+---
+import { FAQ_ITEMS } from '@/lib/micro-saas/faq';
+---
+
+<section class="encodere-section ms-faq" id="faq" aria-labelledby="faq-title">
+  <p class="encodere-section__eyebrow">dúvidas reais</p>
+  <h2 id="faq-title">perguntas que founders me mandam</h2>
+
+  <div class="ms-faq__list">
+    {
+      FAQ_ITEMS.map((item) => (
+        <details class="ms-faq__item">
+          <summary>{item.question}</summary>
+          <p>{item.answer}</p>
+        </details>
+      ))
+    }
+  </div>
+</section>

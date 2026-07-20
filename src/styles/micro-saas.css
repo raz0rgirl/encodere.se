@@ -1,7 +1,7 @@
 /* Micro SaaS landing — /micro-saas */
 
 .ms-hero {
-  --encodere-hero-bg-image: url('/images/hero-bg.png');
+  --encodere-hero-bg-image: url('/images/bg-encodere-se.png');
 }
 
 .ms-hero__lede {
@@ -15,6 +15,201 @@
   background-color: transparent;
   color: var(--encodere-cyan);
   font-weight: 700;
+}
+
+.ms-section-cta {
+  margin-top: var(--space-6);
+}
+
+/* Story */
+
+.ms-story__body {
+  max-width: 62ch;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.ms-story__body p {
+  margin: 0;
+  color: var(--encodere-fg-2);
+  line-height: var(--leading-relaxed);
+}
+
+.ms-method__map-lede {
+  margin: var(--space-8) 0 var(--space-4);
+  color: var(--encodere-fg-2);
+  max-width: 56ch;
+}
+
+/* Testimonials */
+
+.ms-testimonials {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: var(--space-4);
+  margin: var(--space-8) 0;
+}
+
+.ms-testimonial {
+  margin: 0;
+  padding: var(--space-5);
+  border: 1px solid var(--encodere-rule);
+  background: var(--encodere-bg-card);
+}
+
+.ms-testimonial p {
+  margin: 0 0 var(--space-4);
+  font-size: var(--text-sm);
+  color: var(--encodere-fg-2);
+  line-height: var(--leading-relaxed);
+}
+
+.ms-testimonial footer {
+  font-size: var(--text-xs);
+  color: var(--encodere-fg);
+}
+
+.ms-testimonial cite {
+  font-style: normal;
+  font-weight: 700;
+}
+
+.ms-testimonial__role {
+  font-weight: 400;
+  color: var(--encodere-fg-3);
+}
+
+.ms-quiz-anchor {
+  margin-top: var(--space-8);
+}
+
+.ms-quiz-anchor h3 {
+  margin-bottom: var(--space-2);
+}
+
+.ms-quiz-anchor > p {
+  color: var(--encodere-fg-2);
+  max-width: 52ch;
+}
+
+/* Before / after */
+
+.ms-transform {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: var(--space-4);
+  margin: var(--space-8) 0 0;
+}
+
+.ms-transform__col {
+  padding: var(--space-5);
+  border: 1px solid var(--encodere-rule);
+  background: var(--encodere-bg-card);
+}
+
+.ms-transform__col--after {
+  border-color: var(--encodere-cyan);
+}
+
+.ms-transform__col h3 {
+  margin: 0 0 var(--space-3);
+  font-size: var(--text-sm);
+  text-transform: uppercase;
+  letter-spacing: var(--tracking-wider);
+}
+
+.ms-transform__col ul {
+  margin: 0;
+  padding-left: var(--space-5);
+  font-size: var(--text-sm);
+  color: var(--encodere-fg-2);
+}
+
+.ms-transform__col li {
+  margin-bottom: var(--space-2);
+}
+
+.ms-pricing__phase-note {
+  margin: var(--space-4) 0 0;
+  padding: var(--space-3) var(--space-4);
+  border: 1px dashed var(--encodere-rule);
+  font-size: var(--text-sm);
+  color: var(--encodere-fg-2);
+  max-width: 60ch;
+}
+
+.ms-pricing__list-cta {
+  margin-top: var(--space-8);
+  display: flex;
+  justify-content: flex-start;
+}
+
+/* Scarcity */
+
+.ms-scarcity__reason {
+  max-width: 56ch;
+  color: var(--encodere-fg-2);
+}
+
+.ms-scarcity__metrics {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-4);
+  margin-top: var(--space-6);
+}
+
+.ms-scarcity__metric {
+  min-width: 140px;
+  padding: var(--space-4) var(--space-5);
+  border: 1px solid var(--encodere-rule);
+  background: var(--encodere-bg-card);
+}
+
+.ms-scarcity__value {
+  display: block;
+  font-size: var(--text-2xl);
+  font-weight: 800;
+  color: var(--encodere-violet);
+  letter-spacing: var(--tracking-tight);
+  line-height: var(--leading-tight);
+}
+
+.ms-scarcity__label {
+  display: block;
+  margin-top: var(--space-2);
+  font-size: var(--text-xs);
+  color: var(--encodere-fg-3);
+}
+
+/* FAQ */
+
+.ms-faq__list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  margin-top: var(--space-6);
+  max-width: 64ch;
+}
+
+.ms-faq__item {
+  border: 1px solid var(--encodere-rule);
+  background: var(--encodere-bg-card);
+  padding: var(--space-4) var(--space-5);
+}
+
+.ms-faq__item summary {
+  cursor: pointer;
+  font-weight: 700;
+  font-size: var(--text-sm);
+  list-style-position: outside;
+}
+
+.ms-faq__item p {
+  margin: var(--space-3) 0 0;
+  font-size: var(--text-sm);
+  color: var(--encodere-fg-2);
+  line-height: var(--leading-relaxed);
 }
 
 .ms-stats {

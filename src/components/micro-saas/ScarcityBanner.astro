@@ -1,0 +1,43 @@
+---
+import {
+  daysUntilDeadline,
+  formatDeadline,
+  getLaunchConfig,
+  hasHardScarcity,
+} from '@/lib/micro-saas/launch-config';
+
+const config = getLaunchConfig();
+const showHard = hasHardScarcity(config);
+const deadlineLabel = formatDeadline(config.listDeadline);
+const daysLeft = daysUntilDeadline(config.listDeadline);
+const showSection = Boolean(config.scarcityReason) || showHard;
+---
+
+{
+  showSection && (
+    <section class="encodere-section ms-scarcity" id="urgencia" aria-labelledby="scarcity-title">
+      <p class="encodere-section__eyebrow">turma limitada</p>
+      <h2 id="scarcity-title">vagas com motivo real</h2>
+      <p class="ms-scarcity__reason">{config.scarcityReason}</p>
+
+      {showHard && (
+        <div class="ms-scarcity__metrics">
+          {typeof config.seatsRemaining === 'number' && (
+            <div class="ms-scarcity__metric">
+              <span class="ms-scarcity__value">{config.seatsRemaining}</span>
+              <span class="ms-scarcity__label">vagas restantes nesta turma</span>
+            </div>
+          )}
+          {deadlineLabel && (
+            <div class="ms-scarcity__metric">
+              <span class="ms-scarcity__value">
+                {daysLeft !== null && daysLeft >= 0 ? `${daysLeft}d` : '—'}
+              </span>
+              <span class="ms-scarcity__label">até {deadlineLabel}</span>
+            </div>
+          )}
+        </div>
+      )}
+    </section>
+  )
+}

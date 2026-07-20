@@ -8,7 +8,7 @@
 |---|---|---|
 | 2026-06-24 | Design system canônico: GRIMÓRIO // XEQUE | Guia completo com tokens, componentes, voz; substitui oklch light/dark como identidade primária |
 | 2026-06-24 | Aliases `--encodere-*` → tokens grimório | Migração incremental sem reescrever todo CSS legado |
-| 2026-06-24 | Tema escuro único (grimório) | Spec é CRT/void; light theme removido do default |
+| 2026-06-24 | Light mode: paleta "papel técnico" em `[data-theme='light']` | Acentos escurecidos para contraste; scanlines off; toggle restaurado |
 | 2026-06-24 | Chakra Petch display + JetBrains Mono body | Tipografia dual conforme XEQUE//CYBER e Grimório System Design |
 | 2026-06-10 | Landing canônica: manifesto-zine | Spec recomenda; melhor identidade para topo de funil |
 | 2026-06-10 | GlitchTitle como `.astro` (CSS puro) | Spec prefere zero-JS quando título é estático |

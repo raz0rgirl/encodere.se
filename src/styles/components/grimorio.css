@@ -31,7 +31,7 @@
   top: 0;
   z-index: 40;
   backdrop-filter: blur(10px);
-  background: linear-gradient(180deg, rgba(5, 3, 8, 0.92), rgba(5, 3, 8, 0.6));
+  background: var(--topbar-bg);
   border-bottom: 1px solid var(--line);
 }
 
@@ -274,7 +274,7 @@ section.block:first-child {
 }
 
 .tablewrap tbody tr:hover {
-  background: rgba(0, 255, 240, 0.03);
+  background: color-mix(in srgb, var(--cyan) 3%, transparent);
 }
 
 .tablewrap td b {
@@ -290,7 +290,7 @@ section.block:first-child {
 /* 7.6 Callout / nota */
 .note {
   border-left: 2px solid var(--gold);
-  background: linear-gradient(90deg, rgba(255, 230, 0, 0.05), transparent);
+  background: linear-gradient(90deg, color-mix(in srgb, var(--gold) 5%, transparent), transparent);
   border-radius: 0 10px 10px 0;
   padding: 13px 16px;
   margin: 6px 0 20px;
@@ -311,7 +311,7 @@ section.block:first-child {
 
 .note.warn {
   border-left-color: var(--magenta);
-  background: linear-gradient(90deg, rgba(255, 0, 170, 0.06), transparent);
+  background: linear-gradient(90deg, color-mix(in srgb, var(--magenta) 6%, transparent), transparent);
 }
 
 .note.warn .k {
@@ -367,7 +367,7 @@ section.block:first-child {
   font-family: var(--disp);
   font-weight: 700;
   font-size: 12px;
-  color: var(--void);
+  color: var(--on-phosphor);
   background: var(--cyan);
   border-radius: 7px;
   width: 30px;

@@ -1,15 +1,67 @@
 ---
 import { PRICING_TIERS } from '@/lib/micro-saas/pricing';
+import {
+  canPurchase,
+  getLaunchConfig,
+  getPrimaryCta,
+  type LaunchPhase,
+} from '@/lib/micro-saas/launch-config';
 import { buildPricingWhatsAppMessage, buildWhatsAppUrl } from '@/lib/micro-saas/whatsapp';
 import WhatsAppButton from './WhatsAppButton.astro';
+
+interface Props {
+  phase?: LaunchPhase;
+}
+
+const { phase = getLaunchConfig().phase } = Astro.props;
+const purchaseOpen = canPurchase(phase);
+const primaryCta = getPrimaryCta(phase);
 ---
 
-<section class="encodere-section ms-pricing" id="precos" aria-labelledby="pricing-title">
-  <p class="encodere-section__eyebrow">investimento</p>
-  <h2 id="pricing-title">pacotes de consultoria</h2>
+<section class="encodere-section ms-pricing" id="oferta" aria-labelledby="pricing-title">
+  <p class="encodere-section__eyebrow">a oferta</p>
+  <h2 id="pricing-title">o que você leva</h2>
   <p class="ms-pricing__lede">
-    Preços transparentes para micro SaaS. Sem surpresa, sem contrato de enterprise de seis dígitos.
+    Consultoria hands-on para fundadores de micro SaaS. Sem enterprise theater, sem contrato de seis
+    dígitos.
   </p>
+
+  {
+    phase === 'closed' && (
+      <p class="ms-pricing__phase-note" role="status">
+        Lote atual encerrado. Entre na lista da próxima turma — o CTA abaixo te coloca nela.
+      </p>
+    )
+  }
+  {
+    phase === 'pre-launch' && (
+      <p class="ms-pricing__phase-note" role="status">
+        Preview da oferta. CTAs de compra abrem quando a turma iniciar — agora o próximo passo é a
+        lista de acesso.
+      </p>
+    )
+  }
+
+  <div class="ms-transform">
+    <div class="ms-transform__col">
+      <h3>Antes</h3>
+      <ul>
+        <li>Auth “bom o suficiente” e secrets no .env do laptop</li>
+        <li>Backup que ninguém restaurou de verdade</li>
+        <li>LGPD como slide, não como checklist do produto</li>
+        <li>Pânico se algo vazar</li>
+      </ul>
+    </div>
+    <div class="ms-transform__col ms-transform__col--after">
+      <h3>Depois</h3>
+      <ul>
+        <li>Controles críticos fechados (MFA, RBAC, rotação)</li>
+        <li>Restore testado + playbook de incidente</li>
+        <li>Prioridades em reais, não em CVSS abstrato</li>
+        <li>Canal claro pro que aparece na próxima semana</li>
+      </ul>
+    </div>
+  </div>
 
   <div class="ms-pricing__grid">
     {
@@ -29,14 +81,32 @@ import WhatsAppButton from './WhatsAppButton.astro';
               <li>{item}</li>
             ))}
           </ul>
-          <WhatsAppButton
-            href={buildWhatsAppUrl(buildPricingWhatsAppMessage(tier.id))}
-            variant={tier.highlight ? 'primary' : 'ghost'}
-          >
-            quero {tier.name.toLowerCase()}
-          </WhatsAppButton>
+          {purchaseOpen && (
+            <WhatsAppButton
+              href={buildWhatsAppUrl(buildPricingWhatsAppMessage(tier.id))}
+              variant={tier.highlight ? 'primary' : 'ghost'}
+            >
+              quero {tier.name.toLowerCase()}
+            </WhatsAppButton>
+          )}
         </article>
       ))
     }
   </div>
+
+  {
+    !purchaseOpen && (
+      <div class="ms-pricing__list-cta">
+        {primaryCta.external ? (
+          <WhatsAppButton href={primaryCta.href} variant="primary" size="lg">
+            {primaryCta.label}
+          </WhatsAppButton>
+        ) : (
+          <a class="btn btn--primary btn--lg" href={primaryCta.href}>
+            {primaryCta.label}
+          </a>
+        )}
+      </div>
+    )
+  }
 </section>

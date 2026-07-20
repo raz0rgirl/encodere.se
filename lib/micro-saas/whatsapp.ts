@@ -35,11 +35,34 @@ export function buildQuizWhatsAppMessage(
 
 export function buildPricingWhatsAppMessage(tierId: PricingTierId): string {
 	const tier = getTierById(tierId);
-	if (!tier) return buildWhatsAppUrl('Olá! Quero saber mais sobre consultoria de segurança para micro SaaS.');
+	if (!tier) {
+		return 'Olá! Quero saber mais sobre consultoria de segurança para micro SaaS.';
+	}
 
 	return [
 		`Olá! Vi o pacote *${tier.name}* (${tier.price}${tier.priceNote ?? ''}) no encodere.se/micro-saas.`,
 		'',
 		'Quero entender se faz sentido para o meu produto. Podemos agendar uma call?',
+	].join('\n');
+}
+
+export type WaitlistPhase = 'pre-launch' | 'closed';
+
+/** Waitlist / next-cohort capture via WhatsApp (MVP until email provider exists). */
+export function buildWaitlistWhatsAppMessage(
+	phase: WaitlistPhase | 'open' = 'pre-launch',
+): string {
+	if (phase === 'closed') {
+		return [
+			'Olá! Quero entrar na *lista da próxima turma* de Micro SaaS Seguro no encodere.se.',
+			'',
+			'Sou founder de micro SaaS e quero ser avisado(a) quando abrir vaga.',
+		].join('\n');
+	}
+
+	return [
+		'Olá! Quero entrar na *lista de acesso antecipado* de Micro SaaS Seguro no encodere.se.',
+		'',
+		'Sou founder de micro SaaS e quero garantir prioridade quando as vagas abrirem.',
 	].join('\n');
 }

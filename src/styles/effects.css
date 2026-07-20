@@ -13,12 +13,16 @@ body::after {
     rgba(0, 0, 0, 0.2) 2px 3px
   );
   mix-blend-mode: multiply;
-  opacity: 0.45;
+  opacity: var(--scanline-opacity);
+}
+
+[data-theme='light'] body::after {
+  display: none;
 }
 
 ::selection {
-  background: rgba(255, 0, 170, 0.3);
-  color: #fff;
+  background: var(--selection-bg);
+  color: var(--selection-fg);
 }
 
 :focus-visible {

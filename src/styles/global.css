@@ -34,10 +34,12 @@ body {
   color: var(--ink);
   word-wrap: break-word;
   overflow-wrap: break-word;
-  background:
-    radial-gradient(1100px 640px at 88% -8%, rgba(255, 0, 170, 0.07), transparent 60%),
-    radial-gradient(900px 640px at -8% 8%, rgba(0, 255, 240, 0.06), transparent 55%),
-    var(--void);
+  background: var(--page-bg);
+}
+
+.encodere-cta {
+  background-image: url('/images/cta-bg.png');
+  background-size: cover;
 }
 
 .encodere-main {
@@ -46,6 +48,9 @@ body {
   padding: clamp(var(--space-4), 6vw, var(--space-16)) var(--encodere-gutter);
 }
 
+.encodere-title {
+  font-size:8rem;
+}
 h1, h2, h3, h4, h5, h6 {
   margin: 0 0 var(--space-3);
   font-family: var(--disp);

@@ -6,137 +6,273 @@ import BreachThreatMap from '../../components/micro-saas/BreachThreatMap';
 import RiskQuiz from '../../components/micro-saas/RiskQuiz';
 import PricingGrid from '../../components/micro-saas/PricingGrid.astro';
 import WhatsAppButton from '../../components/micro-saas/WhatsAppButton.astro';
-import { buildWhatsAppUrl } from '@/lib/micro-saas/whatsapp';
+import ScarcityBanner from '../../components/micro-saas/ScarcityBanner.astro';
+import FaqSection from '../../components/micro-saas/FaqSection.astro';
+import { getLaunchConfig, getPrimaryCta } from '@/lib/micro-saas/launch-config';
+import { TESTIMONIALS } from '@/lib/micro-saas/testimonials';
 
 const title = 'Micro SaaS Seguro — Consultoria de Segurança';
 const description =
-  'Diagnóstico rápido de risco, preços transparentes e consultoria hands-on para tornar seu micro SaaS seguro.';
+  'Lista de acesso e consultoria hands-on para fundadores de micro SaaS que precisam de segurança real — sem enterprise theater.';
 
-const generalWhatsApp = buildWhatsAppUrl(
-  'Olá! Quero saber mais sobre consultoria de segurança para micro SaaS no encodere.se.',
-);
+const launch = getLaunchConfig();
+const primaryCta = getPrimaryCta(launch.phase);
 ---
 
 <SiteLayout title={title} description={description} wide>
-    <header slot="hero" class="encodere-hero__header ms-hero">
-      <div class="encodere-content">
-        <p class="encodere-section__eyebrow">consultoria · micro saas</p>
-        <GlitchTitle text="micro saas seguro" as="h1" />
-        <AsciiRule />
-        <p class="ms-hero__lede">
-          Seu produto fatura todo mês — mas um breach pode custar <mark>12 meses de MRR</mark> em
-          multas, churn e reputação.
-        </p>
-        <p>
-          Consultoria especializada para fundadores de micro SaaS que precisam de segurança real, sem
-          enterprise theater.
-        </p>
-        <div class="encodere-cta__actions" style="margin-top: var(--space-6);">
-          <a class="btn btn--primary btn--lg" href="#diagnostico">fazer diagnóstico grátis</a>
-          <a class="btn btn--ghost btn--lg" href="#precos">ver preços</a>
-        </div>
-      </div>
-    </header>
-
-    <section class="encodere-section">
-      <p class="encodere-section__eyebrow">por que importa</p>
-      <h2>micro saas é alvo fácil</h2>
-      <div class="ms-stats">
-        <div class="ms-stat">
-          <span class="ms-stat__value">43%</span>
-          <p class="ms-stat__label">
-            dos ataques cyber miram pequenas empresas — você compete com times de 2 pessoas contra
-            botnets automatizados.
-          </p>
-        </div>
-        <div class="ms-stat">
-          <span class="ms-stat__value">R$ 180k</span>
-          <p class="ms-stat__label">
-            custo médio de um incidente com vazamento de dados para PMEs no Brasil (multa LGPD +
-            churn + remediação).
-          </p>
-        </div>
-        <div class="ms-stat">
-          <span class="ms-stat__value">72h</span>
-          <p class="ms-stat__label">
-            é o prazo típico para notificar a ANPD após confirmar vazamento — sem playbook, vira
-            pânico.
-          </p>
-        </div>
-      </div>
-    </section>
-
-    <section class="encodere-section ms-breach-section" id="mapa-risco">
-      <p class="encodere-section__eyebrow">superfície de ataque</p>
-      <h2>seu micro saas no radar de quem quer seus dados</h2>
-      <p>
-        Mapa de exfiltração simulado — cada vetor abaixo aparece em incidentes reais de produtos com
-        equipe pequena, deploy rápido e zero revisão de segurança.
+  <!-- 1. Hero (pré-pré-lançamento) -->
+  <header slot="hero" class="encodere-hero__header ms-hero" id="hero">
+    <div class="encodere-content">
+      <p class="encodere-section__eyebrow">consultoria · micro saas · lançamento</p>
+      <GlitchTitle text="micro saas seguro" as="h1" />
+      <AsciiRule />
+      <p class="ms-hero__lede">
+        Fundador de micro SaaS: shippe com segurança real — sem enterprise theater — antes que um
+        breach coma <mark>meses de MRR</mark>.
       </p>
-      <BreachThreatMap client:visible />
-    </section>
+      <p>
+        Método testado em produtos com equipe enxuta, dados de usuários e receita recorrente. Entre
+        na sequência de acesso antes da oferta abrir.
+      </p>
+      <div class="encodere-cta__actions ms-hero__cta" style="margin-top: var(--space-6);">
+        {
+          primaryCta.external ? (
+            <WhatsAppButton href={primaryCta.href} variant="primary" size="lg">
+              {primaryCta.label}
+            </WhatsAppButton>
+          ) : (
+            <a class="btn btn--primary btn--lg" href={primaryCta.href}>
+              {primaryCta.label}
+            </a>
+          )
+        }
+      </div>
+    </div>
+  </header>
 
-    <section class="encodere-section">
-      <p class="encodere-section__eyebrow">como funciona</p>
-      <h2>do diagnóstico ao hardening</h2>
-      <div class="ms-steps">
-        <div class="ms-step">
-          <span class="ms-step__num">01</span>
-          <div>
-            <h3>trivia de 2 minutos</h3>
-            <p>
-              Responda 7 perguntas sobre usuários, dados e controles. Receba uma estimativa de
-              exposição financeira em reais.
-            </p>
-          </div>
-        </div>
-        <div class="ms-step">
-          <span class="ms-step__num">02</span>
-          <div>
-            <h3>pacote sob medida</h3>
-            <p>
-              Com base no seu score, sugerimos Diagnóstico Express, Hardening Sprint ou Guardião
-              Mensal — sem upsell genérico.
-            </p>
-          </div>
-        </div>
-        <div class="ms-step">
-          <span class="ms-step__num">03</span>
-          <div>
-            <h3>WhatsApp → call → entrega</h3>
-            <p>
-              Envie seu diagnóstico pelo WhatsApp. Agendamos uma call e começamos a fechar os
-              buracos críticos na sua stack.
-            </p>
-          </div>
+  <!-- 2. História -->
+  <section class="encodere-section ms-story" id="historia" aria-labelledby="story-title">
+    <p class="encodere-section__eyebrow">por que isso existe</p>
+    <h2 id="story-title">eu cansei de ver micro SaaS virar manchete</h2>
+    <div class="ms-story__body">
+      <p>
+        Eu construí carreira em segurança olhando o outro lado do desk: times grandes, orçamento,
+        ferramentas que ninguém no micro SaaS consegue pagar. Em paralelo, via founders — pessoas
+        como você — shipparem produto incrível com auth improvisado, secrets no chat e zero plan B
+        se algo vazasse.
+      </p>
+      <p>
+        O ponto de virada foi perceber que o problema não era “falta de consciência”. Era falta de
+        um caminho enxuto, em reais, que coubesse na semana de quem ainda escreve o código e atende
+        cliente. Enterprise theater só aumenta a culpa.
+      </p>
+      <p>
+        Micro SaaS Seguro nasceu daí: diagnóstico honesto, hardening hands-on e acompanhamento que
+        respeita o tamanho do seu time. Não vendo medo genérico — mostro exposição, priorizo e
+        fecho buracos com você.
+      </p>
+    </div>
+    <div class="ms-section-cta">
+      {
+        primaryCta.external ? (
+          <WhatsAppButton href={primaryCta.href} variant="ghost" size="md">
+            {primaryCta.label}
+          </WhatsAppButton>
+        ) : (
+          <a class="btn btn--ghost btn--md" href={primaryCta.href}>
+            {primaryCta.label}
+          </a>
+        )
+      }
+    </div>
+  </section>
+
+  <!-- 3a. Valor — oportunidade -->
+  <section class="encodere-section" id="oportunidade" aria-labelledby="opp-title">
+    <p class="encodere-section__eyebrow">bloco 1 · por que agora</p>
+    <h2 id="opp-title">seu micro saas já está no radar</h2>
+    <p>
+      Ataques automatizados não esperam você “contratar um CISO”. Eles miram stack moderna, deploy
+      rápido e time de poucas pessoas — exatamente o seu cenário.
+    </p>
+    <div class="ms-stats">
+      <div class="ms-stat">
+        <span class="ms-stat__value">43%</span>
+        <p class="ms-stat__label">
+          dos ataques cyber miram pequenas empresas — você compete com times de 2 pessoas contra
+          botnets automatizados.
+        </p>
+      </div>
+      <div class="ms-stat">
+        <span class="ms-stat__value">R$ 180k</span>
+        <p class="ms-stat__label">
+          custo médio de um incidente com vazamento de dados para PMEs no Brasil (multa LGPD +
+          churn + remediação).
+        </p>
+      </div>
+      <div class="ms-stat">
+        <span class="ms-stat__value">72h</span>
+        <p class="ms-stat__label">
+          é o prazo típico para notificar a ANPD após confirmar vazamento — sem playbook, vira
+          pânico.
+        </p>
+      </div>
+    </div>
+    <div class="ms-section-cta">
+      {
+        primaryCta.external ? (
+          <WhatsAppButton href={primaryCta.href} variant="ghost" size="md">
+            {primaryCta.label}
+          </WhatsAppButton>
+        ) : (
+          <a class="btn btn--ghost btn--md" href={primaryCta.href}>
+            {primaryCta.label}
+          </a>
+        )
+      }
+    </div>
+  </section>
+
+  <!-- 3b. Valor — método -->
+  <section class="encodere-section ms-breach-section" id="metodo" aria-labelledby="method-title">
+    <p class="encodere-section__eyebrow">bloco 2 · como funciona</p>
+    <h2 id="method-title">do diagnóstico ao hardening</h2>
+    <p>
+      Três passos claros. Sem teatro: você vê a superfície de ataque, mede exposição e fecha o que
+      importa primeiro.
+    </p>
+    <div class="ms-steps">
+      <div class="ms-step">
+        <span class="ms-step__num">01</span>
+        <div>
+          <h3>trivia de 2 minutos</h3>
+          <p>
+            Responda perguntas sobre usuários, dados e controles. Receba uma estimativa de
+            exposição financeira em reais.
+          </p>
         </div>
       </div>
-    </section>
+      <div class="ms-step">
+        <span class="ms-step__num">02</span>
+        <div>
+          <h3>pacote sob medida</h3>
+          <p>
+            Com base no seu score, sugerimos Diagnóstico Express, Hardening Sprint ou Guardião
+            Mensal — sem upsell genérico.
+          </p>
+        </div>
+      </div>
+      <div class="ms-step">
+        <span class="ms-step__num">03</span>
+        <div>
+          <h3>WhatsApp → call → entrega</h3>
+          <p>
+            Envie o contexto pelo WhatsApp. Agendamos uma call e começamos a fechar os buracos
+            críticos na sua stack.
+          </p>
+        </div>
+      </div>
+    </div>
+    <p class="ms-method__map-lede">
+      Mapa de exfiltração simulado — vetores que aparecem em incidentes reais de produtos com
+      equipe pequena e zero revisão de segurança.
+    </p>
+    <BreachThreatMap client:visible />
+    <div class="ms-section-cta">
+      {
+        primaryCta.external ? (
+          <WhatsAppButton href={primaryCta.href} variant="ghost" size="md">
+            {primaryCta.label}
+          </WhatsAppButton>
+        ) : (
+          <a class="btn btn--ghost btn--md" href={primaryCta.href}>
+            {primaryCta.label}
+          </a>
+        )
+      }
+    </div>
+  </section>
 
-    <section class="encodere-section" id="diagnostico">
-      <p class="encodere-section__eyebrow">diagnóstico rápido</p>
-      <h2>quanto um breach pode te custar?</h2>
+  <!-- 3c. Valor — resultado -->
+  <section class="encodere-section" id="resultado" aria-labelledby="result-title">
+    <p class="encodere-section__eyebrow">bloco 3 · o que muda</p>
+    <h2 id="result-title">resultado em reais — não em teoria</h2>
+    <p>
+      Fundadores que passaram pelo método saem com prioridades claras e buracos críticos fechados.
+      Faça o diagnóstico grátis abaixo e veja sua exposição estimada.
+    </p>
+
+    {
+      TESTIMONIALS.length > 0 && (
+        <div class="ms-testimonials">
+          {TESTIMONIALS.map((t) => (
+            <blockquote class="ms-testimonial">
+              <p>“{t.quote}”</p>
+              <footer>
+                <cite>
+                  {t.name}
+                  <span class="ms-testimonial__role"> · {t.role}</span>
+                </cite>
+              </footer>
+            </blockquote>
+          ))}
+        </div>
+      )
+    }
+
+    <div id="diagnostico" class="ms-quiz-anchor">
+      <h3>quanto um breach pode te custar?</h3>
       <p>
-        Trivia educativa — leva cerca de 2 minutos. No final, você recebe uma estimativa em BRL e um
-        link para falar comigo no WhatsApp com tudo preenchido.
+        Trivia educativa — cerca de 2 minutos. No final, estimativa em BRL e caminho claro pro
+        próximo passo.
       </p>
       <RiskQuiz client:visible />
-    </section>
+    </div>
 
-    <PricingGrid />
+    <div class="ms-section-cta">
+      {
+        primaryCta.external ? (
+          <WhatsAppButton href={primaryCta.href} variant="ghost" size="md">
+            {primaryCta.label}
+          </WhatsAppButton>
+        ) : (
+          <a class="btn btn--ghost btn--md" href={primaryCta.href}>
+            {primaryCta.label}
+          </a>
+        )
+      }
+    </div>
+  </section>
 
-    <section class="encodere-section ms-cta-final">
-      <p class="encodere-section__eyebrow">próximo passo</p>
-      <h2>shippar rápido não precisa significar exposto</h2>
-      <p>
-        Se você tem MRR recorrente e dados de usuários, segurança não é luxo — é seguro de negócio.
-        Vamos conversar.
-      </p>
-      <div class="ms-cta-final__actions">
-        <WhatsAppButton href={generalWhatsApp} variant="primary" size="lg">
-          falar no WhatsApp
-        </WhatsAppButton>
-        <a class="btn btn--ghost btn--lg" href="#diagnostico">refazer diagnóstico</a>
-      </div>
-    </section>
+  <!-- 4. Oferta -->
+  <PricingGrid phase={launch.phase} />
+
+  <!-- 5. Escassez -->
+  <ScarcityBanner />
+
+  <!-- 6. FAQ -->
+  <FaqSection />
+
+  <!-- 7. CTA final -->
+  <section class="encodere-section ms-cta-final" id="entrar" aria-labelledby="final-title">
+    <p class="encodere-section__eyebrow">próximo passo</p>
+    <h2 id="final-title">você não precisa endurecer sozinho</h2>
+    <p>
+      Depois da conversa inicial, o suporte continua no mesmo canal — dúvidas de segurança, decisões
+      de stack, o que priorizar na próxima semana. Comunidade pequena, atendimento real.
+    </p>
+    <div class="ms-cta-final__actions">
+      {
+        primaryCta.external ? (
+          <WhatsAppButton href={primaryCta.href} variant="primary" size="lg">
+            {primaryCta.label}
+          </WhatsAppButton>
+        ) : (
+          <a class="btn btn--primary btn--lg" href={primaryCta.href}>
+            {primaryCta.label}
+          </a>
+        )
+      }
+    </div>
+  </section>
 </SiteLayout>

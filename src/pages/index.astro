@@ -10,6 +10,7 @@ import { getCollection } from "astro:content";
 import { SITE_DESCRIPTION, SITE_TITLE } from "../consts";
 import fasesData from "../content/fases.json";
 import * as styles from "../styles/index.css";
+import MonoButton from "../components/ui/MonoButton.astro";
 
 const fases = fasesData.fases;
 
@@ -24,37 +25,20 @@ const depoimentos = depoimentosRaw.map((d) => d.data);
     <div class="encodere-content">
       <p class="encodere-section__eyebrow">criar com intenção</p>
       <GlitchTitle text="Encodere.se" as="h1" />
-      <p class="encodere-hero__lede">o terminal é o primeiro <mark>altar</mark> da tecnomante.</p>
       <p>
-        Para quem não quer ser apenas usuário, mas arquiteto da própria realidade.
+      --> Para quem não quer ser apenas usuário da própria realidade.
       </p>
+      <p class="encodere-hero__lede">--> o terminal é o primeiro <mark>altar</mark> da tecnomante.</p>
+
+<!-- 
+      <div class="encodere-hero__header__cta">
+        <MonoButton href="/blog" variant="ghost" size="lg">quero me tornar arquiteto da minha própria real</MonoButton>
+      </div> -->
+
     </div>
   </header>
 
-  <article class="encodere-section">
-    <p class="encodere-section__eyebrow">por que existimos</p>
-    <GlitchTitle text="manifesto" as="h1" />
-    <AsciiRule />
-
-    <h2>Tecnomancia</h2>
-    <p>
-      Tecnomancer é aquele que alcança o véu entre o código e a realidade, e
-      aprende a manipular ambos com intenção.
-    </p>
-
-    <h2>Encantamentos</h2>
-    <p>
-      Encantamentos é a prática de usar a tecnologia para criar experiências
-      transformadoras, tanto para quem cria quanto para quem usa.
-    </p>
-
-    <h2>Cybermagia</h2>
-    <p>
-      Cybermagia é a arte de utilizar tecnologia, símbolos e informação para produzir transformações na consciência e na realidade.
-      </p>
-  </article>
-
-   <!-- <Roadmap fases={fases} />-->
+   <Roadmap fases={fases} />
   <!-- <Depoimentos depoimentos={depoimentos} /> -->
   <CtaMatricula />
 </SiteLayout>

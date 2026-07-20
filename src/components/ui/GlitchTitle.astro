@@ -8,6 +8,6 @@ interface Props {
 const { text, as: Tag = 'h1', class: className } = Astro.props;
 ---
 
-<Tag class:list={['encodere-glitch', className]} data-text={text}>
+<Tag class:list={['encodere-glitch','encodere-title', className]} data-text={text}>
   <slot>{text}</slot>
 </Tag>

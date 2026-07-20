@@ -1,20 +1,21 @@
 ---
+import GrimoireSigil from './grimoire/GrimoireSigil.astro';
 import { ThemeToggle } from './ui/ThemeToggle';
 
 const links = [
   { href: '/', label: 'início' },
   // { href: '/trilhas', label: 'trilhas' },
   // { href: '/mestras', label: 'mestras' },
-  { href: '/manifesto', label: 'manifesto' },
-  { href: '/micro-saas', label: 'micro saas' },
-  { href: '/bruxa-desenvolvedora', label: 'bruxa dev' },
-  { href: '/blog', label: 'grimório' },
+  // { href: '/manifesto', label: 'manifesto' },
+  // { href: '/micro-saas', label: 'micro saas' },
+  // { href: '/bruxa-desenvolvedora', label: 'bruxa dev' },
+  { href: '/blog', label: 'grimório digital' },
 ];
 ---
 
 <header class="encodere-topnav">
-  <a href="/" class="encodere-topnav__brand">
-    <span class="encodere-topnav__brand-name">encodere</span><span class="encodere-topnav__brand-dot">.se</span>
+  <a href="/" class="encodere-topnav__brand" aria-label="encodere.se — início">
+    <GrimoireSigil kind="crystal" class="encodere-topnav__sigil" />
   </a>
   <nav class="encodere-topnav__links" aria-label="Navegação principal">
     {
