@@ -53,6 +53,8 @@ function formatDate(date: Date) {
 
     <div class="encodere-blog-post__layout">
       <div class="encodere-blog-post__main">
+        <BlogTableOfContents client:load />
+
         <header class="encodere-blog-post__header">
           {
             tags && tags.length > 0 && (
@@ -121,8 +123,6 @@ function formatDate(date: Date) {
       </div>
 
       <aside class="encodere-blog-post__sidebar">
-        <BlogTableOfContents client:load />
-
         {
           relatedPosts.length > 0 && (
             <div class="encodere-tron-panel encodere-blog-post__sidebar-related">
