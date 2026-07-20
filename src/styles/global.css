@@ -1,6 +1,7 @@
 @import "tailwindcss";
 @import "@fontsource-variable/jetbrains-mono";
 @import "./tokens.css";
+@import "./thegridcn-theme.css";
 @import "./effects.css";
 @import "./thegridcn.css";
 @import "./components/grimorio.css";
