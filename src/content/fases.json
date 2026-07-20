@@ -3,27 +3,27 @@
     {
       "id": "I",
       "nome": "Despertar",
-      "descricao": "Fundamentos da tecnomancia: terminal, git, primeira magia de automação."
+      "descricao": "A lógica da natureza e a lógica da máquina"
     },
-    {
+    {  
       "id": "II",
-      "nome": "Invocação",
-      "descricao": "APIs, HTTP e contratos — aprender a chamar forças externas com intenção."
+      "nome": "Tecnologias ancestrais",
+      "descricao": "A história que permitiu moldar o mundo digital e a tecnologia que nos conecta."
     },
     {
       "id": "III",
       "nome": "Transmutação",
-      "descricao": "Dados, persistência e modelagem — transformar informação em conhecimento."
+      "descricao": "Resignificandoa sua relação com o mundo digital e a tecnologia."
     },
     {
       "id": "IV",
       "nome": "Vínculo",
-      "descricao": "Frontend, UX e interfaces — criar pontes entre mundos (humano e máquina)."
+      "descricao": "Como conectar pontes entre os dois mundo e criar experiências encantadoras"
     },
     {
       "id": "V",
       "nome": "Manifestação",
-      "descricao": "Projeto final: ritual de entrega, deploy e apresentação ao círculo."
+      "descricao": "Canalização da energia para criar com propósito e gerar impacto positivo no mundo."
     }
   ]
 }
