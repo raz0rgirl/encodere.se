@@ -50,8 +50,7 @@
   .brand{display:flex;flex-direction:column;gap:2px;min-width:0}
   .brand .kicker{font-family:var(--mono);font-size:11px;letter-spacing:.34em;color:var(--ash);text-transform:uppercase}
   .brand h1{font-family:var(--disp);font-weight:700;font-size:clamp(22px,4.4vw,34px);margin:0;line-height:1;
-    letter-spacing:.02em;
-    background:linear-gradient(92deg,var(--magenta),var(--cyan));-webkit-background-clip:text;background-clip:text;color:transparent}
+    letter-spacing:.02em;}
   .brand h1 .slash{color:var(--gold);-webkit-text-fill-color:var(--gold)}
   .brand .sub{font-size:12px;color:var(--ash-2);letter-spacing:.04em;margin-top:4px}
 
@@ -99,7 +98,7 @@
   .card .meta{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-bottom:9px}
   .tag{font-size:9px;letter-spacing:.16em;text-transform:uppercase;padding:3px 7px;border-radius:999px;
     border:1px solid var(--line);color:var(--ash-2)}
-  .tag.stage{border-color:var(--team);color:var(--team)}
+  .tag.stage{border-color:var(--team);color:var(--team); display: inline-block;}
   .tag.mitre{border-color:rgba(255,230,0,.4);color:var(--gold)}
   .card h2{font-family:var(--disp);font-weight:600;font-size:16px;margin:0 0 6px;letter-spacing:.01em;color:var(--ink)}
   .card .situation{font-size:13px;line-height:1.6;color:var(--ash-2)}
@@ -154,9 +153,10 @@
   .endbtns button.primary{background:var(--team);color:var(--void);border-color:var(--team)}
   .endbtns button:hover{filter:brightness(1.12)}
 
-  footer{margin-top:26px;border-top:1px solid var(--line);padding-top:14px;font-size:11px;color:var(--ash);line-height:1.7}
+  footer{text-align: center; margin-top:26px;border-top:1px solid var(--line);padding-top:14px;font-size:11px;color:var(--ash);line-height:1.7}
   footer b{color:var(--ash-2)}
   footer .refs{margin-top:6px}
+
   .hud{display:flex;gap:14px;align-items:center;font-size:11px;color:var(--ash);letter-spacing:.06em;margin:2px 0 12px}
   .hud b{color:var(--team);font-family:var(--disp)}
   .restart-mini{margin-left:auto;background:transparent;border:1px solid var(--line);color:var(--ash-2);
@@ -175,7 +175,7 @@
     <div class="brand">
       <span class="kicker">encodere.se · sala de estudo</span>
       <h1>XEQUE <span class="slash">//</span> CYBER</h1>
-      <span class="sub">O tabuleiro é a rede. A kill chain é o caminho até a Joia da Coroa.</span>
+      <span class="sub">Escolha seu lado e sustente sua posição no jogo!</span>
     </div>
     <div class="modeswap">
       <span class="lbl">Lado</span>
@@ -212,9 +212,8 @@
     <section class="console" id="console" aria-live="polite"></section>
   </div>
 
-  <footer>
-    <b>Sala de estudo, não simulador de produção.</b> O conteúdo segue o OSCP+ atual (Active Directory obrigatório em cenário de <i>assumed breach</i>, sem buffer overflow garantido, Metasploit restrito, e <i>pivoting/tunneling</i> como ponto de falha número um). Cenários mapeados ao MITRE ATT&CK.
-    <div class="refs">Referências de estudo (legítimas e gratuitas): <b>OffSec PEN-200 / OSCP+ Exam Guide</b> · <b>MITRE ATT&CK</b> · <b>HackTricks</b> · <b>GTFOBins</b> · <b>NIST SP 800-61</b> (resposta a incidentes) · <b>BloodHound docs</b>.</div>
+  <footer class="footer">
+    <div class="refs">Todos os direitos reservados · encodere.se </div>
   </footer>
 </div>
 
