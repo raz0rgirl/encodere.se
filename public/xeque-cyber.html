@@ -1,9 +1,9 @@
 <!doctype html>
-<html lang="pt-BR">
+<html lang="en">
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-<title>XEQUE // CYBER — Sala de Estudo OSCP</title>
+<title>XEQUE // CYBER — OSCP Study Room</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@400;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
@@ -12,17 +12,17 @@
     --void:#050308;
     --void-2:#0c0a16;
     --void-3:#13101f;
-    --cyan:#00fff0;     /* Blue team / defesa */
-    --magenta:#ff00aa;  /* Red team / ataque */
-    --gold:#ffe600;     /* Joia da Coroa / objetivo / acerto */
-    --danger:#ff3b3b;   /* dano / breach */
+    --cyan:#00fff0;     /* Blue team / defense */
+    --magenta:#ff00aa;  /* Red team / attack */
+    --gold:#ffe600;     /* Crown Jewel / objective / correct */
+    --danger:#ff3b3b;   /* damage / breach */
     --ash:#7a7790;
     --ash-2:#a9a6c0;
     --ink:#e9e7f5;
     --line:rgba(0,255,240,.14);
     --mono:'JetBrains Mono',ui-monospace,SFMono-Regular,Menlo,monospace;
     --disp:'Chakra Petch',var(--mono);
-    --team:var(--magenta); /* cor do lado ativo, trocada via JS */
+    --team:var(--magenta); /* color of the active side, swapped via JS */
   }
   *{box-sizing:border-box}
   html,body{margin:0;height:100%}
@@ -173,13 +173,13 @@
 <div class="wrap">
   <header class="top">
     <div class="brand">
-      <span class="kicker">encodere.se · sala de estudo</span>
+      <span class="kicker">encodere.se · study room</span>
       <h1>XEQUE <span class="slash">//</span> CYBER</h1>
-      <span class="sub">Escolha seu lado e sustente sua posição no jogo!</span>
+      <span class="sub">Choose your side and hold your position in the game!</span>
     </div>
     <div class="modeswap">
-      <span class="lbl">Lado</span>
-      <div class="seg" role="tablist" aria-label="Escolha de lado">
+      <span class="lbl">Side</span>
+      <div class="seg" role="tablist" aria-label="Side selection">
         <button class="red on" id="btnRed" role="tab" aria-selected="true">▲ RED · OSCP</button>
         <button class="blue" id="btnBlue" role="tab" aria-selected="false">▼ BLUE · SOC</button>
       </div>
@@ -188,23 +188,23 @@
 
   <div class="bars">
     <div class="bar">
-      <div class="row"><span class="name" id="goodName">Acesso</span><span class="val" id="goodVal">0%</span></div>
+      <div class="row"><span class="name" id="goodName">Access</span><span class="val" id="goodVal">0%</span></div>
       <div class="track"><div class="fill good" id="goodFill"></div></div>
     </div>
     <div class="bar">
-      <div class="row"><span class="name" id="doomName">Detecção</span><span class="val" id="doomVal">0%</span></div>
+      <div class="row"><span class="name" id="doomName">Detection</span><span class="val" id="doomVal">0%</span></div>
       <div class="track"><div class="fill doom" id="doomFill"></div></div>
     </div>
   </div>
 
   <div class="hud">
-    <span>OPERAÇÃO: <b id="opName">INTRUSÃO</b></span>
-    <span>FASE <b id="turnNum">1</b>/<b id="turnTot">11</b></span>
-    <button class="restart-mini" id="restartMini">↺ reiniciar operação</button>
+    <span>OPERATION: <b id="opName">INTRUSION</b></span>
+    <span>PHASE <b id="turnNum">1</b>/<b id="turnTot">18</b></span>
+    <button class="restart-mini" id="restartMini">↺ restart operation</button>
   </div>
 
   <div class="stage">
-    <section class="boardpanel" id="boardPanel" aria-label="Tabuleiro tático">
+    <section class="boardpanel" id="boardPanel" aria-label="Tactical board">
       <div class="chainrail" id="chainRail"></div>
       <canvas id="board" width="640" height="640" aria-hidden="true"></canvas>
     </section>
@@ -213,407 +213,512 @@
   </div>
 
   <footer class="footer">
-    <div class="refs">Todos os direitos reservados · encodere.se </div>
+    <div class="refs">All rights reserved · encodere.se </div>
   </footer>
 </div>
 
 <div class="overlay" id="overlay">
   <div class="endcard" id="endCard">
-    <span class="eyebrow" id="endEyebrow">resultado</span>
+    <span class="eyebrow" id="endEyebrow">result</span>
     <h2 id="endTitle">—</h2>
     <p id="endBody">—</p>
     <div class="endbtns">
-      <button class="primary" id="endAgain">Nova operação</button>
-      <button id="endSwap">Trocar de lado</button>
+      <button class="primary" id="endAgain">New operation</button>
+      <button id="endSwap">Switch sides</button>
     </div>
   </div>
 </div>
 
 <script>
 /* ============================================================
-   XEQUE // CYBER  —  motor de jogo
-   Caminho B: kill chain como caminho no tabuleiro de xadrez.
+   XEQUE // CYBER — game engine
+   Path B: kill chain as a path on the chessboard.
    ============================================================ */
 
 /* ---------- DECKS ---------- */
-/* Cada nó: stage (rótulo curto p/ trilho), title, mitre, situation,
-   options[3], correct (índice), okFeed, badFeed, ref, role (peça defensora) */
+/* Each node: stage (short rail label), title, mitre, situation,
+   options[3], correct (index), okFeed, badFeed, ref, role (defending piece) */
 
 const RED_DECK = [
   {
     stage:"Recon", role:"pawn",
-    title:"Alvo frio: 10.10.x.x",
+    title:"Cold target: 10.10.x.x",
     mitre:"TA0043 · Reconnaissance",
-    situation:"Você recebe um IP e nada mais. A vontade é abrir o Metasploit e procurar um exploit pronto. <b>Qual o primeiro movimento?</b>",
+    situation:"You get an IP and nothing else. The urge is to open Metasploit and look for a ready-made exploit. <b>What's the first move?</b>",
     options:[
-      "Rodar nmap completo: <b>-p- </b>e depois <b>-sC -sV</b> nas portas abertas, em segundo plano enquanto já cutuca 80/443/445 na mão.",
-      "Buscar no searchsploit o nome do SO e disparar o primeiro exploit que casar.",
-      "Usar um único <b>nmap -F</b> (top 100) e seguir, pra ganhar tempo."
+      "Run a full nmap: <b>-p- </b>then <b>-sC -sV</b> on the open ports, in the background while already poking 80/443/445 by hand.",
+      "Search searchsploit for the OS name and fire off the first exploit that matches.",
+      "Use a single <b>nmap -F</b> (top 100) and move on, to save time."
     ],
     correct:0,
-    okFeed:"Enumeração antes de exploração. Você varre <b>todas</b> as 65535 portas (-p-), depois aprofunda só nas abertas. E não fica olhando o script terminar: ataca 80/443/445 manualmente em paralelo — a maioria das falhas no exame é <b>port 80 óbvia ignorada</b> enquanto se esperava a automação.",
-    badFeed:"Pressa é o inimigo. Pular pra exploit sem mapa, ou varrer só o top-100, é como dar o primeiro lance sem olhar o tabuleiro inteiro — uma porta alta esquecida (8080, 8443, 5985) é onde mora o foothold.",
-    ref:"OSCP: enumeração insuficiente é a causa nº1 de reprovação. Rode automação em background, mas cutuque portas de alto valor na mão."
+    okFeed:"Enumeration before exploitation. You scan <b>all</b> 65535 ports (-p-), then dig deeper only into the open ones. And you don't sit watching the script finish: you attack 80/443/445 manually in parallel — most exam failures come from an <b>obvious port 80 being ignored</b> while waiting on automation.",
+    badFeed:"Haste is the enemy. Jumping to an exploit without a map, or scanning only the top 100, is like making your first move without looking at the whole board — a forgotten high port (8080, 8443, 5985) is where the foothold lives.",
+    ref:"OSCP: insufficient enumeration is the #1 cause of failure. Run automation in the background, but poke high-value ports by hand."
   },
   {
-    stage:"Serviços", role:"pawn",
-    title:"Portas vivas: 80, 445, 5985",
+    stage:"Services", role:"pawn",
+    title:"Live ports: 80, 445, 5985",
     mitre:"TA0007 · Discovery",
-    situation:"O scan voltou: HTTP (80), SMB (445) e WinRM (5985). <b>Como você abre o leque de superfície?</b>",
+    situation:"The scan is back: HTTP (80), SMB (445), and WinRM (5985). <b>How do you widen the attack surface?</b>",
     options:[
-      "Só fuzzar diretórios no 80 — web costuma ser o caminho mais curto.",
-      "Enumerar <b>em paralelo</b>: feroxbuster/gobuster no 80, <b>enum4linux-ng</b> e <b>smbclient -L</b> no 445, e guardar o 5985 pra quando tiver credencial.",
-      "Tentar login anônimo no WinRM primeiro, já que dá shell direto."
+      "Just fuzz directories on port 80 — web is usually the shortest path.",
+      "Enumerate <b>in parallel</b>: feroxbuster/gobuster on 80, <b>enum4linux-ng</b> and <b>smbclient -L</b> on 445, and save 5985 for when you have a credential.",
+      "Try anonymous login on WinRM first, since it gives a direct shell."
     ],
     correct:1,
-    okFeed:"Cada serviço é uma diagonal diferente do tabuleiro. SMB pode vazar shares anônimos, usuários, versão; web pode ter upload ou LFI; WinRM (5985) vira shell <b>quando</b> você já tiver credencial. Largura de enumeração vence profundidade prematura.",
-    badFeed:"Tunelar a atenção em um só serviço deixa material na mesa. WinRM não tem 'login anônimo' útil — ele espera credencial válida. Enumere os três; o foothold raramente está onde você apostou primeiro.",
-    ref:"enum4linux-ng / smbclient / crackmapexec p/ SMB; feroxbuster p/ web. WinRM = pós-credencial (evil-winrm)."
+    okFeed:"Each service is a different diagonal on the board. SMB can leak anonymous shares, usernames, version; web can have upload or LFI; WinRM (5985) turns into a shell <b>once</b> you already have a credential. Breadth of enumeration beats premature depth.",
+    badFeed:"Tunnel-visioning on a single service leaves material on the table. WinRM has no useful 'anonymous login' — it expects a valid credential. Enumerate all three; the foothold is rarely where you bet first.",
+    ref:"enum4linux-ng / smbclient / crackmapexec for SMB; feroxbuster for web. WinRM = post-credential (evil-winrm)."
   },
   {
     stage:"Web foothold", role:"bishop",
-    title:"Upload que aceita demais",
+    title:"Upload that accepts too much",
     mitre:"TA0001 · Initial Access",
-    situation:"A web tem um formulário de upload de imagem. O filtro bloqueia <b>.php</b>, mas você suspeita que é fraco. <b>Como transforma isso em RCE?</b>",
+    situation:"The web app has an image upload form. The filter blocks <b>.php</b>, but you suspect it's weak. <b>How do you turn this into RCE?</b>",
     options:[
-      "Desistir do upload e ir caçar SQL injection no login.",
-      "Testar bypass de extensão (<b>.phtml, .php5, .pHp</b>, duplo-ext, content-type forjado) pra subir um webshell e ganhar execução.",
-      "Subir um .txt com código PHP e torcer pra que o servidor execute."
+      "Give up on the upload and go hunt for SQL injection on the login.",
+      "Test extension bypasses (<b>.phtml, .php5, .pHp</b>, double extension, forged content-type) to upload a webshell and gain execution.",
+      "Upload a .txt with PHP code and hope the server executes it."
     ],
     correct:1,
-    okFeed:"Filtro de extensão fraco = porta destrancada. Você testa variantes que o servidor ainda interpreta como PHP (.phtml/.php5), maiúsculas, duplo-ext (shell.php.jpg) e Content-Type forjado. Um webshell mínimo já te dá <b>execução de comando</b> — o pé na porta.",
-    badFeed:"Abandonar a pista certa pra perseguir um rabbit hole (SQLi onde a entrada é o upload) é como trocar uma peça avançada por nada. .txt não é interpretado como código. Quando o upload é o vetor, persista no bypass.",
-    ref:"Bypass de upload: extensões alternativas, double extension, magic bytes, Content-Type. Veja HackTricks 'File Upload'."
+    okFeed:"A weak extension filter = an unlocked door. You test variants the server still interprets as PHP (.phtml/.php5), uppercase, double extension (shell.php.jpg), and a forged Content-Type. A minimal webshell already gives you <b>command execution</b> — your foot in the door.",
+    badFeed:"Abandoning the right lead to chase a rabbit hole (SQLi where the input is the upload) is like trading an advanced piece for nothing. A .txt isn't interpreted as code. When the upload is the vector, persist with the bypass.",
+    ref:"Upload bypass: alternative extensions, double extension, magic bytes, Content-Type. See HackTricks 'File Upload'."
   },
   {
-    stage:"Shell estável", role:"pawn",
-    title:"Reverse shell — mas burra",
+    stage:"JWT bypass", role:"bishop",
+    title:"An internal API trusts its own token",
+    mitre:"TA0001 · Initial Access (JWT)",
+    situation:"While the web upload gives you RCE, a second endpoint catches your eye: an internal API that authenticates with a JWT. Decoding the token, the header shows <b>\"alg\":\"HS256\"</b>. <b>How do you test it?</b>",
+    options:[
+      "Forge a new payload with an admin claim and re-sign it with a random secret.",
+      "Change <b>alg</b> to <b>none</b> and strip the signature — some libraries still accept an unsigned token if the field isn't validated server-side.",
+      "Give up — you already have RCE from the upload, no need to touch the API."
+    ],
+    correct:1,
+    okFeed:"Algorithm confusion is a classic JWT flaw: some verification libraries trust the <b>alg</b> field from the token itself. Set it to <b>none</b>, drop the signature, and if the server skips verification, you walk in as whichever claims you wrote — often exposing credentials or config the upload vector never touched.",
+    badFeed:"Re-signing with a guessed secret only works if you already have (or brute-force) the real key — it's not the first thing to try. And 'I already have RCE' is exactly the tunnel vision that makes you miss adjacent low-hanging fruit; the exam rewards squeezing every exposed surface, not stopping at the first shell.",
+    ref:"JWT alg:none / algorithm confusion. Check with jwt_tool or manually via jwt.io. OWASP JWT Cheat Sheet."
+  },
+  {
+    stage:"XXE", role:"bishop",
+    title:"An XML import that reads more than it should",
+    mitre:"TA0009 · Collection (XXE)",
+    situation:"A file-import feature accepts XML. Nothing in the response reflects your input directly, but the app clearly parses the document. <b>Where do you look for a primitive?</b>",
+    options:[
+      "Try SQL injection on the same field instead — XML is a dead end without reflected output.",
+      "Declare an external entity pointing at <b>file:///etc/passwd</b> and reference it inside the payload — even a blind response (error-based or out-of-band) can confirm the read.",
+      "Assume the parser is safe by default and move to another endpoint."
+    ],
+    correct:1,
+    okFeed:"You don't need the file to appear on screen to prove XXE. Declaring <code>&lt;!ENTITY xxe SYSTEM \"file:///etc/passwd\"&gt;</code> and referencing <code>&xxe;</code> can leak data through an error message, a delayed response, or an out-of-band DNS/HTTP callback — enough to confirm arbitrary file read even when the app looks silent.",
+    badFeed:"SQL injection is a different vulnerability class; a parser that clearly consumes an XML body deserves an XML-specific test first. And most modern parsers only disable external entities if someone explicitly configured it — assuming safety by default is how XXE gets missed in reports.",
+    ref:"XXE: external entity + out-of-band exfiltration when blind. See HackTricks 'XXE' and OWASP XXE Prevention Cheat Sheet."
+  },
+  {
+    stage:"Stable shell", role:"pawn",
+    title:"Reverse shell — but dumb",
     mitre:"TA0002 · Execution",
-    situation:"O webshell te deu um reverse shell, mas é um TTY quebrado: sem histórico, sem tab, Ctrl-C mata tudo. <b>Próximo passo antes de qualquer enum?</b>",
+    situation:"The webshell gave you a reverse shell, but it's a broken TTY: no history, no tab, Ctrl-C kills everything. <b>Next step before any enumeration?</b>",
     options:[
-      "Já rodar <b>sudo -l</b> e linpeas, sem perder tempo.",
-      "<b>Estabilizar o shell</b>: spawn de PTY (python3 pty), <b>export TERM=xterm</b>, e <b>stty raw -echo; fg</b> pra ter um terminal full-interactive.",
-      "Reconectar várias vezes esperando vir um shell melhor."
+      "Just run <b>sudo -l</b> and linpeas right away, no time to lose.",
+      "<b>Stabilize the shell</b>: spawn a PTY (python3 pty), <b>export TERM=xterm</b>, and <b>stty raw -echo; fg</b> to get a fully interactive terminal.",
+      "Reconnect several times hoping a better shell comes along."
     ],
     correct:1,
-    okFeed:"Shell instável faz você perder a sessão no meio de um exploit de privesc — perda de tempo cara no exame. Você faz o upgrade: <code>python3 -c 'import pty;pty.spawn(\"/bin/bash\")'</code>, depois <b>Ctrl-Z → stty raw -echo; fg → export TERM=xterm</b>. Agora tem Ctrl-C, setas e tab.",
-    badFeed:"Rodar privesc num shell quebrado é receita pra travar e cair na hora errada. Estabilize <b>primeiro</b>: é o equivalente a rocar o rei antes de abrir o jogo.",
-    ref:"PTY upgrade: pty.spawn + stty raw -echo + fg. Essencial antes de privesc."
+    okFeed:"An unstable shell makes you lose the session mid privesc exploit — an expensive time loss during the exam. You do the upgrade: <code>python3 -c 'import pty;pty.spawn(\"/bin/bash\")'</code>, then <b>Ctrl-Z → stty raw -echo; fg → export TERM=xterm</b>. Now you have Ctrl-C, arrow keys, and tab.",
+    badFeed:"Running privesc in a broken shell is a recipe for freezing and dropping at the worst moment. Stabilize <b>first</b>: it's the equivalent of castling the king before opening the game.",
+    ref:"PTY upgrade: pty.spawn + stty raw -echo + fg. Essential before privesc."
   },
   {
-    stage:"Enum local", role:"knight",
-    title:"De pé na máquina — e agora?",
+    stage:"Local enum", role:"knight",
+    title:"On your feet on the box — now what?",
     mitre:"TA0007 · Discovery",
-    situation:"Você é www-data num Linux. A tentação é baixar um exploit de kernel e detonar. <b>Como conduzir a enumeração de privesc?</b>",
+    situation:"You're www-data on a Linux box. The temptation is to download a kernel exploit and detonate it. <b>How do you conduct privesc enumeration?</b>",
     options:[
-      "Procurar a versão do kernel no Google e rodar o primeiro PoC público.",
-      "Enumerar metodicamente: <b>sudo -l</b>, SUID/SGID, cron, capabilities, arquivos com credencial, caminhos graváveis — apoiado por linpeas, mas lendo a saída.",
-      "Tentar trocar a senha do root direto, já que você tem shell."
+      "Look up the kernel version on Google and run the first public PoC.",
+      "Enumerate methodically: <b>sudo -l</b>, SUID/SGID, cron, capabilities, files with credentials, writable paths — aided by linpeas, but reading the output.",
+      "Try changing root's password directly, since you have a shell."
     ],
     correct:1,
-    okFeed:"Kernel exploit é último recurso: instável, pode derrubar a máquina (e sua sessão) na frente do avaliador. O caminho limpo é misconfiguração: <b>sudo -l</b>, binários SUID, cron jobs graváveis, capabilities, senhas em config/history. linpeas acelera, mas <b>você</b> interpreta.",
-    badFeed:"PoC de kernel aleatório = peça sacrificada à toa: derruba o alvo, não compila, ou é honeypot de tempo. Misconfig é silenciosa e confiável. Leia a saída do linpeas, não só rode.",
-    ref:"linpeas/pspy + checagem manual. Kernel exploit por último. GTFOBins p/ SUID/sudo."
+    okFeed:"A kernel exploit is a last resort: unstable, it can crash the box (and your session) right in front of the proctor. The clean path is misconfiguration: <b>sudo -l</b>, SUID binaries, writable cron jobs, capabilities, passwords in config/history. linpeas speeds things up, but <b>you</b> interpret the output.",
+    badFeed:"A random kernel PoC = a piece sacrificed for nothing: it crashes the target, doesn't compile, or is a time honeypot. Misconfiguration is quiet and reliable. Read linpeas' output, don't just run it.",
+    ref:"linpeas/pspy + manual checks. Kernel exploit last. GTFOBins for SUID/sudo."
   },
   {
     stage:"Privesc", role:"rook",
-    title:"sudo -l revela um GTFOBin",
+    title:"sudo -l reveals a GTFOBin",
     mitre:"TA0004 · Privilege Escalation",
-    situation:"<b>sudo -l</b> mostra que você pode rodar <b>/usr/bin/find</b> como root sem senha. <b>Qual a jogada?</b>",
+    situation:"<b>sudo -l</b> shows you can run <b>/usr/bin/find</b> as root with no password. <b>What's the play?</b>",
     options:[
-      "Usar a técnica do <b>GTFOBins</b>: <code>sudo find . -exec /bin/sh \\; -quit</code> pra virar root.",
-      "Baixar um exploit de kernel mesmo assim, por garantia.",
-      "Copiar /etc/shadow com o find e tentar crackear todas as hashes offline."
+      "Use the <b>GTFOBins</b> technique: <code>sudo find . -exec /bin/sh \\; -quit</code> to become root.",
+      "Download a kernel exploit anyway, just to be safe.",
+      "Copy /etc/shadow with find and try to crack all the hashes offline."
     ],
     correct:0,
-    okFeed:"<b>find</b> com sudo é um GTFOBin clássico: <code>-exec</code> roda um shell <b>como root</b>. Você acabou de promover a peça — de www-data a coroa. Cada binário permitido no sudo -l tem uma técnica catalogada; consultar GTFOBins é o reflexo certo.",
-    badFeed:"Você já tinha xeque em uma jogada e foi procurar complicação. Crackear shadow é lento e desnecessário quando o <code>-exec</code> te dá root na hora. Kernel exploit aqui é risco gratuito.",
-    ref:"GTFOBins: find, vim, less, env, tar, etc. com sudo = shell root imediato."
+    okFeed:"<b>find</b> with sudo is a classic GTFOBin: <code>-exec</code> runs a shell <b>as root</b>. You just promoted the piece — from www-data to crown. Every binary allowed in sudo -l has a cataloged technique; checking GTFOBins is the right reflex.",
+    badFeed:"You already had check in one move and went looking for complications. Cracking shadow is slow and unnecessary when <code>-exec</code> gives you root instantly. A kernel exploit here is a free risk.",
+    ref:"GTFOBins: find, vim, less, env, tar, etc. with sudo = instant root shell."
+  },
+  {
+    stage:"Win privesc I", role:"knight",
+    title:"A second target, a different OS",
+    mitre:"TA0004 · Privilege Escalation",
+    situation:"The next box in scope is Windows. <b>wmic service get name,pathname,startmode</b> shows a service running as SYSTEM with an unquoted path: <b>C:\\Program Files\\Some App\\service.exe</b>. <b>What's the play?</b>",
+    options:[
+      "Ignore it — unquoted paths are rarely exploitable in practice.",
+      "Check if you have write access to <b>C:\\Program.exe</b> or <b>C:\\Program Files\\Some.exe</b> — Windows tries each space-separated segment as a candidate executable, in order, before the real one.",
+      "Try to overwrite the legitimate service.exe directly, since you already know its full path."
+    ],
+    correct:1,
+    okFeed:"An unquoted path with spaces is ambiguous to the Windows loader: it tries <code>C:\\Program.exe</code>, then <code>C:\\Program Files\\Some.exe</code>, before ever reaching the real target. If any of those parent directories is writable, you drop a malicious binary with the same name and the SYSTEM-owned service launches it for you on next start.",
+    badFeed:"Overwriting the real service.exe usually requires the exact permissions you don't have — that's the whole point of the misconfiguration existing elsewhere in the chain. Dismissing unquoted paths as 'rarely exploitable' throws away a checklist item that consistently shows up on OSCP-style Windows boxes — always check writability of every candidate segment.",
+    ref:"Unquoted Service Path privesc. Check with wmic/PowerUp.ps1; confirm writable dirs with icacls."
+  },
+  {
+    stage:"Win privesc II", role:"knight",
+    title:"A policy left wide open",
+    mitre:"TA0004 · Privilege Escalation",
+    situation:"The unquoted path led nowhere writable. A registry check shows both <b>HKLM</b> and <b>HKCU\\...\\Installer\\AlwaysInstallElevated</b> set to <b>1</b>. <b>How do you use that?</b>",
+    options:[
+      "Build a malicious MSI payload (msfvenom -f msi) and install it — with both keys set, Windows Installer runs it with SYSTEM privileges regardless of your own permissions.",
+      "Try to disable the policy first through gpedit, then re-enable it after — extra steps that also require the privilege you don't have yet.",
+      "Skip it — AlwaysInstallElevated is a legacy setting nobody actually leaves on."
+    ],
+    correct:0,
+    okFeed:"Both keys being <b>1</b> is the whole exploit: it tells the Windows Installer service to run <b>any</b> .msi with elevated rights, no prompt, no check on who's installing it. A payload built with <code>msfvenom -p windows/x64/shell_reverse_tcp -f msi</code> and run with <code>msiexec /quiet /qn /i payload.msi</code> hands you a SYSTEM shell directly — no service restart, no timing window.",
+    badFeed:"You can't reach gpedit or the registry to toggle the policy without the very privilege you're trying to gain — that's circular. And 'nobody leaves this on' is a bad assumption to bring into an exam: misconfigurations like this exist precisely because someone did leave it on, and skipping the check costs you the box.",
+    ref:"AlwaysInstallElevated → MSI privesc. Check both HKLM and HKCU keys; msfvenom -f msi + msiexec."
   },
   {
     stage:"Loot", role:"bishop",
-    title:"Root local: colher a colheita",
+    title:"Local root: reap the harvest",
     mitre:"TA0006 · Credential Access",
-    situation:"Você é root nessa máquina. Antes de pensar em rede, <b>o que extrair?</b>",
+    situation:"You're root on this box. Before thinking about the network, <b>what do you extract?</b>",
     options:[
-      "Nada — root local já é o flag, pode fechar.",
-      "<b>Saquear credenciais</b>: /etc/shadow, chaves SSH (~/.ssh), senhas em configs/.bash_history/.env, e testar <b>reuso</b> dessas creds em outros hosts.",
-      "Apagar logs primeiro pra não ser detectado."
+      "Nothing — local root is already the flag, you can close it out.",
+      "<b>Loot credentials</b>: /etc/shadow, SSH keys (~/.ssh), passwords in configs/.bash_history/.env, and test <b>reuse</b> of those creds on other hosts.",
+      "Wipe logs first so you don't get detected."
     ],
     correct:1,
-    okFeed:"Root local é meio do jogo, não o fim. Credenciais saqueadas aqui — chaves SSH, hashes, senhas em texto, tokens — são munição pra <b>lateralização</b>. Reuso de senha entre hosts é o vetor que conecta uma máquina à próxima.",
-    badFeed:"Parar em root local deixa o tabuleiro inteiro inexplorado — e no OSCP+ o ouro está no Active Directory adiante. (Apagar log não é objetivo do exame e não te aproxima do DC.)",
-    ref:"Credential reuse → pivô. secretsdump/mimikatz no Windows; ~/.ssh, shadow, configs no Linux."
+    okFeed:"Local root is the midgame, not the end. Credentials looted here — SSH keys, hashes, plaintext passwords, tokens — are ammunition for <b>lateral movement</b>. Password reuse across hosts is the vector that connects one machine to the next.",
+    badFeed:"Stopping at local root leaves the whole board unexplored — and in OSCP+ the gold is in the Active Directory ahead. (Wiping logs isn't an exam objective and doesn't get you closer to the DC.)",
+    ref:"Credential reuse → pivot. secretsdump/mimikatz on Windows; ~/.ssh, shadow, configs on Linux."
+  },
+  {
+    stage:"Discipline", role:"pawn",
+    title:"SYSTEM on box two — now what?",
+    mitre:"TA0003 · Persistence (exam judgment)",
+    situation:"You're SYSTEM on the second box. Muscle memory says 'lock this down' the way you would on a real engagement. <b>What's the right call inside an OSCP-style assessment?</b>",
+    options:[
+      "Add a scheduled task and a registry run-key backdoor, just in case you get disconnected.",
+      "Loot credentials, take your proof, and move on — skip building persistence or wiping logs; they cost time and aren't what the assessment scores.",
+      "Clear the event logs so the box looks untouched for the report."
+    ],
+    correct:1,
+    okFeed:"An OSCP-style exam rewards documented compromise, not tradecraft you'd use against a live blue team. Every minute spent on a backdoor or log-wiping is a minute not spent enumerating the next box or the AD path — and neither action earns points. Grab your loot (creds, proof, screenshots) and keep moving.",
+    badFeed:"Persistence mechanisms and log clearing are real red-team skills, but they're solving a problem you don't have here: there's no blue team hunting you turn by turn, and the exam doesn't credit stealth. Time spent here is time stolen from the next pivot — discipline about scope is as much a skill as the exploit itself.",
+    ref:"Exam time management: prioritize documented access + loot over persistence/anti-forensics that don't affect scoring."
+  },
+  {
+    stage:"SSRF", role:"bishop",
+    title:"A feature that fetches URLs for you",
+    mitre:"TA0007 · Discovery (SSRF)",
+    situation:"One of the web apps has an 'import from URL' feature that fetches whatever address you give it server-side. <b>How do you use that before you've even touched the internal network directly?</b>",
+    options:[
+      "Point it at an internal-only address (e.g. <b>http://169.254.169.254/</b> or a private RFC1918 IP) — the server fetches on your behalf, from a network position you don't have yet.",
+      "Only test it with external URLs — pointing it inward could break the feature.",
+      "Assume the feature is sandboxed since it's server-side and skip testing it."
+    ],
+    correct:0,
+    okFeed:"SSRF turns the server into your proxy into a network you can't reach directly. Feeding it a cloud metadata address or an internal RFC1918 IP makes <b>the server</b> do the request from inside the perimeter — sometimes handing back credentials, sometimes just confirming a live internal host, which is exactly the map you need before pivoting for real.",
+    badFeed:"Testing only with external URLs misses the entire point of the vulnerability class — SSRF's value is reaching what you can't reach yourself. And 'server-side must mean sandboxed' is an assumption, not a finding; most SSRF bugs exist precisely because nobody validated the target of the fetch.",
+    ref:"SSRF → internal network / cloud metadata access. See HackTricks 'SSRF' and OWASP SSRF Prevention Cheat Sheet."
   },
   {
     stage:"Pivoting", role:"rook",
-    title:"Há uma rede atrás desta máquina",
+    title:"There's a network behind this machine",
     mitre:"TA0008 · Lateral Movement",
-    situation:"<b>ip a</b> mostra uma segunda interface: <b>172.16.x.x</b>, uma sub-rede interna que você não alcança da sua máquina. É onde mora o AD. <b>Como entrar?</b>",
+    situation:"<b>ip a</b> shows a second interface: <b>172.16.x.x</b>, an internal subnet you can't reach from your machine. That's where the AD lives. <b>How do you get in?</b>",
     options:[
-      "Tentar nmap direto da sua Kali contra 172.16.x.x — talvez roteie.",
-      "Montar <b>tunneling/pivoting</b> com <b>Ligolo-ng</b> (ou chisel), criando uma interface que faz a sub-rede interna parecer local.",
-      "Desistir do AD e tentar ganhar mais pontos nas máquinas standalone."
+      "Try nmap directly from your Kali box against 172.16.x.x — maybe it routes.",
+      "Set up <b>tunneling/pivoting</b> with <b>Ligolo-ng</b> (or chisel), creating an interface that makes the internal subnet look local.",
+      "Give up on the AD and try to score more points on standalone machines."
     ],
     correct:1,
-    okFeed:"Esta é <b>a</b> casa onde mais gente perde o exame hoje. A sub-rede 172.16 não roteia da sua Kali — você precisa pivotar <b>através</b> do host comprometido. Ligolo-ng cria um <code>tun</code> e a rede interna vira praticamente local; foi quem destronou o chisel no meta OSCP.",
-    badFeed:"nmap direto não alcança rede não-roteável — você tem que tunelar pelo pivô. Pular o AD custa caro: ele vale <b>40/100</b> e virou obrigatório. Pivoting é músculo que se treina antes do exame, não na hora.",
-    ref:"Ligolo-ng > chisel no meta atual. Pivoting/tunneling = causa principal de stall no AD set."
+    okFeed:"This is <b>the</b> square where most people lose the exam today. The 172.16 subnet doesn't route from your Kali box — you need to pivot <b>through</b> the compromised host. Ligolo-ng creates a <code>tun</code> and the internal network becomes practically local; it's what dethroned chisel in the current OSCP meta.",
+    badFeed:"Direct nmap can't reach a non-routable network — you have to tunnel through the pivot. Skipping the AD is costly: it's worth <b>40/100</b> and became mandatory. Pivoting is a muscle you train before the exam, not on the day.",
+    ref:"Ligolo-ng > chisel in the current meta. Pivoting/tunneling = the main cause of stalling on the AD set."
   },
   {
     stage:"AD foothold", role:"knight",
-    title:"Assumed breach: usuário de domínio",
+    title:"Assumed breach: domain user",
     mitre:"TA0007 · Discovery (AD)",
-    situation:"Você tunelou pra dentro e o exame te deu (assumed breach) <b>um usuário de domínio comum</b> + senha. Sem mapa do AD. <b>Primeiro movimento no domínio?</b>",
+    situation:"You tunneled in and the exam gave you (assumed breach) <b>a regular domain user</b> + password. No map of the AD. <b>First move in the domain?</b>",
     options:[
-      "Sair tentando <b>Pass-the-Hash</b> em todo host até algo abrir.",
-      "Coletar o grafo com <b>BloodHound</b> (SharpHound) e rodar <b>'shortest path to Domain Admin'</b> pra achar a rota de menor resistência.",
-      "Brute force no Administrator do domínio via SMB."
+      "Go around trying <b>Pass-the-Hash</b> on every host until something opens up.",
+      "Collect the graph with <b>BloodHound</b> (SharpHound) and run <b>'shortest path to Domain Admin'</b> to find the path of least resistance.",
+      "Brute force the domain Administrator account via SMB."
     ],
     correct:1,
-    okFeed:"Com um usuário low-priv, você <b>mapeia antes de mover</b>. SharpHound coleta sessões, ACLs, memberships; o BloodHound desenha o caminho mais curto até Domain Admin. É literalmente achar a sequência de lances forçados até o xeque-mate.",
-    badFeed:"Sair fazendo PtH ou brute force às cegas é barulho que dispara o Blue (e queima tempo). O AD recompensa quem enxerga o grafo: a query 'shortest path to DA' aparece em quase todo writeup aprovado.",
-    ref:"SharpHound → BloodHound 'Shortest Path to Domain Admins'. Mapear ACLs/sessões antes de agir."
+    okFeed:"With a low-priv user, you <b>map before you move</b>. SharpHound collects sessions, ACLs, memberships; BloodHound draws the shortest path to Domain Admin. It's literally finding the sequence of forced moves to checkmate.",
+    badFeed:"Going around doing PtH or brute force blindly is noise that trips the Blue team (and burns time). The AD rewards whoever sees the graph: the 'shortest path to DA' query shows up in almost every passing writeup.",
+    ref:"SharpHound → BloodHound 'Shortest Path to Domain Admins'. Map ACLs/sessions before acting."
+  },
+  {
+    stage:"GPP leak", role:"bishop",
+    title:"An old script still sitting in SYSVOL",
+    mitre:"TA0006 · Credential Access (AD)",
+    situation:"Before diving into Kerberoasting, you browse the domain's <b>SYSVOL</b> share and find a Group Policy Preferences file with a <b>cpassword</b> attribute — a leftover from an old password-setting policy. <b>What now?</b>",
+    options:[
+      "Decrypt it — Microsoft published the AES key used for cpassword years ago, so any GPP-set password is trivially reversible.",
+      "Ignore it — Microsoft patched GPP passwords, so any cpassword left is definitely a decoy.",
+      "Try to brute-force it like a hash, since it's clearly encrypted."
+    ],
+    correct:0,
+    okFeed:"MS14-025 fixed the <b>policy</b> that let admins set passwords via GPP, but it never invalidated passwords already deployed before the patch — and it never rotates them for you. Because the AES private key Microsoft used is public, any leftover <code>cpassword</code> in SYSVOL decrypts in one command (gpp-decrypt). It's often a fast, quiet win sitting right next to the AD foothold you already have.",
+    badFeed:"The patch closed the door for new abuse, not for old artifacts still sitting on disk — dismissing a cpassword you actually found as 'definitely a decoy' throws away a real credential. And it isn't a hash to brute-force: it's reversible encryption with a known key, which is strictly faster than cracking.",
+    ref:"GPP password decryption (MS14-025). gpp-decrypt / Get-GPPPassword.ps1. Check SYSVOL Groups.xml, Services.xml, etc."
   },
   {
     stage:"Kerberoast", role:"queen",
-    title:"Conta de serviço com SPN",
+    title:"Service account with an SPN",
     mitre:"TA0006 · Credential Access (AD)",
-    situation:"O BloodHound aponta uma <b>conta de serviço Kerberoastable</b> (tem SPN) no caminho até DA. <b>Como explorar?</b>",
+    situation:"BloodHound points to a <b>Kerberoastable service account</b> (has an SPN) on the path to DA. <b>How do you exploit it?</b>",
     options:[
-      "<b>Kerberoasting</b>: pedir o TGS dessa conta (GetUserSPNs/Rubeus) e <b>crackear a hash offline</b> com hashcat.",
-      "AS-REP roasting nessa mesma conta, mesmo ela exigindo pré-autenticação.",
-      "DCSync agora, mesmo sem ter direitos de replicação ainda."
+      "<b>Kerberoasting</b>: request that account's TGS (GetUserSPNs/Rubeus) and <b>crack the hash offline</b> with hashcat.",
+      "AS-REP roasting on that same account, even though it requires pre-authentication.",
+      "DCSync right now, even without replication rights yet."
     ],
     correct:0,
-    okFeed:"Conta com SPN = alvo de <b>Kerberoasting</b>: qualquer usuário autenticado pode pedir o ticket TGS, cuja parte é cifrada com o hash da senha do serviço. Você extrai e crackeia <b>offline</b> (hashcat -m 13100) — zero barulho no DC durante o crack. Contas de serviço costumam ter senhas fracas e reutilizadas.",
-    badFeed:"AS-REP roasting só funciona em contas com <b>pré-autenticação desabilitada</b> — não é o caso aqui. E DCSync exige direitos de replicação (DS-Replication-Get-Changes) que você ainda não tem. Cada técnica AD tem sua pré-condição: usar a errada é lance ilegal.",
+    okFeed:"An account with an SPN = a <b>Kerberoasting</b> target: any authenticated user can request the TGS ticket, part of which is encrypted with the service account's password hash. You extract it and crack it <b>offline</b> (hashcat -m 13100) — zero noise on the DC during the crack. Service accounts tend to have weak, reused passwords.",
+    badFeed:"AS-REP roasting only works on accounts with <b>pre-authentication disabled</b> — that's not the case here. And DCSync requires replication rights (DS-Replication-Get-Changes) you don't have yet. Every AD technique has its precondition: using the wrong one is an illegal move.",
     ref:"Kerberoast (SPN) vs AS-REP roast (preauth off). GetUserSPNs.py / Rubeus + hashcat -m 13100 / -m 18200."
   },
   {
     stage:"Domain compromise", role:"king",
-    title:"Direitos de replicação → a Joia",
+    title:"Replication rights → the Jewel",
     mitre:"TA0006 · DCSync / Domain Dominance",
-    situation:"A senha crackeada pertence a uma conta que, pelo grafo, tem direito de <b>replicação no domínio</b>. O Domain Controller — a Joia da Coroa — está a um lance. <b>Xeque-mate como?</b>",
+    situation:"The cracked password belongs to an account that, per the graph, has <b>domain replication</b> rights. The Domain Controller — the Crown Jewel — is one move away. <b>How do you deliver checkmate?</b>",
     options:[
-      "<b>DCSync</b> (secretsdump/mimikatz) pra replicar e extrair o hash do <b>krbtgt/Administrator</b> — comprometimento total do domínio.",
-      "Reiniciar o DC pra forçar um novo login de admin.",
-      "Tentar phishing do administrador de domínio."
+      "<b>DCSync</b> (secretsdump/mimikatz) to replicate and extract the <b>krbtgt/Administrator</b> hash — total domain compromise.",
+      "Reboot the DC to force a new admin login.",
+      "Try phishing the domain administrator."
     ],
     correct:0,
-    okFeed:"<b>Xeque-mate.</b> Com direito de replicação, o DCSync imita um Domain Controller e pede a sincronização dos segredos — você extrai o hash do <b>Administrator</b> (e do krbtgt, que permitiria Golden Ticket). Da rede de cima até o Rei: domínio comprometido, objetivo do exame cumprido.",
-    badFeed:"Reiniciar o DC ou phishing fogem da rota técnica que o grafo já te entregou. Quando você tem o direito de replicação, o DCSync é o lance forçado que captura o Rei diretamente.",
-    ref:"DCSync via secretsdump.py / mimikatz. krbtgt hash → Golden Ticket = persistência total."
+    okFeed:"<b>Checkmate.</b> With replication rights, DCSync impersonates a Domain Controller and requests a sync of the secrets — you extract the <b>Administrator</b> hash (and krbtgt, which would enable a Golden Ticket). From the network above all the way to the King: domain compromised, exam objective accomplished.",
+    badFeed:"Rebooting the DC or phishing stray from the technical route the graph already handed you. Once you have replication rights, DCSync is the forced move that captures the King directly.",
+    ref:"DCSync via secretsdump.py / mimikatz. krbtgt hash → Golden Ticket = total persistence."
   }
 ];
 
 const BLUE_DECK = [
   {
-    stage:"Triagem", role:"pawn",
-    title:"06:14 — enxurrada de alertas",
+    stage:"Triage", role:"pawn",
+    title:"06:14 — a flood of alerts",
     mitre:"TA0040 · Detect / Triage",
-    situation:"O SIEM despeja 300 alertas de baixa severidade e <b>um</b> de acesso anômalo num servidor crítico. <b>Como começa o turno?</b>",
+    situation:"The SIEM dumps 300 low-severity alerts and <b>one</b> anomalous-access alert on a critical server. <b>How do you start the shift?</b>",
     options:[
-      "Bloquear tudo que disparou alerta, por precaução.",
-      "<b>Triar por criticidade do ativo</b> e validar o alerta do servidor crítico primeiro — confirmar se é verdadeiro positivo antes de agir.",
-      "Fechar os 300 de baixa como ruído e ignorar o resto do turno."
+      "Block everything that triggered an alert, as a precaution.",
+      "<b>Triage by asset criticality</b> and validate the critical server's alert first — confirm whether it's a true positive before acting.",
+      "Close the 300 low-severity ones as noise and ignore the rest of the shift."
     ],
     correct:1,
-    okFeed:"Defesa começa por <b>priorização</b>, não por reação. Você ancora no ativo de maior valor (o servidor crítico), valida se o alerta é real e só então age. Bloquear tudo gera <i>alert fatigue</i> e derruba serviço legítimo — exatamente o caos que o atacante adora.",
-    badFeed:"Bloqueio reflexivo em massa = autossabotagem (e DoS no seu próprio ambiente). Fechar tudo como ruído é como ignorar metade do tabuleiro. Triagem orientada a risco é o primeiro lance do SOC.",
-    ref:"Priorização por criticidade de ativo; validar TP/FP antes de conter. NIST SP 800-61 (Detection & Analysis)."
+    okFeed:"Defense starts with <b>prioritization</b>, not reaction. You anchor on the highest-value asset (the critical server), validate whether the alert is real, and only then act. Blocking everything creates <i>alert fatigue</i> and takes down legitimate service — exactly the chaos an attacker loves.",
+    badFeed:"Reflexive mass blocking = self-sabotage (and DoS on your own environment). Closing everything as noise is like ignoring half the board. Risk-driven triage is the SOC's opening move.",
+    ref:"Prioritize by asset criticality; validate TP/FP before containing. NIST SP 800-61 (Detection & Analysis)."
   },
   {
-    stage:"Recon detectado", role:"pawn",
-    title:"Varredura interna a partir de um host",
+    stage:"Recon detected", role:"pawn",
+    title:"Internal scan originating from a host",
     mitre:"TA0043 · Reconnaissance (det.)",
-    situation:"Um host interno está conectando em centenas de portas/IPs em segundos — padrão de <b>port scan</b>. <b>Resposta?</b>",
+    situation:"An internal host is connecting to hundreds of ports/IPs within seconds — a <b>port scan</b> pattern. <b>Response?</b>",
     options:[
-      "Isolar o host imediatamente sem confirmar nada.",
-      "<b>Confirmar escopo e enriquecer</b>: é scanner de vulnerabilidade autorizado? host comprometido? Determinar antes de agir e aumentar o monitoramento sobre ele.",
-      "Avisar a empresa toda por e-mail que há um hacker na rede."
+      "Isolate the host immediately without confirming anything.",
+      "<b>Confirm scope and enrich</b>: is it an authorized vulnerability scanner? A compromised host? Determine that before acting and increase monitoring on it.",
+      "Email the entire company to warn that there's a hacker on the network."
     ],
     correct:1,
-    okFeed:"Nem todo scan é ataque — pode ser o Nessus do time de TI. Você <b>confirma a origem e a autorização</b>, enriquece (quem é o host, que conta, é esperado?) e eleva o monitoramento. Agir cedo demais sem escopo pode alertar um intruso real de que você o viu — perdendo a vantagem.",
-    badFeed:"Isolar às cegas pode derrubar um scan legítimo e queima sua janela de observação. Pânico público amplia o problema sem contê-lo. Escopo primeiro, contenção depois — com intenção.",
-    ref:"Diferenciar scan autorizado de hostil; não 'tip off' o adversário cedo demais. Aumentar visibilidade."
+    okFeed:"Not every scan is an attack — it could be IT's Nessus. You <b>confirm the origin and authorization</b>, enrich (which host, which account, is it expected?), and raise monitoring. Acting too early without scoping can tip off a real intruder that you've spotted them — losing your advantage.",
+    badFeed:"Isolating blindly can take down a legitimate scan and burns your observation window. Public panic amplifies the problem without containing it. Scope first, containment second — with intent.",
+    ref:"Differentiate authorized scans from hostile ones; don't tip off the adversary too early. Increase visibility."
   },
   {
-    stage:"Exploração", role:"bishop",
-    title:"IDS acende + processo novo no web server",
+    stage:"Exploitation", role:"bishop",
+    title:"IDS fires + new process on the web server",
     mitre:"TA0001 · Initial Access (det.)",
-    situation:"O IDS casa uma assinatura de exploração web e, segundos depois, um <b>processo estranho</b> nasce sob o usuário do servidor web. Verdadeiro positivo. <b>Ação?</b>",
+    situation:"The IDS matches a web exploitation signature and, seconds later, a <b>strange process</b> spawns under the web server's user. True positive. <b>Action?</b>",
     options:[
-      "<b>Desligar o servidor</b> na tomada pra cortar o ataque.",
-      "<b>Isolar o host da rede</b> (conter), <b>preservar memória/disco</b> (snapshot) e iniciar análise — sem desligar, pra não perder evidência volátil.",
-      "Reiniciar o serviço web e seguir o expediente."
+      "<b>Pull the server's plug</b> to cut off the attack.",
+      "<b>Isolate the host from the network</b> (contain), <b>preserve memory/disk</b> (snapshot), and start analysis — without powering off, so you don't lose volatile evidence.",
+      "Restart the web service and carry on with the shift."
     ],
     correct:1,
-    okFeed:"Contenção ≠ destruição. Você <b>isola da rede</b> (corta o C2 e a lateralização) mas mantém a máquina <b>ligada</b>: RAM, processos e conexões são evidência volátil que some no desligamento. Snapshot/triagem preservam a cadeia. É conter o avanço sem queimar as provas.",
-    badFeed:"Desligar na tomada apaga memória, malware sem persistência e artefatos forenses — você cega a própria investigação. Reiniciar o serviço só esconde o sintoma e deixa o atacante dentro. Isolar > desligar.",
-    ref:"Conter isolando a rede; preservar dados voláteis (ordem de volatilidade). NIST SP 800-61 Containment."
+    okFeed:"Containment ≠ destruction. You <b>isolate from the network</b> (cutting off C2 and lateral movement) but keep the machine <b>powered on</b>: RAM, processes, and connections are volatile evidence that vanishes on shutdown. Snapshotting/triage preserve the chain. It's about containing the advance without burning the evidence.",
+    badFeed:"Pulling the plug wipes memory, non-persistent malware, and forensic artifacts — you blind your own investigation. Restarting the service just hides the symptom and leaves the attacker inside. Isolate > power off.",
+    ref:"Contain by isolating the network; preserve volatile data (order of volatility). NIST SP 800-61 Containment."
   },
   {
     stage:"C2 / beacon", role:"knight",
-    title:"Batida regular pra um domínio raro",
+    title:"Regular beacon to a rare domain",
     mitre:"TA0011 · Command & Control",
-    situation:"O host contido fazia conexões de saída <b>periódicas</b> (com jitter) a um domínio recém-registrado. Cheiro de <b>beacon de C2</b>. <b>O que fazer?</b>",
+    situation:"The contained host was making <b>periodic</b> outbound connections (with jitter) to a freshly registered domain. Smells like a <b>C2 beacon</b>. <b>What do you do?</b>",
     options:[
-      "Ignorar — saída HTTPS é normal, todo mundo faz.",
-      "Confirmar o padrão de <b>beaconing</b> (intervalo+jitter), <b>bloquear no egress</b>/DNS e <b>caçar o mesmo IOC</b> em outros hosts pra achar mais comprometidos.",
-      "Só adicionar o domínio numa planilha pra revisar depois."
+      "Ignore it — outbound HTTPS is normal, everyone does it.",
+      "Confirm the <b>beaconing</b> pattern (interval+jitter), <b>block at egress</b>/DNS, and <b>hunt for the same IOC</b> on other hosts to find more compromised ones.",
+      "Just add the domain to a spreadsheet to review later."
     ],
     correct:1,
-    okFeed:"Beacon tem assinatura comportamental: intervalo regular + jitter + domínio novo/baixa reputação. Você bloqueia no <b>egress/DNS sinkhole</b> e — crucial — <b>pivota a caça</b>: o mesmo IOC em outro host revela o alcance real da intrusão. Um beacon nunca anda sozinho.",
-    badFeed:"'HTTPS é normal' é como o C2 se esconde — o que denuncia é o <b>padrão</b>, não o protocolo. Anotar pra depois dá tempo de exfiltração ao adversário. Bloqueie e expanda a caça pelo IOC.",
-    ref:"Beaconing = intervalo+jitter; bloqueio egress/DNS; threat hunting pelo IOC em toda a frota."
+    okFeed:"A beacon has a behavioral signature: regular interval + jitter + a new/low-reputation domain. You block it at <b>egress/DNS sinkhole</b> and — crucially — <b>pivot the hunt</b>: the same IOC on another host reveals the intrusion's real reach. A beacon never travels alone.",
+    badFeed:"'HTTPS is normal' is exactly how C2 hides — what gives it away is the <b>pattern</b>, not the protocol. Noting it for later gives the adversary time to exfiltrate. Block it and expand the hunt by IOC.",
+    ref:"Beaconing = interval+jitter; egress/DNS blocking; threat hunting by IOC across the whole fleet."
   },
   {
-    stage:"Privesc no host", role:"rook",
-    title:"Filho suspeito de um processo de sistema",
+    stage:"Host privesc", role:"rook",
+    title:"Suspicious child of a system process",
     mitre:"TA0004 · Privilege Escalation (det.)",
-    situation:"Telemetria mostra um shell nascendo de um serviço privilegiado e abuso de um binário SUID. Sinal de <b>escalonamento local</b>. <b>Prioridade agora?</b>",
+    situation:"Telemetry shows a shell spawning from a privileged service and abuse of a SUID binary. Signal of <b>local escalation</b>. <b>Priority now?</b>",
     options:[
-      "Matar só o processo suspeito e considerar resolvido.",
-      "<b>Dimensionar o raio de explosão</b>: que conta foi obtida, há persistência (cron/serviço/chave), e quais credenciais podem ter vazado desse host.",
-      "Formatar a máquina imediatamente."
+      "Kill just the suspicious process and consider it resolved.",
+      "<b>Scope the blast radius</b>: which account was obtained, is there persistence (cron/service/key), and which credentials may have leaked from this host.",
+      "Format the machine immediately."
     ],
     correct:1,
-    okFeed:"Matar o processo trata o sintoma; o intruso já pode ter <b>persistência</b> e <b>credenciais</b>. Você mede o raio: qual privilégio foi alcançado, que mecanismos de persistência foram plantados, e — o ponto-chave — <b>que credenciais saquearam daqui</b>, porque é o que habilita o próximo salto lateral.",
-    badFeed:"Encerrar o processo isolado deixa backdoors de pé (reinfecção garantida). Formatar antes de investigar destrói a evidência e não te diz o que vazou. Escopo de comprometimento primeiro.",
-    ref:"Determinar privilégio obtido + persistência + credenciais expostas. Antecipar o movimento lateral."
+    okFeed:"Killing the process treats the symptom; the intruder may already have <b>persistence</b> and <b>credentials</b>. You measure the radius: what privilege was reached, what persistence mechanisms were planted, and — the key point — <b>what credentials were looted from here</b>, because that's what enables the next lateral jump.",
+    badFeed:"Killing the isolated process leaves backdoors standing (reinfection guaranteed). Formatting before investigating destroys the evidence and doesn't tell you what leaked. Scope the compromise first.",
+    ref:"Determine privilege obtained + persistence + exposed credentials. Anticipate lateral movement."
   },
   {
     stage:"Credential access", role:"bishop",
-    title:"Acesso anômalo ao LSASS",
+    title:"Anomalous access to LSASS",
     mitre:"TA0006 · Credential Access (det.)",
-    situation:"Detecção de leitura de memória do <b>LSASS</b> numa estação. Provável dump de credenciais. <b>Hipótese de trabalho?</b>",
+    situation:"Detection of memory reads on <b>LSASS</b> on a workstation. Likely credential dump. <b>Working hypothesis?</b>",
     options:[
-      "Foi só o antivírus fazendo varredura — arquivar.",
-      "<b>Assumir credenciais comprometidas</b>: forçar reset das contas que logaram naquele host, validar MFA e vigiar <b>reuso</b> dessas contas em outros sistemas.",
-      "Trocar só a senha do usuário logado e encerrar."
+      "It was just the antivirus scanning — archive it.",
+      "<b>Assume credentials are compromised</b>: force a reset on the accounts that logged into that host, validate MFA, and watch for <b>reuse</b> of those accounts on other systems.",
+      "Just change the logged-in user's password and close it out."
     ],
     correct:1,
-    okFeed:"Dump de LSASS = todas as credenciais em cache naquele host devem ser tratadas como <b>queimadas</b>. Você reseta essas contas, confirma MFA e monitora reuso — porque a próxima jogada do atacante é autenticar-se <b>com credencial legítima</b>, que não dispara assinatura de exploit.",
-    badFeed:"Assumir que é o AV é o viés que deixa o adversário 'viver da terra' (LotL). Trocar só uma senha ignora as outras contas em cache no mesmo host. Trate o conjunto como comprometido.",
-    ref:"LSASS dump → reset em massa das contas em cache; MFA; caçar uso de credencial legítima (LotL)."
+    okFeed:"An LSASS dump = every credential cached on that host must be treated as <b>burned</b>. You reset those accounts, confirm MFA, and monitor for reuse — because the attacker's next move is to authenticate <b>with a legitimate credential</b>, which doesn't trigger an exploit signature.",
+    badFeed:"Assuming it's the AV is the bias that lets the adversary 'live off the land' (LotL). Changing just one password ignores the other accounts cached on the same host. Treat the whole set as compromised.",
+    ref:"LSASS dump → mass reset of cached accounts; MFA; hunt for legitimate-credential use (LotL)."
   },
   {
     stage:"Kerberoast det.", role:"queen",
-    title:"Pico de 4769 com RC4",
+    title:"Spike in 4769 events with RC4",
     mitre:"TA0008 · Lateral Movement (det.)",
-    situation:"O DC registra um pico de eventos <b>4769</b> (pedido de TGS) para uma conta de serviço, com cifra <b>RC4</b> — padrão clássico de <b>Kerberoasting</b>. <b>Contramedida?</b>",
+    situation:"The DC logs a spike in <b>4769</b> events (TGS request) for a service account, using <b>RC4</b> encryption — a classic <b>Kerberoasting</b> pattern. <b>Countermeasure?</b>",
     options:[
-      "Desabilitar o Kerberos no domínio.",
-      "<b>Rotacionar a senha da conta de serviço</b> (longa/gerenciada — gMSA), reduzir seu privilégio e caçar onde o ticket foi usado pra crackear/autenticar.",
-      "Ignorar — 4769 é evento normal de autenticação."
+      "Disable Kerberos on the domain.",
+      "<b>Rotate the service account's password</b> (long/managed — gMSA), reduce its privilege, and hunt for where the ticket was used to crack/authenticate.",
+      "Ignore it — 4769 is a normal authentication event."
     ],
     correct:1,
-    okFeed:"4769 + RC4 + conta com SPN = assinatura de Kerberoasting. O crack é <b>offline</b>, então você não vê o ataque acontecer — corta a raiz: <b>senha forte/gMSA</b> (inviável de crackear), menor privilégio na conta de serviço, e caça do uso posterior. É tirar a Dama do adversário do tabuleiro.",
-    badFeed:"Desligar Kerberos quebra o domínio inteiro — cura pior que a doença. Ignorar 4769 em massa com RC4 ignora justamente a pegada do ataque. A defesa real é senha não-crackeável (gMSA) + menor privilégio.",
-    ref:"Detecção: 4769 + RC4 + SPN. Defesa: gMSA/senha longa, least privilege, caçar uso do TGS."
+    okFeed:"4769 + RC4 + account with an SPN = Kerberoasting signature. The crack is <b>offline</b>, so you don't see the attack happen — cut it at the root: <b>strong password/gMSA</b> (uncrackable), least privilege on the service account, and hunt for later use. It's taking the adversary's Queen off the board.",
+    badFeed:"Disabling Kerberos breaks the entire domain — a cure worse than the disease. Ignoring 4769 en masse with RC4 ignores the very footprint of the attack. The real defense is an uncrackable password (gMSA) + least privilege.",
+    ref:"Detection: 4769 + RC4 + SPN. Defense: gMSA/long password, least privilege, hunt TGS usage."
   },
   {
     stage:"Lateral (PtH)", role:"rook",
-    title:"Logon administrativo de host incomum",
+    title:"Administrative logon from an unusual host",
     mitre:"TA0008 · Lateral Movement",
-    situation:"Eventos <b>4624 tipo 3</b> + <b>4672</b> (privilégios especiais) de um host que <b>nunca</b> faz admin logon, usando uma conta de serviço. Cheiro de <b>Pass-the-Hash</b>. <b>Resposta?</b>",
+    situation:"Events <b>4624 type 3</b> + <b>4672</b> (special privileges) from a host that <b>never</b> does admin logons, using a service account. Smells like <b>Pass-the-Hash</b>. <b>Response?</b>",
     options:[
-      "Desabilitar só a conta de serviço e dar por encerrado.",
-      "<b>Conter a origem</b> (isolar o host), <b>desabilitar/rotacionar</b> a conta abusada, <b>segmentar</b> pra cortar o caminho e caçar outros hosts onde a mesma credencial autenticou.",
-      "Esperar pra ver se acontece de novo antes de agir."
+      "Just disable the service account and call it done.",
+      "<b>Contain the source</b> (isolate the host), <b>disable/rotate</b> the abused account, <b>segment</b> to cut off the path, and hunt other hosts where the same credential authenticated.",
+      "Wait to see if it happens again before acting."
     ],
     correct:1,
-    okFeed:"PtH usa o <b>hash</b>, não a senha — por isso aparece como logon 'legítimo' de origem estranha. Você contém o host de origem, queima a credencial, <b>segmenta</b> a rede pra cortar a rota lateral, e caça onde mais esse hash autenticou. Não basta uma conta: o adversário replica o salto.",
-    badFeed:"Desabilitar uma conta só é tapar um buraco enquanto o atacante anda por outros. Esperar 'pra confirmar' cede iniciativa numa fase de movimento ativo. Contenção + segmentação + caça ampla.",
-    ref:"4624(type3)+4672 anômalo = PtH. Conter origem, rotacionar, segmentar, caçar reuso do hash."
+    okFeed:"PtH uses the <b>hash</b>, not the password — that's why it looks like a 'legitimate' logon from a strange origin. You contain the source host, burn the credential, <b>segment</b> the network to cut off the lateral route, and hunt for wherever else that hash authenticated. One account isn't enough: the adversary replicates the jump.",
+    badFeed:"Disabling just one account is plugging one hole while the attacker walks through others. Waiting 'to confirm' cedes the initiative during an active-movement phase. Containment + segmentation + broad hunting.",
+    ref:"Anomalous 4624(type3)+4672 = PtH. Contain the source, rotate, segment, hunt for hash reuse."
   },
   {
-    stage:"Exfiltração", role:"bishop",
-    title:"Saída volumosa pra storage externo",
+    stage:"Exfiltration", role:"bishop",
+    title:"Bulk outbound transfer to external storage",
     mitre:"TA0010 · Exfiltration",
-    situation:"Transferência de saída <b>grande e incomum</b> de um servidor de arquivos pra um storage em nuvem desconhecido, fora do horário. <b>Ação imediata?</b>",
+    situation:"A <b>large and unusual</b> outbound transfer from a file server to an unknown cloud storage, outside business hours. <b>Immediate action?</b>",
     options:[
-      "Esperar o backup terminar — pode ser job legítimo.",
-      "<b>Bloquear o egress</b> agora (DLP/firewall), <b>quantificar</b> o que saiu, <b>preservar</b> evidência e acionar a comunicação de incidente.",
-      "Só registrar o volume num relatório semanal."
+      "Wait for the backup to finish — it could be a legitimate job.",
+      "<b>Block egress</b> now (DLP/firewall), <b>quantify</b> what went out, <b>preserve</b> evidence, and trigger incident communications.",
+      "Just log the volume in a weekly report."
     ],
     correct:1,
-    okFeed:"Exfiltração é a captura da sua Joia saindo pela porta. Você <b>corta o egress</b> imediatamente (DLP/regra de firewall/sinkhole), <b>mede</b> o que já vazou (escopo do dano = base da notificação legal/LGPD), preserva evidência e <b>aciona o plano de comunicação</b> de incidente.",
-    badFeed:"'Pode ser backup' fora de hora pra storage desconhecido é a desculpa que deixa os dados irem embora. Relatório semanal é tarde demais — exfiltração é janela curta. Bloqueie e quantifique já.",
-    ref:"Bloqueio de egress/DLP; quantificar dados (escopo p/ notificação); acionar IR comms. NIST 800-61."
+    okFeed:"Exfiltration is your Jewel walking out the door. You <b>cut egress</b> immediately (DLP/firewall rule/sinkhole), <b>measure</b> what's already leaked (scope of the damage = basis for legal/LGPD notification), preserve evidence, and <b>trigger the incident communication plan</b>.",
+    badFeed:"'Could be a backup' outside business hours to unknown storage is the excuse that lets the data walk away. A weekly report is too late — exfiltration is a short window. Block and quantify now.",
+    ref:"Egress/DLP blocking; quantify data (scope for notification); trigger IR comms. NIST 800-61."
   },
   {
-    stage:"Erradicação", role:"king",
-    title:"DC comprometido — fechar o ciclo",
+    stage:"Eradication", role:"king",
+    title:"DC compromised — closing the loop",
     mitre:"TA0040 · Eradicate & Recover",
-    situation:"A investigação confirma comprometimento que chegou ao <b>Domain Controller</b> (DCSync). Como <b>erradicar e recuperar</b> sem deixar a Joia envenenada?",
+    situation:"The investigation confirms compromise reached the <b>Domain Controller</b> (DCSync). How do you <b>eradicate and recover</b> without leaving the Jewel poisoned?",
     options:[
-      "Deletar o malware encontrado e reabrir o ambiente.",
-      "Ciclo completo de IR: <b>resetar o krbtgt duas vezes</b>, rotacionar credenciais privilegiadas, reconstruir de baseline confiável, validar e só então recuperar — fechando com lições aprendidas.",
-      "Restaurar o backup de ontem e seguir a vida."
+      "Delete the malware found and reopen the environment.",
+      "Full IR cycle: <b>reset krbtgt twice</b>, rotate privileged credentials, rebuild from a trusted baseline, validate, and only then recover — closing out with lessons learned.",
+      "Restore yesterday's backup and move on."
     ],
     correct:1,
-    okFeed:"<b>Joia salva.</b> Com DCSync, o atacante pode ter o hash do <b>krbtgt</b> (Golden Ticket = acesso eterno) — por isso o reset <b>duplo</b> do krbtgt é obrigatório, além de rotacionar credenciais privilegiadas e reconstruir do baseline. Você fecha o ciclo NIST: erradicar → recuperar → <b>lições aprendidas</b>. Defesa em profundidade restabelecida.",
-    badFeed:"Deletar o malware deixa persistência e tickets forjados intactos — reinfecção quase garantida. Backup de ontem pode já estar comprometido e <b>não</b> resolve o krbtgt roubado. Erradicação real é metódica, não cosmética.",
-    ref:"Golden Ticket → reset krbtgt 2x; rotacionar privilegiadas; rebuild de baseline; lessons learned (NIST)."
+    okFeed:"<b>Jewel saved.</b> With DCSync, the attacker may have the <b>krbtgt</b> hash (Golden Ticket = eternal access) — which is why the <b>double</b> krbtgt reset is mandatory, along with rotating privileged credentials and rebuilding from baseline. You close the NIST cycle: eradicate → recover → <b>lessons learned</b>. Defense in depth restored.",
+    badFeed:"Deleting the malware leaves persistence and forged tickets intact — reinfection is nearly guaranteed. Yesterday's backup may already be compromised and <b>doesn't</b> address the stolen krbtgt. Real eradication is methodical, not cosmetic.",
+    ref:"Golden Ticket → reset krbtgt 2x; rotate privileged credentials; rebuild from baseline; lessons learned (NIST)."
   }
 ];
 
-/* ---------- estado ---------- */
+/* ---------- state ---------- */
 const state = {
   side:"red",
   deck:RED_DECK,
   idx:0,
-  good:0,     // 0..100  (acesso / contenção)
-  doom:0,     // 0..100  (detecção / comprometimento)
+  good:0,     // 0..100 (access / containment)
+  doom:0,     // 0..100 (detection / compromise)
   answered:false,
-  pathProgress:0, // quantos nós conquistados (red) / segurados (blue)
-  enemyAdvance:0, // só blue: quão perto o atacante chegou do rei
+  pathProgress:0, // how many nodes conquered (red) / held (blue)
+  enemyAdvance:0, // blue only: how close the attacker got to the king
   reduced: window.matchMedia('(prefers-reduced-motion: reduce)').matches
 };
 
 const CFG = {
   red:{
     team:"var(--magenta)",
-    op:"INTRUSÃO",
-    goodName:"Acesso", doomName:"Detecção",
-    goodDesc:"progresso na kill chain",
-    winTitle:"DOMÍNIO COMPROMETIDO",
-    winBody:"Da rede de borda ao <b>Domain Controller</b> em uma cadeia limpa. Enumeração ampla, privesc por misconfig, pivoting pra dentro do AD, Kerberoast e <b>DCSync</b> no Rei. Isto é um relatório de OSCP+ que passa.",
-    loseTitle:"OPERAÇÃO QUEIMADA",
-    loseBody:"O barulho acumulado estourou a <b>Detecção</b> e o Blue Team te ejetou antes da Joia. No exame, decisões erradas custam tempo e sessões — reduza ruído, enumere mais, pivote com método."
+    op:"INTRUSION",
+    goodName:"Access", doomName:"Detection",
+    goodDesc:"kill chain progress",
+    winTitle:"DOMAIN COMPROMISED",
+    winBody:"From the edge network to the <b>Domain Controller</b> in one clean chain. Broad enumeration, misconfig privesc, pivoting into the AD, Kerberoast, and <b>DCSync</b> on the King. This is an OSCP+ report that passes.",
+    loseTitle:"OPERATION BURNED",
+    loseBody:"The accumulated noise blew past <b>Detection</b> and the Blue Team ejected you before the Jewel. In the exam, wrong decisions cost time and sessions — reduce noise, enumerate more, pivot with method."
   },
   blue:{
     team:"var(--cyan)",
-    op:"DEFESA",
-    goodName:"Contenção", doomName:"Comprometimento",
-    goodDesc:"avanço da resposta",
-    winTitle:"ADVERSÁRIO EJETADO",
-    winBody:"Você quebrou a kill chain antes da Joia: triagem sem pânico, contenção preservando evidência, caça por IOC, e erradicação que <b>resetou o krbtgt</b>. Defesa em profundidade restabelecida — ciclo NIST fechado.",
-    loseTitle:"JOIA COMPROMETIDA",
-    loseBody:"O atacante atravessou as camadas até o <b>Domain Controller</b>. Reações tardias e contenção destrutiva deram tempo e evidência ao adversário. Contenha sem destruir, expanda a caça, assuma credenciais queimadas."
+    op:"DEFENSE",
+    goodName:"Containment", doomName:"Compromise",
+    goodDesc:"response progress",
+    winTitle:"ADVERSARY EJECTED",
+    winBody:"You broke the kill chain before the Jewel: calm triage, containment that preserved evidence, IOC hunting, and eradication that <b>reset the krbtgt</b>. Defense in depth restored — NIST cycle closed.",
+    loseTitle:"JEWEL COMPROMISED",
+    loseBody:"The attacker crossed every layer up to the <b>Domain Controller</b>. Late reactions and destructive containment gave the adversary time and evidence. Contain without destroying, expand the hunt, assume credentials are burned."
   }
 };
 
-/* ---------- tabuleiro: caminho da kill chain ---------- */
-/* caminho em zigue-zague do canto inferior-esquerdo até o Rei (topo-centro) */
+/* ---------- board: kill chain path ---------- */
+/* zigzag path from the bottom-left corner to the King (top-center) */
 let PATH = [];
 function buildPath(n){
-  // gera n casas únicas subindo o tabuleiro; rei fica fixo no topo
+  // generates n unique squares climbing the board; king stays fixed at top
   const cells=[];
   const king={c:4,r:0};
-  // pontos de partida no fundo, serpenteando
+  // starting points at the bottom, winding upward
   let c=0,r=7;
   cells.push({c,r});
   const total=n;
   for(let i=1;i<total-1;i++){
-    // sobe gradualmente e oscila horizontalmente em direção ao rei
+    // gradually climbs and oscillates horizontally toward the king
     const t=i/(total-1);
     r = Math.max(1, Math.round(7 - t*6));
     const wave = Math.sin(i*1.05)*2.4;
     c = Math.min(7, Math.max(0, Math.round(2 + t*2 + wave)));
-    // evita repetição exata
+    // avoids exact repetition
     if(cells.some(x=>x.c===c&&x.r===r)) c=Math.min(7,c+1);
     cells.push({c,r});
   }
@@ -621,9 +726,9 @@ function buildPath(n){
   return cells;
 }
 
-/* glyphs de xadrez por papel */
+/* chess glyphs by role */
 const GLYPH={king:"♚",queen:"♛",rook:"♜",bishop:"♝",knight:"♞",pawn:"♟"};
-const ROLE_PT={king:"DC · Joia",queen:"SOC/IR",rook:"Firewall",bishop:"SIEM/Det.",knight:"Hunter",pawn:"Endpoint"};
+const ROLE_EN={king:"DC · Crown Jewel",queen:"SOC/IR",rook:"Firewall",bishop:"SIEM/Det.",knight:"Hunter",pawn:"Endpoint"};
 
 /* ---------- canvas render ---------- */
 const cv=document.getElementById('board');
@@ -646,20 +751,20 @@ function draw(){
   const enemyCol=css(state.side==='red'?'--cyan':'--magenta');
   const gold=css('--gold');
 
-  // casas
+  // squares
   for(let r=0;r<8;r++)for(let c=0;c<8;c++){
     const dark=(r+c)%2===1;
     ctx.fillStyle=dark?'#0a0814':'#0f0c1c';
     ctx.fillRect(c*cell,r*cell,cell,cell);
   }
-  // grade glow
+  // grid glow
   ctx.strokeStyle='rgba(0,255,240,.07)';ctx.lineWidth=1*DPR;
   for(let i=0;i<=8;i++){
     ctx.beginPath();ctx.moveTo(i*cell,0);ctx.lineTo(i*cell,S);ctx.stroke();
     ctx.beginPath();ctx.moveTo(0,i*cell);ctx.lineTo(S,i*cell);ctx.stroke();
   }
 
-  // rota da kill chain (linha entre nós)
+  // kill chain route (line between nodes)
   if(PATH.length){
     ctx.lineWidth=2.5*DPR;
     ctx.strokeStyle='rgba(255,230,0,.18)';
@@ -673,15 +778,15 @@ function draw(){
     ctx.setLineDash([]);
   }
 
-  // peças ao longo da kill chain
+  // pieces along the kill chain
   PATH.forEach((p,i)=>{
-    if(i===PATH.length-1) return; // rei desenhado à parte
+    if(i===PATH.length-1) return; // king drawn separately
     const role=state.deck[i]?state.deck[i].role:'pawn';
     const isActive = (i===state.idx);
-    // "overrun": casa já atravessada pela frente de avanço do atacante
+    // "overrun": square already crossed by the attacker's advance front
     const overrun = state.side==='red' ? (i<state.pathProgress)
                                        : (i<state.enemyAdvance);
-    // destaque do nó ativo
+    // active node highlight
     if(isActive){
       ctx.save();
       ctx.shadowColor=gold;ctx.shadowBlur=22*DPR;
@@ -689,12 +794,12 @@ function draw(){
       ctx.strokeRect(p.c*cell+3*DPR,p.r*cell+3*DPR,cell-6*DPR,cell-6*DPR);
       ctx.restore();
     }
-    // camada de defesa intacta = ciano; tombada = cinza
+    // intact defense layer = cyan; fallen = gray
     const col = overrun ? '#4a4a5a' : (state.side==='red' ? enemyCol : teamCol);
     drawPiece(role,p.c*cell,p.r*cell,cell,col,gold,isActive);
   });
 
-  // operativo / frente de avanço (magenta = atacante sempre)
+  // operative / advance front (magenta = attacker always)
   const attackerCol=css('--magenta');
   let opIdx;
   if(state.side==='red'){ opIdx=Math.min(state.pathProgress, PATH.length-2); }
@@ -707,7 +812,7 @@ function draw(){
     ctx.save();
     ctx.shadowColor=attackerCol;ctx.shadowBlur=(18+pulse*3)*DPR;
     ctx.fillStyle=attackerCol;
-    // losango "cursor de operação"
+    // "operation cursor" diamond
     const s=cell*0.16+pulse;
     ctx.beginPath();
     ctx.moveTo(x,y-cell*0.34);ctx.lineTo(x+s,y-cell*0.34+s);
@@ -716,7 +821,7 @@ function draw(){
     ctx.restore();
   }
 
-  // Rei / Joia
+  // King / Jewel
   const king=PATH[PATH.length-1];
   if(king){
     const t=performance.now()/700;
@@ -737,19 +842,19 @@ function drawPiece(role,x,y,cell,col,glow,active){
   ctx.textAlign='center'; ctx.textBaseline='middle';
   ctx.fillText(GLYPH[role]||'♟', cx, cy-cell*0.06);
   ctx.restore();
-  // rótulo do papel
+  // role label
   ctx.save();
   ctx.fillStyle='rgba(180,180,200,.6)';
   ctx.font=`${Math.round(cell*0.13)}px 'JetBrains Mono', monospace`;
   ctx.textAlign='center';ctx.textBaseline='middle';
-  ctx.fillText(ROLE_PT[role]||'', cx, cy+cell*0.34);
+  ctx.fillText(ROLE_EN[role]||'', cx, cy+cell*0.34);
   ctx.restore();
 }
 
-/* loop suave só p/ pulsos */
+/* smooth loop just for pulses */
 function raf(){ if(!state.reduced){ draw(); } requestAnimationFrame(raf); }
 
-/* ---------- UI / fluxo ---------- */
+/* ---------- UI / flow ---------- */
 const el=id=>document.getElementById(id);
 const consoleEl=el('console');
 
@@ -788,7 +893,7 @@ function renderCard(){
   card.className='card';
   card.innerHTML=`
     <div class="meta">
-      <span class="tag stage">Fase ${state.idx+1} · ${d.stage}</span>
+      <span class="tag stage">Phase ${state.idx+1} · ${d.stage}</span>
       <span class="tag mitre">${d.mitre}</span>
     </div>
     <h2>${d.title}</h2>
@@ -807,7 +912,7 @@ function renderCard(){
   fb.className='feedback'; fb.id='feedback';
   const next=document.createElement('button');
   next.className='next hidden'; next.id='nextBtn';
-  next.textContent='Próximo lance ▸';
+  next.textContent='Next move ▸';
   next.onclick=advance;
 
   consoleEl.appendChild(card);
@@ -822,22 +927,22 @@ function answer(i,btn,choicesWrap){
   state.answered=true;
   const d=state.deck[state.idx];
   const ok = i===d.correct;
-  // trava botões
+  // lock buttons
   [...choicesWrap.children].forEach((b,bi)=>{
     b.disabled=true;
     if(bi===d.correct) b.classList.add('correct');
     if(bi===i && !ok) b.classList.add('wrong');
   });
-  // efeitos de estado
+  // state effects
   if(ok){
     state.good=Math.min(100, state.good + (100/state.deck.length));
     if(state.side==='red'){ state.pathProgress=Math.min(state.deck.length, state.pathProgress+1); }
-    else { /* blue segura: empurra o atacante 1 nó pra trás se possível */
+    else { /* blue holds: pushes the attacker back 1 node if possible */
       state.enemyAdvance=Math.max(0, state.enemyAdvance-1);
       state.pathProgress=Math.min(state.deck.length, state.pathProgress+1);
     }
   }else{
-    if(state.side==='red'){ state.doom=Math.min(100, state.doom+34); } // 3 erros queimam a op
+    if(state.side==='red'){ state.doom=Math.min(100, state.doom+34); } // 3 mistakes burn the op
     else { state.enemyAdvance+=1; state.doom=Math.min(100, state.doom+ (100/Math.max(1,state.deck.length-1)) ); }
     if(!state.reduced){ const bp=el('boardPanel'); bp.classList.remove('shake'); void bp.offsetWidth; bp.classList.add('shake'); }
   }
@@ -845,20 +950,20 @@ function answer(i,btn,choicesWrap){
   const fb=el('feedback');
   fb.classList.add('show', ok?'ok':'bad');
   fb.innerHTML=`
-    <div class="verdict">${ok?'Lance correto':'Armadilha'}</div>
+    <div class="verdict">${ok?'Correct move':'Trap'}</div>
     <div class="txt">${ok?d.okFeed:d.badFeed}</div>
-    <div class="ref"><b>Estudo:</b> ${d.ref}</div>
+    <div class="ref"><b>Study:</b> ${d.ref}</div>
   `;
   renderBars(); draw();
 
-  // checa derrota imediata
+  // check for immediate defeat
   const blueBreached = state.side==='blue' && state.enemyAdvance>=PATH.length-1;
   if(state.doom>=100 || blueBreached){ setTimeout(()=>endGame(false), 650); return; }
   el('nextBtn').classList.remove('hidden');
 }
 
 function advance(){
-  // vitória se chegou ao fim
+  // victory if reached the end
   if(state.idx>=state.deck.length-1){
     const won = state.doom<100;
     return endGame(won);
@@ -871,13 +976,13 @@ function endGame(win){
   const cfg=CFG[state.side];
   const ov=el('overlay'), card=el('endCard');
   card.className='endcard '+(win?'win':'lose');
-  el('endEyebrow').textContent = win?'objetivo cumprido':'kill chain falhou';
+  el('endEyebrow').textContent = win?'objective accomplished':'kill chain failed';
   el('endTitle').textContent = win?cfg.winTitle:cfg.loseTitle;
   el('endBody').innerHTML = win?cfg.winBody:cfg.loseBody;
   ov.classList.add('show');
 }
 
-/* ---------- controle de modo ---------- */
+/* ---------- mode control ---------- */
 function startSide(side){
   state.side=side;
   state.deck = side==='red'?RED_DECK:BLUE_DECK;
@@ -886,7 +991,7 @@ function startSide(side){
   if(side==='blue') state.enemyAdvance=0;
   PATH=buildPath(state.deck.length);
   setTeamVar();
-  // toggle visual
+  // visual toggle
   el('btnRed').classList.toggle('on', side==='red');
   el('btnBlue').classList.toggle('on', side==='blue');
   el('btnRed').setAttribute('aria-selected', side==='red');
